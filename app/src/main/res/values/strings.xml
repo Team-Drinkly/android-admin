@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Drinkly-Admin</string>
+
+    <!-- 약관 -->
+    <string name="agreement1"><u>이용 약관(필수)</u></string>
+    <string name="agreement2"><u>개인정보 수집 및 이용 동의서(필수)</u></string>
+    <string name="agreement3"><u>제 3자 정보 제공 동의서(선택)</u></string>
 </resources>
