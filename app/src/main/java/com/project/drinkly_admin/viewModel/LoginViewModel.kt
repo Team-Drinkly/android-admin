@@ -71,4 +71,82 @@ class LoginViewModel: ViewModel() {
             })
     }
 
+    fun getNiceUrlData(activity: PassWebActivity, memberId: Int) {
+        val apiClient = ApiClient(activity)
+
+        apiClient.apiService.getNiceUrlData(memberId)
+            .enqueue(object :
+                Callback<BaseResponse<NiceUrlResponse>> {
+                override fun onResponse(
+                    call: Call<BaseResponse<NiceUrlResponse>>,
+                    response: Response<BaseResponse<NiceUrlResponse>>
+                ) {
+                    Log.d("DrinklyViewModel", "onResponse 성공: " + response.body().toString())
+                    if (response.isSuccessful) {
+                        // 정상적으로 통신이 성공된 경우
+                        val result: BaseResponse<NiceUrlResponse>? = response.body()
+                        Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
+
+                        var encode_enc = URLEncoder.encode(result?.payload?.enc_data ?: "", "UTF-8")
+                        var encode_integrity = URLEncoder.encode(result?.payload?.integrity_value ?: "", "UTF-8")
+                        var URL_INFO = BuildConfig.PASS_URL + "?m=service&token_version_id=${result?.payload?.token_version_id}&enc_data=${encode_enc}&integrity_value=${encode_integrity}"
+
+                        passUrl.value = URL_INFO
+
+                    } else {
+                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                        var result: BaseResponse<NiceUrlResponse>? = response.body()
+                        Log.d("DrinklyViewModel", "onResponse 실패: " + response.body())
+                        val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
+                        Log.d("DrinklyViewModel", "Error Response: $errorBody")
+
+                    }
+                }
+
+                override fun onFailure(call: Call<BaseResponse<NiceUrlResponse>>, t: Throwable) {
+                    // 통신 실패
+                    Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+                }
+            })
+    }
+
+    fun callBackNiceData(activity: PassWebActivity, memberId: String?, tokenVersionId: String?, encData: String?, integrityValue: String?) {
+        val apiClient = ApiClient(activity)
+
+        apiClient.apiService.callBackNiceData(memberId!!, "owner", tokenVersionId!!, encData!!, integrityValue!!)
+            .enqueue(object :
+                Callback<BaseResponse<String>> {
+                override fun onResponse(
+                    call: Call<BaseResponse<String>>,
+                    response: Response<BaseResponse<String>>
+                ) {
+                    Log.d("DrinklyViewModel", "onResponse 성공: " + response.body().toString())
+                    if (response.isSuccessful) {
+                        // 정상적으로 통신이 성공된 경우
+                        val result: BaseResponse<String>? = response.body()
+                        Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
+
+                        activity.finish()
+
+                        if(response.body()?.result?.code == 403) {
+                            MyApplication.signUpPassAuthorization = false
+                        } else {
+                            MyApplication.signUpPassAuthorization = true
+                        }
+                    } else {
+                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                        var result: BaseResponse<String>? = response.body()
+                        Log.d("DrinklyViewModel", "onResponse 실패: " + response.body())
+                        val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
+                        Log.d("DrinklyViewModel", "Error Response: $errorBody")
+
+                    }
+                }
+
+                override fun onFailure(call: Call<BaseResponse<String>>, t: Throwable) {
+                    // 통신 실패
+                    Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+                }
+            })
+    }
 }
