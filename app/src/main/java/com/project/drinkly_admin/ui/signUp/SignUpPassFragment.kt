@@ -49,6 +49,10 @@ class SignUpPassFragment : Fragment() {
             // 패스 인증 완료 후 회원가입 - 사업자 정보 입력 화면 이동
             MyApplication.signUpPassAuthorization = null
 
+            mainActivity.supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView_main, SignUpBusinessInfoFragment())
+                .addToBackStack(null)
+                .commit()
         } else if(MyApplication.signUpPassAuthorization == false) {
             MyApplication.signUpPassAuthorization = null
 
