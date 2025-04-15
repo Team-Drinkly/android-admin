@@ -5,4 +5,12 @@
     <string name="agreement1"><u>이용 약관(필수)</u></string>
     <string name="agreement2"><u>개인정보 수집 및 이용 동의서(필수)</u></string>
     <string name="agreement3"><u>제 3자 정보 제공 동의서(선택)</u></string>
+
+    <!-- 온보딩 -->
+    <string name="onboarding1_title">단골이 늘면 매출은 자연스럽게 올라요!</string>
+    <string name="onboarding1_description">술 한 잔으로 방문 고객을 단골로 만들고\n재방문까지 이어지도록 도와드려요!</string>
+    <string name="onboarding2_title">광고 없이도 가게를 알릴 수 있어요</string>
+    <string name="onboarding2_description">드링클리 소비자 앱에 매장이 노출되어\n주변 고객에게 자연스럽게 홍보할 수 있어요</string>
+    <string name="onboarding3_title">단골 고객, 손쉽게 관리하세요</string>
+    <string name="onboarding3_description">방문 고객은 자동으로 기록되고,\n쿠폰과 푸시 알림으로 재방문을 유도할 수 있어요.</string>
 </resources>

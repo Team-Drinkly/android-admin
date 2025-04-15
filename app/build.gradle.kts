@@ -77,4 +77,7 @@ dependencies {
     // glide
     implementation("com.github.bumptech.glide:glide:4.13.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.13.0")
+
+    // dot indicator
+    implementation("com.tbuonomo:dotsindicator:5.1.0")
 }
