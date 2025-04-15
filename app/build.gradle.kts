@@ -24,6 +24,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        buildConfigField("String", "SERVER_URL", "\"${properties["server_url"]}\"")
+        buildConfigField("String", "PASS_URL", "\"${properties["pass_url"]}\"")
+
+        buildConfigField("String", "KAKAO_APP_KEY", "\"${properties["kakao_key"]}\"")
         buildConfigField("String", "KAKAO_APP_KEY", "\"${properties["kakao_key"]}\"")
 
         manifestPlaceholders["kakao_native_key"] = kakaoNativeKey
@@ -65,6 +69,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // 카카오 로그인
+    implementation("com.kakao.sdk:v2-user:2.20.6")
 
     // api
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
