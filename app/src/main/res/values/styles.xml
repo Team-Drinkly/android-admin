@@ -79,4 +79,21 @@
         <item name="android:backgroundTint">@drawable/background_button_next</item>
         <item name="android:paddingVertical">13dp</item>
     </style>
+
+    <!-- dialog Button -->
+    <style name="DialogCheckButton" parent="SubTitle2">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/gray1</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:backgroundTint">@color/primary_50</item>
+        <item name="android:paddingVertical">11dp</item>
+    </style>
+
+    <style name="DialogCancelButton" parent="SubTitle2">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/gray1</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:backgroundTint">@color/gray5</item>
+        <item name="android:paddingVertical">11dp</item>
+    </style>
 </resources>
