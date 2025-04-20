@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.databinding.FragmentSignUpStoreNumberBinding
 import com.project.drinkly_admin.ui.MainActivity
@@ -41,6 +42,11 @@ class SignUpStoreNumberFragment : Fragment() {
 
                 override fun afterTextChanged(s: Editable?) {}
             })
+
+            buttonNext.setOnClickListener {
+                MyApplication.basicStoreInfo.storeTel = editTextStoreNumber.text.toString()
+
+            }
 
         }
 
