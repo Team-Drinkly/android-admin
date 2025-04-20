@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
-import com.project.drinkly_admin.MyApplication
+import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.databinding.FragmentSignUpPassBinding
 import com.project.drinkly_admin.ui.BasicDialogInterface

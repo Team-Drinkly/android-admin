@@ -14,15 +14,12 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.project.drinkly_admin.BuildConfig
-import com.project.drinkly_admin.MyApplication
-import com.project.drinkly_admin.R
+import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.databinding.ActivityPassWebBinding
 import com.project.drinkly_admin.viewModel.LoginViewModel
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -125,7 +122,18 @@ class PassWebActivity : AppCompatActivity() {
                     val packageName = intent?.`package`
                     if (packageName != null && packageName != "") {
                         // 앱이 설치되어 있지 않을 경우 구글마켓 이동
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
+                        if (intent.resolveActivity(packageManager) != null) {
+                            startActivity(intent)
+                        } else {
+                            // 대체 URL 사용 (예: 웹 링크로 연결)
+                            val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName"))
+                            if (webIntent.resolveActivity(packageManager) != null) {
+                                startActivity(webIntent)
+                            } else {
+                                Toast.makeText(this@PassWebActivity, "스토어를 열 수 있는 앱이 없습니다.", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 }
                 // return 값을 반드시 true로 해야 합니다.
