@@ -8,5 +8,13 @@ class MyApplication : Application() {
         // 회원가입 정보
         var oauthId = 0
         var signUpPassAuthorization: Boolean? = null
+        var basicStoreInfo = BasicStoreInfoRequest(
+            ownerId = 0,
+            storeName = "",
+            storeTel = "",
+            storeAddress = "",
+            storeDetailAddress = null,
+            businessRegistrationNumber = ""
+        )
     }
 }

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.databinding.FragmentSignUpBusinessInfoBinding
 import com.project.drinkly_admin.ui.MainActivity
@@ -26,11 +27,33 @@ class SignUpBusinessInfoFragment : Fragment() {
 
         binding.run {
             editTextBusinessNumber.addTextChangedListener(object : TextWatcher {
+                private var isFormatting: Boolean = false  // 무한 루프 방지용
+
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-                    if(editTextBusinessNumber.text.isNotEmpty()) {
+                override fun afterTextChanged(s: Editable?) {
+                    if (isFormatting) return
+
+                    val digits = s.toString().filter { it.isDigit() }
+                    val maxLength = 10
+                    val limited = digits.take(maxLength)
+
+                    val formatted = buildString {
+                        for ((i, c) in limited.withIndex()) {
+                            append(c)
+                            if (i == 2 || i == 4) append("-")
+                        }
+                    }
+
+                    isFormatting = true
+                    editTextBusinessNumber.setText(formatted)
+                    editTextBusinessNumber.setSelection(formatted.length)  // 커서 끝으로 이동
+                    isFormatting = false
+
+                    // 배경 설정
+                    if (formatted.isNotEmpty()) {
                         editTextBusinessNumber.setBackgroundResource(R.drawable.background_edittext_success)
                     } else {
                         editTextBusinessNumber.setBackgroundResource(R.drawable.background_edittext_default)
@@ -38,9 +61,8 @@ class SignUpBusinessInfoFragment : Fragment() {
 
                     checkEnabled()
                 }
-
-                override fun afterTextChanged(s: Editable?) {}
             })
+
 
             editTextOpenDate.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -58,6 +80,14 @@ class SignUpBusinessInfoFragment : Fragment() {
 
                 override fun afterTextChanged(s: Editable?) {}
             })
+
+            buttonNext.setOnClickListener {
+                MyApplication.basicStoreInfo.businessRegistrationNumber = editTextBusinessNumber.text.toString()
+
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, SignUpStoreInfoFragment())
+                    .commit()
+            }
         }
 
         return binding.root
@@ -70,7 +100,7 @@ class SignUpBusinessInfoFragment : Fragment() {
 
     fun checkEnabled() {
         binding.run {
-            if(editTextBusinessNumber.text.isNotEmpty() && editTextOpenDate.text.length == 8) {
+            if(editTextBusinessNumber.text.length == 10 && editTextOpenDate.text.length == 8) {
                 buttonNext.isEnabled = true
             } else {
                 buttonNext.isEnabled = false
