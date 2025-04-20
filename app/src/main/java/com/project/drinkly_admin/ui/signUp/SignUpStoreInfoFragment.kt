@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.databinding.FragmentSignUpStoreInfoBinding
 import com.project.drinkly_admin.ui.MainActivity
@@ -62,6 +63,16 @@ class SignUpStoreInfoFragment : Fragment() {
 
                 override fun afterTextChanged(s: Editable?) {}
             })
+
+            buttonNext.setOnClickListener {
+                MyApplication.basicStoreInfo.storeName = editTextStoreName.text.toString()
+                MyApplication.basicStoreInfo.storeAddress = editTextStoreAddressMain.text.toString()
+                MyApplication.basicStoreInfo.storeDetailAddress = editTextStoreAddressDetail.text.toString()
+
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, SignUpStoreNumberFragment())
+                    .commit()
+            }
         }
 
         return binding.root
