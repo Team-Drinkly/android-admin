@@ -30,6 +30,7 @@ class SignUpInfoFragment : Fragment() {
 
         binding.run {
             buttonSignUp.setOnClickListener {
+                viewModel.signUp(mainActivity)
             }
         }
 

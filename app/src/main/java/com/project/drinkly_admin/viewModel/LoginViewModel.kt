@@ -3,18 +3,21 @@ package com.project.drinkly_admin.viewModel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.project.drinkly.api.response.login.LoginResponse
 import com.project.drinkly.api.response.login.NiceUrlResponse
+import com.project.drinkly.api.response.login.SignUpResponse
 import com.project.drinkly_admin.BuildConfig
-import com.project.drinkly_admin.MyApplication
+import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.ApiClient
 import com.project.drinkly_admin.api.TokenManager
+import com.project.drinkly_admin.api.request.login.SignUpRequest
 import com.project.drinkly_admin.api.response.BaseResponse
+import com.project.drinkly_admin.api.response.login.BasicStoreInfoResponse
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.signUp.PassWebActivity
 import com.project.drinkly_admin.ui.signUp.SignUpAgreementFragment
+import com.project.drinkly_admin.ui.signUp.SignUpCompleteFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -144,6 +147,81 @@ class LoginViewModel: ViewModel() {
                 }
 
                 override fun onFailure(call: Call<BaseResponse<String>>, t: Throwable) {
+                    // 통신 실패
+                    Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+                }
+            })
+    }
+
+    fun signUp(activity: MainActivity) {
+        val apiClient = ApiClient(activity)
+        val tokenManager = TokenManager(activity)
+
+        apiClient.apiService.signUp(SignUpRequest(MyApplication.oauthId))
+            .enqueue(object :
+                Callback<BaseResponse<SignUpResponse>> {
+                override fun onResponse(
+                    call: Call<BaseResponse<SignUpResponse>>,
+                    response: Response<BaseResponse<SignUpResponse>>
+                ) {
+                    Log.d("DrinklyViewModel", "onResponse 성공: " + response.body().toString())
+                    if (response.isSuccessful) {
+                        // 정상적으로 통신이 성공된 경우
+                        val result: BaseResponse<SignUpResponse>? = response.body()
+                        Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
+
+                        tokenManager.saveTokens(result?.payload?.accessToken.toString(), result?.payload?.refreshToken.toString())
+                        saveBasicStoreInfo(activity)
+
+                    } else {
+                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                        var result: BaseResponse<SignUpResponse>? = response.body()
+                        Log.d("DrinklyViewModel", "onResponse 실패: " + response.body())
+                        val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
+                        Log.d("DrinklyViewModel", "Error Response: $errorBody")
+
+                    }
+                }
+
+                override fun onFailure(call: Call<BaseResponse<SignUpResponse>>, t: Throwable) {
+                    // 통신 실패
+                    Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+                }
+            })
+    }
+
+    fun saveBasicStoreInfo(activity: MainActivity) {
+        val apiClient = ApiClient(activity)
+
+        apiClient.apiService.saveBasicStoreInfo(MyApplication.basicStoreInfo)
+            .enqueue(object :
+                Callback<BaseResponse<BasicStoreInfoResponse>> {
+                override fun onResponse(
+                    call: Call<BaseResponse<BasicStoreInfoResponse>>,
+                    response: Response<BaseResponse<BasicStoreInfoResponse>>
+                ) {
+                    Log.d("DrinklyViewModel", "onResponse 성공: " + response.body().toString())
+                    if (response.isSuccessful) {
+                        // 정상적으로 통신이 성공된 경우
+                        val result: BaseResponse<BasicStoreInfoResponse>? = response.body()
+                        Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
+
+                        activity.supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainerView_main, SignUpCompleteFragment())
+                            .addToBackStack(null)
+                            .commit()
+
+                    } else {
+                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                        var result: BaseResponse<BasicStoreInfoResponse>? = response.body()
+                        Log.d("DrinklyViewModel", "onResponse 실패: " + response.body())
+                        val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
+                        Log.d("DrinklyViewModel", "Error Response: $errorBody")
+
+                    }
+                }
+
+                override fun onFailure(call: Call<BaseResponse<BasicStoreInfoResponse>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
                 }

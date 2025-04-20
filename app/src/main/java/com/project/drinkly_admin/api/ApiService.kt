@@ -2,8 +2,13 @@ package com.project.drinkly_admin.api
 
 import com.project.drinkly.api.response.login.LoginResponse
 import com.project.drinkly.api.response.login.NiceUrlResponse
+import com.project.drinkly.api.response.login.SignUpResponse
+import com.project.drinkly_admin.api.request.login.BasicStoreInfoRequest
+import com.project.drinkly_admin.api.request.login.SignUpRequest
 import com.project.drinkly_admin.api.response.BaseResponse
+import com.project.drinkly_admin.api.response.login.BasicStoreInfoResponse
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -33,4 +38,16 @@ interface ApiService {
         @Query("enc_data") enc_data: String,
         @Query("integrity_value") integrity_value: String
     ): Call<BaseResponse<String>>
+
+    // 회원가입
+    @POST("v1/member/signup/owner")
+    fun signUp(
+        @Body request: SignUpRequest
+    ): Call<BaseResponse<SignUpResponse>>
+
+    // 업체 기본 정보 저장
+    @POST("v1/store/o")
+    fun saveBasicStoreInfo(
+        @Body request: BasicStoreInfoRequest
+    ): Call<BaseResponse<BasicStoreInfoResponse>>
 }
