@@ -46,6 +46,9 @@ class SignUpStoreNumberFragment : Fragment() {
             buttonNext.setOnClickListener {
                 MyApplication.basicStoreInfo.storeTel = editTextStoreNumber.text.toString()
 
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, SignUpInfoFragment())
+                    .commit()
             }
 
         }
