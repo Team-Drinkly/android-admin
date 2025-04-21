@@ -26,9 +26,11 @@ android {
 
         buildConfigField("String", "SERVER_URL", "\"${properties["server_url"]}\"")
         buildConfigField("String", "PASS_URL", "\"${properties["pass_url"]}\"")
+        buildConfigField("String", "DATA_API_URL", "\"${properties["data_api_url"]}\"")
 
         buildConfigField("String", "KAKAO_APP_KEY", "\"${properties["kakao_key"]}\"")
         buildConfigField("String", "KAKAO_APP_KEY", "\"${properties["kakao_key"]}\"")
+        buildConfigField("String", "OPEN_DATA_KEY", "\"${properties["open_data_key"]}\"")
 
         manifestPlaceholders["kakao_native_key"] = kakaoNativeKey
     }
