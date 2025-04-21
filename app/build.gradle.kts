@@ -24,7 +24,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        buildConfigField("String", "SERVER_URL", "\"${properties["server_url"]}\"")
+        buildConfigField("String", "PASS_URL", "\"${properties["pass_url"]}\"")
+        buildConfigField("String", "DATA_API_URL", "\"${properties["data_api_url"]}\"")
+
         buildConfigField("String", "KAKAO_APP_KEY", "\"${properties["kakao_key"]}\"")
+        buildConfigField("String", "KAKAO_APP_KEY", "\"${properties["kakao_key"]}\"")
+        buildConfigField("String", "OPEN_DATA_KEY", "\"${properties["open_data_key"]}\"")
 
         manifestPlaceholders["kakao_native_key"] = kakaoNativeKey
     }
@@ -66,6 +72,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    // 카카오 로그인
+    implementation("com.kakao.sdk:v2-user:2.20.6")
+
     // api
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0") // JSON 변환
@@ -77,4 +86,7 @@ dependencies {
     // glide
     implementation("com.github.bumptech.glide:glide:4.13.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.13.0")
+
+    // dot indicator
+    implementation("com.tbuonomo:dotsindicator:5.1.0")
 }
