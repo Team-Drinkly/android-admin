@@ -121,6 +121,7 @@ class SignUpBusinessInfoFragment : Fragment() {
 
             buttonNext.setOnClickListener {
                 MyApplication.basicStoreInfo.businessRegistrationNumber = editTextBusinessNumber.text.toString()
+                viewModel.getOwnerName(mainActivity, businessNumber, openDate)
             }
         }
 
