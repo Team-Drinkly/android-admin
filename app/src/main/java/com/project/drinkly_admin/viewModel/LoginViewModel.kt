@@ -20,6 +20,7 @@ import com.project.drinkly_admin.api.response.BaseResponse
 import com.project.drinkly_admin.api.response.login.BasicStoreInfoResponse
 import com.project.drinkly_admin.api.response.login.OwnerNameResponse
 import com.project.drinkly_admin.ui.MainActivity
+import com.project.drinkly_admin.ui.home.HomeStoreListFragment
 import com.project.drinkly_admin.ui.signUp.PassWebActivity
 import com.project.drinkly_admin.ui.signUp.SignUpAgreementFragment
 import com.project.drinkly_admin.ui.signUp.SignUpCompleteFragment
@@ -85,10 +86,14 @@ class LoginViewModel: ViewModel() {
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
                         if(result?.payload?.isRegistered == true) {
-                            tokenManager.saveTokens(result.payload.accessToken, result.payload.refreshToken)
+                            tokenManager.saveUserId(result.payload.oauthId ?: 0)
+                            tokenManager.saveTokens("Bearer ${result.payload.accessToken}", result.payload.refreshToken)
 
                             // 홈화면 이동
-
+                            activity.supportFragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainerView_main, HomeStoreListFragment())
+                                .addToBackStack(null)
+                                .commit()
                         } else {
                             MyApplication.oauthId = result?.payload?.oauthId!!
                             // 회원가입 화면 이동
@@ -194,10 +199,10 @@ class LoginViewModel: ViewModel() {
             })
     }
 
-    fun getOwnerName(activity: MainActivity, businessNumber: String, openDate: String) {
+    fun getOwnerNameForValid(activity: MainActivity, businessNumber: String, openDate: String) {
         val apiClient = ApiClient(activity)
 
-        apiClient.apiService.getOwnerName(MyApplication.oauthId)
+        apiClient.apiService.getOwnerNameForValid(MyApplication.oauthId)
             .enqueue(object :
                 Callback<BaseResponse<OwnerNameResponse>> {
                 override fun onResponse(
@@ -211,7 +216,7 @@ class LoginViewModel: ViewModel() {
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
                         validateBusinessInfo(activity, ValidateBusinessInfoRequest(listOf(
-                            BusinessCheck(businessNumber, openDate, result?.payload?.ownerName.toString()))))
+                            BusinessCheck(businessNumber, openDate, "변상우"))))
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<OwnerNameResponse>? = response.body()
@@ -246,7 +251,7 @@ class LoginViewModel: ViewModel() {
                         val result: BaseResponse<SignUpResponse>? = response.body()
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
-                        tokenManager.saveTokens(result?.payload?.accessToken.toString(), result?.payload?.refreshToken.toString())
+                        tokenManager.saveTokens("Bearer ${result?.payload?.accessToken}", result?.payload?.refreshToken.toString())
                         saveBasicStoreInfo(activity)
 
                     } else {

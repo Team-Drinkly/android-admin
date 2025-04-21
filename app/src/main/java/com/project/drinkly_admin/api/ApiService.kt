@@ -48,6 +48,12 @@ interface ApiService {
 
     // ID를 통한 이름 조회
     @GET("v1/member/validate/owner/{ownerId}")
+    fun getOwnerNameForValid(
+        @Path("ownerId") ownerId: Int
+    ): Call<BaseResponse<OwnerNameResponse>>
+
+    // ID를 통한 이름 조회 (회원가입 이후)
+    @GET("v1/member/profile/owner/{ownerId}")
     fun getOwnerName(
         @Path("ownerId") ownerId: Int
     ): Call<BaseResponse<OwnerNameResponse>>
