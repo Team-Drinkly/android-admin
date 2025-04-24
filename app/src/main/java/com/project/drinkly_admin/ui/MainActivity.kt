@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,17 @@ class MainActivity : AppCompatActivity() {
         this.setStatusBarTransparent()
 
         setContentView(binding.root)
+    }
+
+    fun hideKeyboard() {
+        val currentFocusView = currentFocus
+        if (currentFocusView != null) {
+            val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(
+                currentFocusView.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
