@@ -48,6 +48,7 @@ class SignUpStoreNumberFragment : Fragment() {
 
                 mainActivity.supportFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerView_main, SignUpInfoFragment())
+                    .addToBackStack(null)
                     .commit()
             }
 
