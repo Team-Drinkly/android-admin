@@ -40,7 +40,8 @@ class SignUpBusinessInfoFragment : Fragment() {
 
         binding.run {
             editTextBusinessNumber.addTextChangedListener(object : TextWatcher {
-                private var isFormatting: Boolean = false  // 무한 루프 방지용
+                private var currentText = ""
+                private var isFormatting = false
 
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -49,58 +50,67 @@ class SignUpBusinessInfoFragment : Fragment() {
                 override fun afterTextChanged(s: Editable?) {
                     if (isFormatting) return
 
-                    val digits = s.toString().filter { it.isDigit() }
+                    val digitsOnly = s.toString().filter { it.isDigit() }
                     val maxLength = 10
-                    val limited = digits.take(maxLength)
+                    val limited = digitsOnly.take(maxLength)
 
                     val formatted = buildString {
-                        for ((i, c) in limited.withIndex()) {
-                            append(c)
+                        for (i in limited.indices) {
+                            append(limited[i])
                             if (i == 2 || i == 4) append("-")
                         }
                     }
 
+                    if (formatted == currentText) return
+
                     isFormatting = true
+                    currentText = formatted
+                    val selectionIndex = formatted.length
+
                     editTextBusinessNumber.setText(formatted)
-                    editTextBusinessNumber.setSelection(formatted.length)  // 커서 끝으로 이동
+                    editTextBusinessNumber.setSelection(selectionIndex.coerceAtMost(formatted.length))
                     isFormatting = false
 
                     // 배경 설정
-                    if (formatted.isNotEmpty()) {
+                    if (limited.isNotEmpty()) {
                         editTextBusinessNumber.setBackgroundResource(R.drawable.background_edittext_success)
                     } else {
                         editTextBusinessNumber.setBackgroundResource(R.drawable.background_edittext_default)
                     }
 
-                    businessNumber = limited
-
+                    businessNumber = limited // 하이픈 없는 숫자만 저장
                     checkEnabled()
                 }
             })
 
 
             editTextOpenDate.addTextChangedListener(object : TextWatcher {
-                private var isFormatting: Boolean = false  // 무한 루프 방지용
+                private var isFormatting = false
+                private var currentText = ""
 
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
+                override fun afterTextChanged(s: Editable?) {
                     if (isFormatting) return
 
-                    val digits = s.toString().filter { it.isDigit() }
-                    val limited = digits.take(8)  // yyyyMMdd 최대 8자리까지만 허용
+                    val digitsOnly = s.toString().filter { it.isDigit() }
+                    val limited = digitsOnly.take(8)  // yyyyMMdd 최대 8자리까지만
 
                     val formatted = buildString {
-                        for ((i, c) in limited.withIndex()) {
-                            append(c)
+                        for (i in limited.indices) {
+                            append(limited[i])
                             if (i == 3 || i == 5) append("-")  // yyyy-MM-dd 형식
                         }
                     }
 
+                    if (formatted == currentText) return  // 중복 setText 방지
+
                     isFormatting = true
+                    currentText = formatted
                     editTextOpenDate.setText(formatted)
-                    editTextOpenDate.setSelection(formatted.length)
+                    editTextOpenDate.setSelection(formatted.length.coerceAtMost(formatted.length))
                     isFormatting = false
 
                     // 배경 설정
@@ -115,13 +125,12 @@ class SignUpBusinessInfoFragment : Fragment() {
 
                     checkEnabled()
                 }
-
-                override fun afterTextChanged(s: Editable?) {}
             })
+
 
             buttonNext.setOnClickListener {
                 MyApplication.basicStoreInfo.businessRegistrationNumber = editTextBusinessNumber.text.toString()
-                viewModel.getOwnerName(mainActivity, businessNumber, openDate)
+                viewModel.getOwnerNameForValid(mainActivity, businessNumber, openDate)
             }
         }
 
@@ -150,6 +159,7 @@ class SignUpBusinessInfoFragment : Fragment() {
                     "01" -> {
                         mainActivity.supportFragmentManager.beginTransaction()
                             .replace(R.id.fragmentContainerView_main, SignUpStoreInfoFragment())
+                            .addToBackStack(null)
                             .commit()
                     }
                     "02" -> {
