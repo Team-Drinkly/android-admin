@@ -135,6 +135,7 @@ class StoreDetailInfoFragment : Fragment() {
                         instagramUrl = insta,
                         storeMainImageUrl = it?.filePath
                     )
+                    viewModel.editStoreInfo(mainActivity, MyApplication.storeId, storeInfo)
                 }
             }
 

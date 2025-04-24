@@ -7,6 +7,7 @@ import com.project.drinkly_admin.api.request.image.PresignedUrlRequest
 import com.project.drinkly_admin.api.request.image.PresignedUrlResponse
 import com.project.drinkly_admin.api.request.login.BasicStoreInfoRequest
 import com.project.drinkly_admin.api.request.login.SignUpRequest
+import com.project.drinkly_admin.api.request.store.StoreDetailRequest
 import com.project.drinkly_admin.api.response.BaseResponse
 import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.api.response.home.StoreListResponse
@@ -82,6 +83,13 @@ interface ApiService {
         @Path("storeId") storeId: Int
     ): Call<BaseResponse<StoreDetailResponse>>
 
+    // 매장 정보 수정
+    @PATCH("v1/store/o/{storeId}")
+    fun editStoreInfo(
+        @Header("Authorization") token: String,
+        @Path("storeId") storeId: Int,
+        @Body request: StoreDetailRequest
+    ): Call<BaseResponse<StoreDetailResponse>>
 
     // presigned-url 생성
     @POST("v1/store/o/presigned-url")
