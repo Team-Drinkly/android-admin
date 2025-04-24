@@ -6,6 +6,7 @@ import com.project.drinkly.api.response.login.SignUpResponse
 import com.project.drinkly_admin.api.request.login.BasicStoreInfoRequest
 import com.project.drinkly_admin.api.request.login.SignUpRequest
 import com.project.drinkly_admin.api.response.BaseResponse
+import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.api.response.home.StoreListResponse
 import com.project.drinkly_admin.api.response.login.BasicStoreInfoResponse
 import com.project.drinkly_admin.api.response.login.OwnerNameResponse
@@ -64,6 +65,13 @@ interface ApiService {
     fun getStoreList(
         @Header("Authorization") token: String,
     ): Call<BaseResponse<List<StoreListResponse>>>
+
+    // 업체 세부 정보 조회
+    @GET("v1/store/m/list/{storeId}")
+    fun getStoreDetailInfo(
+        @Header("Authorization") token: String,
+        @Path("storeId") storeId: Int
+    ): Call<BaseResponse<StoreDetailResponse>>
 
     // 업체 기본 정보 저장
     @POST("v1/store/o")

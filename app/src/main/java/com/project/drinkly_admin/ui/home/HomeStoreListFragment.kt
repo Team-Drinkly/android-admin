@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.project.drinkly_admin.R
+import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.api.response.home.StoreListResponse
 import com.project.drinkly_admin.databinding.FragmentHomeStoreListBinding
 import com.project.drinkly_admin.ui.MainActivity
@@ -27,7 +28,8 @@ class HomeStoreListFragment : Fragment() {
 
     lateinit var storeAdapter : StoreAdapter
 
-    var getStoreInfo: List<StoreListResponse>? = null
+    private var getStoreInfo: List<StoreListResponse>? = null
+    private var getStoreDetailInfo: StoreDetailResponse? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,18 +60,7 @@ class HomeStoreListFragment : Fragment() {
         storeAdapter = StoreAdapter(mainActivity, getStoreInfo).apply {
             itemClickListener = object : StoreAdapter.OnItemClickListener {
                 override fun onItemClick(position: Int) {
-                    val bundle = Bundle().apply {
-                        putInt("storeId", getStoreInfo?.get(position)?.storeId ?: 0)
-                    }
-
-                    // 전달할 Fragment 생성
-                    val  nextFragment = StoreDetailInfoMainFragment().apply {
-                        arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
-                    }
-                    mainActivity.supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView_main, nextFragment)
-                        .addToBackStack(null)
-                        .commit()
+                    viewModel.getStoreDetail(mainActivity, getStoreInfo?.get(position)?.storeId ?: 0)
                 }
             }
         }
@@ -95,6 +86,31 @@ class HomeStoreListFragment : Fragment() {
 
                 storeAdapter.updateList(getStoreInfo)
             }
+
+            storeDetailInfo.observe(viewLifecycleOwner) {
+                getStoreDetailInfo = it
+
+                checkInfo()
+            }
+        }
+    }
+
+    fun checkInfo() {
+        val isFill = getStoreDetailInfo?.storeDescription != null && getStoreDetailInfo?.availableDrinkImageUrls?.size != 0 && getStoreDetailInfo?.menuImageUrls?.size != 0 && getStoreDetailInfo?.openingHours != null && getStoreDetailInfo?.availableDays != null
+        if(isFill) {
+        } else {
+            val bundle = Bundle().apply {
+                putInt("storeId", getStoreDetailInfo?.storeId ?: 0)
+            }
+
+            // 전달할 Fragment 생성
+            val  nextFragment = StoreDetailInfoMainFragment().apply {
+                arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
+            }
+            mainActivity.supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView_main, nextFragment)
+                .addToBackStack(null)
+                .commit()
         }
     }
 
