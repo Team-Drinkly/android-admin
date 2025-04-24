@@ -103,7 +103,7 @@
         <item name="android:inputType">text</item>
         <item name="android:textColor">@color/gray9</item>
         <item name="android:textColorHint">@color/gray6</item>
-        <item name="android:background">@drawable/background_edittext_default</item>
+        <item name="android:background">@drawable/background_edittext_radius50_default</item>
         <item name="android:paddingHorizontal">16dp</item>
         <item name="android:paddingVertical">18dp</item>
     </style>

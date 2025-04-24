@@ -32,10 +32,10 @@ class SignUpStoreNumberFragment : Fragment() {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                     if(editTextStoreNumber.text.isNotEmpty()) {
-                        editTextStoreNumber.setBackgroundResource(R.drawable.background_edittext_success)
+                        editTextStoreNumber.setBackgroundResource(R.drawable.background_edittext_radius50_filled)
                         buttonNext.isEnabled = true
                     } else {
-                        editTextStoreNumber.setBackgroundResource(R.drawable.background_edittext_default)
+                        editTextStoreNumber.setBackgroundResource(R.drawable.background_edittext_radius50_default)
                         buttonNext.isEnabled = false
                     }
                 }

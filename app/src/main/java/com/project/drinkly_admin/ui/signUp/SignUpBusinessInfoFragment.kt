@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
@@ -73,9 +72,9 @@ class SignUpBusinessInfoFragment : Fragment() {
 
                     // 배경 설정
                     if (limited.isNotEmpty()) {
-                        editTextBusinessNumber.setBackgroundResource(R.drawable.background_edittext_success)
+                        editTextBusinessNumber.setBackgroundResource(R.drawable.background_edittext_radius50_filled)
                     } else {
-                        editTextBusinessNumber.setBackgroundResource(R.drawable.background_edittext_default)
+                        editTextBusinessNumber.setBackgroundResource(R.drawable.background_edittext_radius50_default)
                     }
 
                     businessNumber = limited // 하이픈 없는 숫자만 저장
@@ -115,9 +114,9 @@ class SignUpBusinessInfoFragment : Fragment() {
 
                     // 배경 설정
                     if (formatted.isNotEmpty()) {
-                        editTextOpenDate.setBackgroundResource(R.drawable.background_edittext_success)
+                        editTextOpenDate.setBackgroundResource(R.drawable.background_edittext_radius50_filled)
                     } else {
-                        editTextOpenDate.setBackgroundResource(R.drawable.background_edittext_default)
+                        editTextOpenDate.setBackgroundResource(R.drawable.background_edittext_radius50_default)
                     }
 
                     // 하이픈 없는 원본 날짜 저장
