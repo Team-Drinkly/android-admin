@@ -6,6 +6,7 @@ import com.project.drinkly.api.response.login.SignUpResponse
 import com.project.drinkly_admin.api.request.login.BasicStoreInfoRequest
 import com.project.drinkly_admin.api.request.login.SignUpRequest
 import com.project.drinkly_admin.api.response.BaseResponse
+import com.project.drinkly_admin.api.response.home.StoreListResponse
 import com.project.drinkly_admin.api.response.login.BasicStoreInfoResponse
 import com.project.drinkly_admin.api.response.login.OwnerNameResponse
 import retrofit2.Call
@@ -48,9 +49,21 @@ interface ApiService {
 
     // ID를 통한 이름 조회
     @GET("v1/member/validate/owner/{ownerId}")
+    fun getOwnerNameForValid(
+        @Path("ownerId") ownerId: Int
+    ): Call<BaseResponse<OwnerNameResponse>>
+
+    // ID를 통한 이름 조회 (회원가입 이후)
+    @GET("v1/member/profile/owner/{ownerId}")
     fun getOwnerName(
         @Path("ownerId") ownerId: Int
     ): Call<BaseResponse<OwnerNameResponse>>
+
+    // 업체 리스트 조회
+    @GET("v1/store/o/owner")
+    fun getStoreList(
+        @Header("Authorization") token: String,
+    ): Call<BaseResponse<List<StoreListResponse>>>
 
     // 업체 기본 정보 저장
     @POST("v1/store/o")

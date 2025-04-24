@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.databinding.ActivityMainBinding
+import com.project.drinkly_admin.util.MainUtil.setStatusBarTransparent
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
@@ -23,6 +24,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
+
+        this.setStatusBarTransparent()
 
         setContentView(binding.root)
     }

@@ -37,4 +37,14 @@ class TokenManager(val context: Context) {
         editor.remove("refresh_token")
         editor.apply()
     }
+
+    fun saveUserId(id: Int) {
+        val editor = sharedPreferences.edit()
+        editor.putInt("userId", id)
+        editor.apply()
+    }
+
+    fun getUserId(): Int {
+        return sharedPreferences.getInt("userId", -1)
+    }
 }
