@@ -3,6 +3,8 @@ package com.project.drinkly_admin.api
 import com.project.drinkly.api.response.login.LoginResponse
 import com.project.drinkly.api.response.login.NiceUrlResponse
 import com.project.drinkly.api.response.login.SignUpResponse
+import com.project.drinkly_admin.api.request.image.PresignedUrlRequest
+import com.project.drinkly_admin.api.request.image.PresignedUrlResponse
 import com.project.drinkly_admin.api.request.login.BasicStoreInfoRequest
 import com.project.drinkly_admin.api.request.login.SignUpRequest
 import com.project.drinkly_admin.api.response.BaseResponse
@@ -10,13 +12,20 @@ import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.api.response.home.StoreListResponse
 import com.project.drinkly_admin.api.response.login.BasicStoreInfoResponse
 import com.project.drinkly_admin.api.response.login.OwnerNameResponse
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Headers
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
+import java.io.File
 
 interface ApiService {
     // OAuth로그인
@@ -72,6 +81,21 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("storeId") storeId: Int
     ): Call<BaseResponse<StoreDetailResponse>>
+
+
+    // presigned-url 생성
+    @POST("v1/store/o/presigned-url")
+    fun getPresignedUrl(
+        @Header("Authorization") token: String,
+        @Body request: PresignedUrlRequest
+    ): Call<BaseResponse<PresignedUrlResponse>>
+
+    // presigned-url 이미지 업로드
+    @PUT
+    fun uploadFileToS3(
+        @Url url: String,
+        @Body image: RequestBody
+    ): Call<ResponseBody>
 
     // 업체 기본 정보 저장
     @POST("v1/store/o")

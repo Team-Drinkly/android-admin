@@ -16,5 +16,8 @@ class MyApplication : Application() {
             storeDetailAddress = null,
             businessRegistrationNumber = ""
         )
+
+        var storeId = 0
+        var storeName = ""
     }
 }

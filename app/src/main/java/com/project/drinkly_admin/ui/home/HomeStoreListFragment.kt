@@ -15,6 +15,7 @@ import com.project.drinkly_admin.databinding.FragmentHomeStoreListBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.home.adapter.StoreAdapter
 import com.project.drinkly_admin.ui.home.info.StoreDetailInfoMainFragment
+import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.StoreViewModel
 import com.project.drinkly_admin.viewModel.UserViewModel
 
@@ -102,11 +103,26 @@ class HomeStoreListFragment : Fragment() {
     }
 
     fun checkInfo() {
+        MyApplication.storeId = getStoreDetailInfo?.storeId ?: 0
+        MyApplication.storeName = getStoreDetailInfo?.storeName ?: ""
+
         val isFill = getStoreDetailInfo?.storeDescription != null && getStoreDetailInfo?.availableDrinkImageUrls?.size != 0 && getStoreDetailInfo?.menuImageUrls?.size != 0 && getStoreDetailInfo?.openingHours != null && getStoreDetailInfo?.availableDays != null
         if(isFill) {
+            val bundle = Bundle().apply {
+                putInt("storeId", MyApplication.storeId)
+            }
+
+            // 전달할 Fragment 생성
+            val  nextFragment = HomeFragment().apply {
+                arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
+            }
+            mainActivity.supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView_main, nextFragment)
+                .addToBackStack(null)
+                .commit()
         } else {
             val bundle = Bundle().apply {
-                putInt("storeId", getStoreDetailInfo?.storeId ?: 0)
+                putInt("storeId", MyApplication.storeId)
             }
 
             // 전달할 Fragment 생성
