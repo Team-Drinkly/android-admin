@@ -1,5 +1,7 @@
 package com.project.drinkly_admin.ui.signUp
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.databinding.FragmentSignUpStoreInfoBinding
@@ -16,6 +19,21 @@ class SignUpStoreInfoFragment : Fragment() {
 
     lateinit var binding: FragmentSignUpStoreInfoBinding
     lateinit var mainActivity: MainActivity
+
+    private val kakaoAddressLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val address = result.data?.getStringExtra("address")
+            binding.editTextStoreAddressMain.run {
+                setText(address)
+                setBackgroundResource(R.drawable.background_edittext_success)
+            }
+            checkEnabled()
+        } else {
+            println("error")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,8 +61,11 @@ class SignUpStoreInfoFragment : Fragment() {
                 override fun afterTextChanged(s: Editable?) {}
             })
 
-            editTextStoreAddressMain.setOnClickListener {
-                // 도로명 주소 검색 기능
+            editTextStoreAddressMain.run {
+                setOnClickListener {
+                    // 도로명 주소 검색 기능
+                    openKakaoAddressWebView()
+                }
             }
 
             editTextStoreAddressDetail.addTextChangedListener(object : TextWatcher {
@@ -71,6 +92,7 @@ class SignUpStoreInfoFragment : Fragment() {
 
                 mainActivity.supportFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerView_main, SignUpStoreNumberFragment())
+                    .addToBackStack(null)
                     .commit()
             }
         }
@@ -81,6 +103,11 @@ class SignUpStoreInfoFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         initView()
+    }
+
+    private fun openKakaoAddressWebView() {
+        val intent = Intent(mainActivity, KakaoAddressWebActivity::class.java)
+        kakaoAddressLauncher.launch(intent)
     }
 
     fun checkEnabled() {

@@ -46,7 +46,11 @@ class SignUpInfoFragment : Fragment() {
         binding.run {
             textViewStoreNameValue.text = MyApplication.basicStoreInfo.storeName
             textViewStoreNumberValue.text = MyApplication.basicStoreInfo.storeTel
-            textViewStoreAddressValue.text = "${MyApplication.basicStoreInfo.storeAddress}, ${MyApplication.basicStoreInfo.storeDetailAddress}"
+            if(MyApplication.basicStoreInfo.storeDetailAddress != null) {
+                textViewStoreAddressValue.text = "${MyApplication.basicStoreInfo.storeAddress}, ${MyApplication.basicStoreInfo.storeDetailAddress}"
+            } else {
+                textViewStoreAddressValue.text = "${MyApplication.basicStoreInfo.storeAddress}"
+            }
 
             toolbar.run {
                 textViewTitle.text = "입점 신청"
