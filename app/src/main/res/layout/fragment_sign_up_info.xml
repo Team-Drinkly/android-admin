@@ -63,10 +63,12 @@
         <TextView
             android:id="@+id/textView_store_name_value"
             style="@style/SubTitle2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/textView_store_name_title"
             app:layout_constraintTop_toBottomOf="@+id/textView_store_name_title" />
 
@@ -84,10 +86,12 @@
         <TextView
             android:id="@+id/textView_store_address_value"
             style="@style/SubTitle2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/textView_store_address_title"
             app:layout_constraintTop_toBottomOf="@+id/textView_store_address_title" />
 
@@ -105,10 +109,12 @@
         <TextView
             android:id="@+id/textView_store_number_value"
             style="@style/SubTitle2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/textView_store_number_title"
             app:layout_constraintTop_toBottomOf="@+id/textView_store_number_title" />
     </androidx.constraintlayout.widget.ConstraintLayout>
