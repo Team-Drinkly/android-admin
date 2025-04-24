@@ -95,14 +95,13 @@ class LoginViewModel: ViewModel() {
                                 .addToBackStack(null)
                                 .commit()
                         } else {
-                            MyApplication.oauthId = result?.payload?.oauthId!!
+                            MyApplication.oauthId = result?.payload?.oauthId ?: 0
                             // 회원가입 화면 이동
                             activity.supportFragmentManager.beginTransaction()
                                 .replace(R.id.fragmentContainerView_main, SignUpAgreementFragment())
                                 .addToBackStack(null)
                                 .commit()
                         }
-
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<LoginResponse>? = response.body()

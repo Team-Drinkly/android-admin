@@ -99,6 +99,8 @@ class HomeStoreListFragment : Fragment() {
 
     fun initView() {
         viewModel.getOwnerName(mainActivity)
+        viewModel.getStoreList(mainActivity)
+
         binding.run {
             textViewTitle.text = "사장님, 안녕하세요!"
         }
