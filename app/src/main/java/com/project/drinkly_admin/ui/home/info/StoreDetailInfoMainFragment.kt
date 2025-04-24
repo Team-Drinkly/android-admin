@@ -11,14 +11,15 @@ import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.databinding.FragmentStoreDetailInfoMainBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.util.MyApplication
+import com.project.drinkly_admin.viewModel.StoreViewModel
 import com.project.drinkly_admin.viewModel.UserViewModel
 
 class StoreDetailInfoMainFragment : Fragment() {
 
     lateinit var binding: FragmentStoreDetailInfoMainBinding
     lateinit var mainActivity: MainActivity
-    private val viewModel: UserViewModel by lazy {
-        ViewModelProvider(requireActivity())[UserViewModel::class.java]
+    private val viewModel: StoreViewModel by lazy {
+        ViewModelProvider(requireActivity())[StoreViewModel::class.java]
     }
 
     private var getStoreDetailInfo: StoreDetailResponse? = null

@@ -15,6 +15,7 @@ import com.project.drinkly_admin.databinding.FragmentHomeStoreListBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.home.adapter.StoreAdapter
 import com.project.drinkly_admin.ui.home.info.StoreDetailInfoMainFragment
+import com.project.drinkly_admin.viewModel.StoreViewModel
 import com.project.drinkly_admin.viewModel.UserViewModel
 
 
@@ -24,6 +25,9 @@ class HomeStoreListFragment : Fragment() {
     lateinit var mainActivity: MainActivity
     private val viewModel: UserViewModel by lazy {
         ViewModelProvider(requireActivity())[UserViewModel::class.java]
+    }
+    private val storeViewModel: StoreViewModel by lazy {
+        ViewModelProvider(requireActivity())[StoreViewModel::class.java]
     }
 
     lateinit var storeAdapter : StoreAdapter
@@ -60,7 +64,7 @@ class HomeStoreListFragment : Fragment() {
         storeAdapter = StoreAdapter(mainActivity, getStoreInfo).apply {
             itemClickListener = object : StoreAdapter.OnItemClickListener {
                 override fun onItemClick(position: Int) {
-                    viewModel.getStoreDetail(mainActivity, getStoreInfo?.get(position)?.storeId ?: 0)
+                    storeViewModel.getStoreDetail(mainActivity, getStoreInfo?.get(position)?.storeId ?: 0)
                 }
             }
         }
@@ -86,7 +90,9 @@ class HomeStoreListFragment : Fragment() {
 
                 storeAdapter.updateList(getStoreInfo)
             }
+        }
 
+        storeViewModel.run {
             storeDetailInfo.observe(viewLifecycleOwner) {
                 getStoreDetailInfo = it
 
