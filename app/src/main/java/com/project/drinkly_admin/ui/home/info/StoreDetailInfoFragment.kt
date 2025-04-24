@@ -16,9 +16,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.project.drinkly_admin.R
+import com.project.drinkly_admin.api.request.store.StoreDetailRequest
 import com.project.drinkly_admin.databinding.FragmentStoreDetailInfoBinding
 import com.project.drinkly_admin.ui.MainActivity
+import com.project.drinkly_admin.util.MyApplication
+import com.project.drinkly_admin.viewModel.StoreViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -31,6 +36,9 @@ class StoreDetailInfoFragment : Fragment() {
 
     lateinit var binding: FragmentStoreDetailInfoBinding
     lateinit var mainActivity: MainActivity
+    private val viewModel: StoreViewModel by lazy {
+        ViewModelProvider(requireActivity())[StoreViewModel::class.java]
+    }
 
     var isImageUpload = false
     var storeMainImage: File? = null
@@ -78,6 +86,9 @@ class StoreDetailInfoFragment : Fragment() {
             insets
         }
 
+        initView()
+        observeViewModel()
+
         binding.run {
             scrollView.setOnTouchListener { v, event ->
                 mainActivity.hideKeyboard()
@@ -100,36 +111,52 @@ class StoreDetailInfoFragment : Fragment() {
 
             editTextStoreDescription.addTextChangedListener {
                 checkComplete()
-                if(editTextStoreDescription.text.isNotEmpty()) {
-                    editTextStoreDescription.setBackgroundResource(R.drawable.background_edittext_radius10_filled)
-                } else {
-                    editTextStoreDescription.setBackgroundResource(R.drawable.background_edittext_radius10_default)
-                }
             }
 
             editTextStoreInstagram.addTextChangedListener {
-                if(editTextStoreInstagram.text.isNotEmpty()) {
-                    editTextStoreInstagram.setBackgroundResource(R.drawable.background_edittext_radius10_filled)
-                } else {
-                    editTextStoreInstagram.setBackgroundResource(R.drawable.background_edittext_radius10_default)
-                }
+                checkComplete()
             }
 
             buttonSave.setOnClickListener {
-
+                viewModel.getPresignedUrl(mainActivity, storeMainImage!!)
             }
         }
 
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        initView()
+    fun observeViewModel() {
+        viewModel.run {
+            presignedUrl.observe(viewLifecycleOwner) {
+                binding.run {
+                    var insta = if(editTextStoreInstagram.text.isNotEmpty()) { "https://www.instagram.com/${editTextStoreInstagram.text.toString()}" } else { null }
+                    var storeInfo = StoreDetailRequest(
+                        storeDescription = editTextStoreDescription.text.toString(),
+                        instagramUrl = insta,
+                        storeMainImageUrl = it?.filePath
+                    )
+                }
+            }
+
+            isEdit.observe(viewLifecycleOwner) {
+                if(it == true) {
+                    fragmentManager?.popBackStack()
+                }
+            }
+        }
     }
 
     fun initView() {
         binding.run {
+            editTextStoreDescription.setText(viewModel.storeDetailInfo.value?.storeDescription)
+            editTextStoreInstagram.setText(viewModel.storeDetailInfo.value?.instagramUrl)
+            if(viewModel.storeDetailInfo.value?.storeMainImageUrl != null) {
+                Glide.with(mainActivity).load(viewModel.storeDetailInfo.value?.storeMainImageUrl).into(imageViewStoreImage)
+                layoutStoreImage.visibility = View.INVISIBLE
+            } else {
+                layoutStoreImage.visibility = View.VISIBLE
+            }
+
             toolbar.run {
                 textViewTitle.text = "매장 정보"
                 buttonBack.setOnClickListener {
@@ -137,10 +164,24 @@ class StoreDetailInfoFragment : Fragment() {
                 }
             }
         }
+
+        checkComplete()
     }
 
     fun checkComplete() {
         binding.run {
+            if(editTextStoreDescription.text.isNotEmpty()) {
+                editTextStoreDescription.setBackgroundResource(R.drawable.background_edittext_radius10_filled)
+            } else {
+                editTextStoreDescription.setBackgroundResource(R.drawable.background_edittext_radius10_default)
+            }
+
+            if(editTextStoreInstagram.text.isNotEmpty()) {
+                editTextStoreInstagram.setBackgroundResource(R.drawable.background_edittext_radius10_filled)
+            } else {
+                editTextStoreInstagram.setBackgroundResource(R.drawable.background_edittext_radius10_default)
+            }
+
             buttonSave.isEnabled =
                 storeMainImage != null && editTextStoreDescription.text.isNotEmpty()
         }
