@@ -1,6 +1,7 @@
 package com.project.drinkly_admin.util
 
 import android.app.Activity
+import android.content.res.Resources
 import android.os.Build
 import android.view.View
 import android.view.WindowInsets
@@ -43,4 +44,7 @@ object MainUtil {
                     )
         }
     }
+
+    fun Float.fromDpToPx(): Int =
+        (this * Resources.getSystem().displayMetrics.density).toInt()
 }

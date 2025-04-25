@@ -47,6 +47,10 @@ class StoreDetailInfoMainFragment : Fragment() {
 
             buttonAvailableDrink.setOnClickListener {
                 // 제공하는 주류 등록 화면으로 이동
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, StoreDetailAvailableDrinksFragment())
+                    .addToBackStack(null)
+                    .commit()
             }
 
             buttonMenu.setOnClickListener {
