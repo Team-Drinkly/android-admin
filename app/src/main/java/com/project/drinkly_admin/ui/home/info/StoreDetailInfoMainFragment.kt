@@ -55,6 +55,10 @@ class StoreDetailInfoMainFragment : Fragment() {
 
             buttonMenu.setOnClickListener {
                 // 메뉴판 등록 화면으로 이동
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, StoreMenuFragment())
+                    .addToBackStack(null)
+                    .commit()
             }
 
             buttonOpenTime.setOnClickListener {
