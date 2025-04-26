@@ -106,8 +106,7 @@ class HomeStoreListFragment : Fragment() {
         MyApplication.storeId = getStoreDetailInfo?.storeId ?: 0
         MyApplication.storeName = getStoreDetailInfo?.storeName ?: ""
 
-        val isFill = getStoreDetailInfo?.storeDescription != null && getStoreDetailInfo?.availableDrinkImageUrls?.size != 0 && getStoreDetailInfo?.menuImageUrls?.size != 0 && getStoreDetailInfo?.openingHours != null && getStoreDetailInfo?.availableDays != null
-        if(isFill) {
+        if(getStoreDetailInfo?.isReady == true) {
             val bundle = Bundle().apply {
                 putInt("storeId", MyApplication.storeId)
             }

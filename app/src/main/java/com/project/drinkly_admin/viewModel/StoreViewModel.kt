@@ -35,7 +35,7 @@ class StoreViewModel : ViewModel() {
         val apiClient = ApiClient(activity)
         val tokenManager = TokenManager(activity)
 
-        apiClient.apiService.getStoreDetailInfo(tokenManager.getAccessToken().toString(), storeId)
+        apiClient.apiService.getStoreDetailInfo(storeId)
             .enqueue(object :
                 Callback<BaseResponse<StoreDetailResponse>> {
                 override fun onResponse(

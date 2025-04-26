@@ -79,7 +79,6 @@ interface ApiService {
     // 업체 세부 정보 조회
     @GET("v1/store/m/list/{storeId}")
     fun getStoreDetailInfo(
-        @Header("Authorization") token: String,
         @Path("storeId") storeId: Int
     ): Call<BaseResponse<StoreDetailResponse>>
 
