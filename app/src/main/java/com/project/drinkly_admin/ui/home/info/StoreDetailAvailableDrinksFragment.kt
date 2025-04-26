@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.databinding.FragmentStoreDetailAvailableDrinksBinding
 import com.project.drinkly_admin.ui.MainActivity
@@ -92,6 +93,11 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        initView()
+    }
+
     fun initAdapter() {
         availableDrinkAdapter =
             AvailableDrinkAdapter(mainActivity, availableDrinksImage, availableDrinksName).apply {
@@ -115,6 +121,19 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                 )
             }
         }
+    }
+
+    fun initView() {
+        binding.run {
+            toolbar.run {
+                textViewTitle.text = "멤버십 제공 주류"
+                buttonBack.setOnClickListener {
+                    fragmentManager?.popBackStack()
+                }
+            }
+        }
+
+        checkComplete()
     }
 
     internal class GridSpacingItemDecoration(
