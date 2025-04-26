@@ -22,6 +22,7 @@ import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.request.store.StoreDetailRequest
 import com.project.drinkly_admin.databinding.FragmentStoreDetailInfoBinding
 import com.project.drinkly_admin.ui.MainActivity
+import com.project.drinkly_admin.util.MainUtil.updateViewPositionForKeyboard
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.StoreViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -82,7 +83,7 @@ class StoreDetailInfoFragment : Fragment() {
         ViewCompat.setOnApplyWindowInsetsListener(requireActivity().window.decorView.rootView) { _, insets ->
             val sysBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
-            updateViewPositionForKeyboard(imeHeight - sysBarInsets.bottom)
+            updateViewPositionForKeyboard(binding.scrollView, imeHeight - sysBarInsets.bottom)
             insets
         }
 
@@ -186,17 +187,6 @@ class StoreDetailInfoFragment : Fragment() {
             buttonSave.isEnabled =
                 storeMainImage != null && editTextStoreDescription.text.isNotEmpty()
         }
-    }
-
-    private fun updateViewPositionForKeyboard(keyboardHeight: Int) {
-        val layoutParams =
-            binding.scrollView.layoutParams as ConstraintLayout.LayoutParams
-        if (keyboardHeight > 0) {
-            layoutParams.bottomMargin = keyboardHeight
-        } else {
-            layoutParams.bottomMargin = 0
-        }
-        binding.scrollView.layoutParams = layoutParams
     }
 
     private fun convertResizeImage(imageUri: Uri): Uri {

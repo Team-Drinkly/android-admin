@@ -131,6 +131,16 @@
         <item name="android:paddingVertical">18dp</item>
     </style>
 
+    <style name="TimeEditText" parent="body2">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:inputType">text</item>
+        <item name="android:textColor">@color/gray9</item>
+        <item name="android:textColorHint">@color/gray6</item>
+        <item name="android:background">@drawable/background_edittext_radius10_default</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">8dp</item>
+    </style>
+
     <!-- 이미지 round style - 20dp -->
     <style name="RoundSector20">
         <item name="cornerSizeTopLeft">20dp</item>

@@ -63,6 +63,10 @@ class StoreDetailInfoMainFragment : Fragment() {
 
             buttonOpenTime.setOnClickListener {
                 // 영업시간 설정 화면으로 이동
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, StoreOpenTimeFragment())
+                    .addToBackStack(null)
+                    .commit()
             }
 
             buttonAvailableDate.setOnClickListener {

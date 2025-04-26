@@ -6,6 +6,7 @@ import android.os.Build
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import androidx.constraintlayout.widget.ConstraintLayout
 
 object MainUtil {
     // 투명한 status bar
@@ -47,4 +48,29 @@ object MainUtil {
 
     fun Float.fromDpToPx(): Int =
         (this * Resources.getSystem().displayMetrics.density).toInt()
+
+    fun updateViewPositionForKeyboard(targetView: View, keyboardHeight: Int) {
+        val layoutParams = targetView.layoutParams
+        if (layoutParams is ConstraintLayout.LayoutParams) {
+            if (keyboardHeight > 0) {
+                layoutParams.bottomMargin = keyboardHeight
+            } else {
+                layoutParams.bottomMargin = 0
+            }
+            targetView.layoutParams = layoutParams
+        }
+    }
+
+    // 시간 단위 변환
+    fun formatToTime(input: String): String {
+        val digits = input.filter { it.isDigit() }.take(4) // 최대 4자리까지만 허용 (HHmm)
+
+        return when (digits.length) {
+            0 -> ""
+            1, 2 -> digits
+            3 -> "${digits.substring(0, 2)}:${digits.substring(2)}"
+            4 -> "${digits.substring(0, 2)}:${digits.substring(2)}"
+            else -> digits
+        }
+    }
 }

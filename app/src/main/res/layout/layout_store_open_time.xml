@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    android:background="@drawable/background_white_radius10">
+
+
+    <LinearLayout
+        android:id="@+id/layout_days"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView_days"
+            style="@style/SubTitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="월요일" />
+
+        <TextView
+            android:id="@+id/textView_isClose"
+            style="@style/SubTitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray7"
+            android:text="휴무일" />
+
+        <ImageView
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            app:srcCompat="@drawable/ic_checkbox_unchecked_gray7" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_time"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_days">
+
+        <EditText
+            android:id="@+id/editText_store_open_time"
+            style="@style/TimeEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="09:00"
+            android:textAlignment="center"
+            android:inputType="textMultiLine" />
+
+        <TextView
+            android:id="@+id/textView_description1"
+            style="@style/SubTitle3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/gray6"
+            android:text="부터" />
+
+        <EditText
+            android:id="@+id/editText_store_close_time"
+            style="@style/TimeEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:hint="09:00"
+            android:textAlignment="center"
+            android:inputType="textMultiLine" />
+
+        <TextView
+            android:id="@+id/textView_description2"
+            style="@style/SubTitle3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/gray6"
+            android:text="까지" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
