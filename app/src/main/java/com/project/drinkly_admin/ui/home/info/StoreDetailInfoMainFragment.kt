@@ -10,6 +10,7 @@ import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.databinding.FragmentStoreDetailInfoMainBinding
 import com.project.drinkly_admin.ui.MainActivity
+import com.project.drinkly_admin.ui.home.HomeFragment
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.StoreViewModel
 import com.project.drinkly_admin.viewModel.UserViewModel
@@ -71,6 +72,10 @@ class StoreDetailInfoMainFragment : Fragment() {
 
             buttonAvailableDate.setOnClickListener {
                 // 멤버십 이용 가능 요일 설정 화면으로 이동
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, StoreAvailableDaysFragment())
+                    .addToBackStack(null)
+                    .commit()
             }
 
             buttonNext.setOnClickListener {
