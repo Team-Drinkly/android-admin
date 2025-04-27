@@ -13,14 +13,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.project.drinkly_admin.R
+import com.project.drinkly_admin.api.request.image.NewImageUrl
+import com.project.drinkly_admin.api.request.image.StoreImageRequest
+import com.project.drinkly_admin.api.request.store.StoreDetailRequest
+import com.project.drinkly_admin.api.response.home.StoreImageInfo
 import com.project.drinkly_admin.databinding.FragmentStoreMenuBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.home.adapter.AvailableDrinkAdapter
 import com.project.drinkly_admin.ui.home.adapter.MenuAdapter
 import com.project.drinkly_admin.util.MainUtil.fromDpToPx
+import com.project.drinkly_admin.util.MyApplication
+import com.project.drinkly_admin.viewModel.StoreViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -29,8 +40,14 @@ class StoreMenuFragment : Fragment() {
 
     lateinit var binding: FragmentStoreMenuBinding
     lateinit var mainActivity: MainActivity
+    private val viewModel: StoreViewModel by lazy {
+        ViewModelProvider(requireActivity())[StoreViewModel::class.java]
+    }
 
-    var menuImages: MutableList<File>? = mutableListOf()
+    var previousMenuImages: List<StoreImageInfo>? = mutableListOf()
+    var newMenuImages: MutableList<File>? = mutableListOf()
+    var removedMenuImages: MutableList<Int>? = mutableListOf()
+    var images: MutableList<Any>? = mutableListOf()
 
     lateinit var menuAdapter: MenuAdapter
 
@@ -49,16 +66,16 @@ class StoreMenuFragment : Fragment() {
                 println("image: ${compressedFile}")
                 // 파일이 정상적으로 생성되었는지 확인
                 if (compressedFile.exists() && compressedFile.length() > 0) {
-                    menuImages?.add(compressedFile)
+                    newMenuImages?.add(compressedFile)
+                    images?.add(compressedFile)
 
-                    menuAdapter.updateList(menuImages)
+                    menuAdapter.updateList(images)
+                    println(images)
 
                     checkComplete()
                 } else {
                     Log.e("ImageCompression", "압축된 파일이 존재하지 않거나 비어 있습니다.")
                 }
-
-                println("image: ${menuImages}")
             } else {
                 Log.d("PhotoPicker", "No media selected")
             }
@@ -73,24 +90,67 @@ class StoreMenuFragment : Fragment() {
         mainActivity = activity as MainActivity
 
         initAdapter()
+        observeViewModel()
 
         binding.run {
             buttonSave.setOnClickListener {
-
+                if(!newMenuImages.isNullOrEmpty()) {
+                    viewModel.getPresignedUrlBatch(mainActivity, newMenuImages!!)
+                } else {
+                    var storeInfo =
+                        StoreImageRequest(
+                            type = "menu",
+                            newImageUrls = emptyList(),
+                            removeImageIds = removedMenuImages ?: emptyList()
+                        )
+                    viewModel.editStoreImage(mainActivity, MyApplication.storeId, storeInfo)
+                }
             }
         }
 
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        initView()
+    }
+
+    fun initView() {
+        binding.run {
+            toolbar.run {
+                textViewTitle.text = "메뉴판"
+                buttonBack.setOnClickListener {
+                    fragmentManager?.popBackStack()
+                }
+            }
+        }
+    }
+
     fun initAdapter() {
+        if(!viewModel.storeDetailInfo.value?.menuImageUrls.isNullOrEmpty()) {
+            previousMenuImages = viewModel.storeDetailInfo.value?.menuImageUrls
+            images = viewModel.storeDetailInfo.value?.menuImageUrls?.map { it.imageUrl }?.toMutableList()
+        }
+
         menuAdapter =
-            MenuAdapter(mainActivity, menuImages).apply {
+            MenuAdapter(mainActivity, images).apply {
                 deleteClickListener = object : MenuAdapter.OnItemDeleteClickListener {
                     override fun onDeleteClick(position: Int) {
                         // 이미지 삭제
-                        menuImages?.removeAt(position -1)
-                        updateList(menuImages)
+                        if(images?.get(position -1) is String) {
+                            var imageId = previousMenuImages?.find { it.imageUrl == images?.get(position -1) }?.imageId
+                            if (imageId != null) {
+                                removedMenuImages?.add(imageId)
+                            }
+                        } else if(images?.get(position -1) is File) {
+                            (images?.get(position - 1) as? File)?.let { file ->
+                                newMenuImages?.remove(file)
+                            }
+                        }
+                        println(removedMenuImages)
+                        images?.removeAt(position -1)
+                        updateList(images)
                         checkComplete()
                     }
                 }
@@ -116,9 +176,42 @@ class StoreMenuFragment : Fragment() {
         }
     }
 
+    fun observeViewModel() {
+        viewModel.run {
+            presignedUrlBatch.observe(viewLifecycleOwner) { presignedList ->
+                if (!presignedList.isNullOrEmpty()) {
+                    val mappedNewImageUrls = presignedList.mapIndexed { index, newImageUrl ->
+                        NewImageUrl(
+                            imageUrl = newImageUrl.filePath,
+                            description = "메뉴판${index + 1}"
+                        )
+                    }
+
+                    MyApplication.storeId?.let { storeId ->
+                        val storeInfo = StoreImageRequest(
+                            type = "menu",
+                            newImageUrls = mappedNewImageUrls,
+                            removeImageIds = removedMenuImages ?: emptyList()
+                        )
+
+                        viewModel.editStoreImage(mainActivity, storeId, storeInfo)
+                    } ?: run {
+                        Log.e("StoreMenuFragment", "storeId is null")
+                    }
+
+                    // ➡️ LiveData 값 초기화는 observe 바깥에서 안전하게 post 해줄 것
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        presignedUrlBatch.postValue(null)
+                    }
+                }
+            }
+
+        }
+    }
+
     fun checkComplete() {
         binding.run {
-            if((menuImages?.size ?: 0) > 0) {
+            if((images?.size ?: 0) > 0) {
                 buttonSave.isEnabled = true
             } else {
                 buttonSave.isEnabled = false

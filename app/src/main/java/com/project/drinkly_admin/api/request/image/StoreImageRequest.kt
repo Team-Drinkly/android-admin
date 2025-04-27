@@ -1,0 +1,12 @@
+package com.project.drinkly_admin.api.request.image
+
+data class StoreImageRequest(
+    val type: String,
+    val newImageUrls: List<NewImageUrl>,
+    val removeImageIds: List<Int>
+)
+
+data class NewImageUrl(
+    val imageUrl: String,
+    val description: String
+)

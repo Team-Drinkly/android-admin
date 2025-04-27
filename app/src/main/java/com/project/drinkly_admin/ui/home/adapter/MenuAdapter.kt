@@ -1,6 +1,7 @@
 package com.project.drinkly_admin.ui.home.adapter
 
 import android.content.Context
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,7 @@ import java.io.File
 
 class MenuAdapter(
     private var activity: MainActivity,
-    private var images: List<File>?
+    private var images: List<Any>?
 ) :
     RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
 
@@ -30,7 +31,7 @@ class MenuAdapter(
         fun onGalleryClick(position: Int)
     }
 
-    fun updateList(newImages: List<File>?) {
+    fun updateList(newImages: List<Any>?) {
         images = newImages
         notifyDataSetChanged()
     }
@@ -53,13 +54,29 @@ class MenuAdapter(
                     galleryClickListener?.onGalleryClick(position)
                 }
             } else {
+                println("position : ${position - 1}")
                 buttonDelete.visibility = View.VISIBLE
                 imageViewGallery.visibility = View.GONE
 
                 // 이미지 로딩
-                Glide.with(activity)
-                    .load(images?.get(position - 1))
-                    .into(imageViewMenu)
+                when (images?.get(position - 1)) {
+                    is File -> {
+                        val file = images?.get(position - 1) as File
+                        Glide.with(activity)
+                            .load(file)
+                            .into(imageViewMenu)
+                    }
+                    is String -> {
+                        println("string")
+                        Glide.with(activity)
+                            .load(images?.get(position - 1))
+                            .into(imageViewMenu)
+                    }
+                    else -> {
+                        println("else")
+                        imageViewMenu.setImageResource(R.drawable.background_gray3_radius20)
+                    }
+                }
             }
         }
     }

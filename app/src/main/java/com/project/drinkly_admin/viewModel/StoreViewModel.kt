@@ -7,8 +7,10 @@ import com.project.drinkly_admin.BuildConfig
 import com.project.drinkly_admin.api.ApiClient
 import com.project.drinkly_admin.api.PresignedUrlApiClient
 import com.project.drinkly_admin.api.TokenManager
+import com.project.drinkly_admin.api.request.image.PresignedUrlBatchRequest
 import com.project.drinkly_admin.api.request.image.PresignedUrlRequest
 import com.project.drinkly_admin.api.request.image.PresignedUrlResponse
+import com.project.drinkly_admin.api.request.image.StoreImageRequest
 import com.project.drinkly_admin.api.request.store.StoreDetailRequest
 import com.project.drinkly_admin.api.response.BaseResponse
 import com.project.drinkly_admin.api.response.home.StoreDetailResponse
@@ -30,6 +32,7 @@ class StoreViewModel : ViewModel() {
     var isEdit: MutableLiveData<Boolean> = MutableLiveData()
 
     var presignedUrl: MutableLiveData<PresignedUrlResponse> = MutableLiveData()
+    var presignedUrlBatch: MutableLiveData<List<PresignedUrlResponse>> = MutableLiveData()
 
     fun getStoreDetail(activity: MainActivity, storeId: Int) {
         val apiClient = ApiClient(activity)
@@ -105,6 +108,45 @@ class StoreViewModel : ViewModel() {
             })
     }
 
+    fun editStoreImage(activity: MainActivity, storeId: Int, storeImageInfo: StoreImageRequest) {
+        val apiClient = ApiClient(activity)
+        val tokenManager = TokenManager(activity)
+
+        apiClient.apiService.editStoreImage(tokenManager.getAccessToken().toString(), storeId, storeImageInfo)
+            .enqueue(object :
+                Callback<BaseResponse<StoreDetailResponse>> {
+                override fun onResponse(
+                    call: Call<BaseResponse<StoreDetailResponse>>,
+                    response: Response<BaseResponse<StoreDetailResponse>>
+                ) {
+                    Log.d("DrinklyViewModel", "onResponse 성공: --" + response.body().toString())
+                    if (response.isSuccessful) {
+                        // 정상적으로 통신이 성공된 경우
+                        val result: BaseResponse<StoreDetailResponse>? = response.body()
+                        Log.d("DrinklyViewModel", "onResponse 성공 - : " + result?.toString())
+
+                        storeDetailInfo.value = result?.payload!!
+
+                        activity.supportFragmentManager.popBackStack()
+                    } else {
+                        // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
+                        var result: BaseResponse<StoreDetailResponse>? = response.body()
+                        Log.d("DrinklyViewModel", "onResponse 실패: " + response.body())
+                        val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
+                        Log.d("DrinklyViewModel", "Error Response: $errorBody")
+
+                        isEdit.value = false
+                    }
+                }
+
+                override fun onFailure(call: Call<BaseResponse<StoreDetailResponse>>, t: Throwable) {
+                    // 통신 실패
+                    Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+                    isEdit.value = false
+                }
+            })
+    }
+
     fun getPresignedUrl(activity: MainActivity, image: File) {
         val apiClient = ApiClient(activity)
         val tokenManager = TokenManager(activity)
@@ -122,7 +164,7 @@ class StoreViewModel : ViewModel() {
                         val result: BaseResponse<PresignedUrlResponse>? = response.body()
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
-                        savePresignedUrlImage(activity, result?.payload ?: PresignedUrlResponse("", ""), image)
+                        savePresignedUrlImage(activity, result?.payload ?: PresignedUrlResponse("", ""), image) {}
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<PresignedUrlResponse>? = response.body()
@@ -140,7 +182,59 @@ class StoreViewModel : ViewModel() {
             })
     }
 
-    fun savePresignedUrlImage(activity: MainActivity, presignedUrlData: PresignedUrlResponse, image: File) {
+    fun getPresignedUrlBatch(activity: MainActivity, images: List<File>) {
+        val apiClient = ApiClient(activity)
+        val tokenManager = TokenManager(activity)
+
+        val request = List(images.size) {
+            PresignedUrlRequest(
+                prefix = "${MyApplication.storeName}/availableDrinks",
+                fileName = "availableDrinks"
+            )
+        }
+
+        apiClient.apiService.getPresignedUrlBatch(
+            tokenManager.getAccessToken().toString(),
+            PresignedUrlBatchRequest(request)
+        ).enqueue(object : Callback<BaseResponse<List<PresignedUrlResponse>>> {
+
+            override fun onResponse(
+                call: Call<BaseResponse<List<PresignedUrlResponse>>>,
+                response: Response<BaseResponse<List<PresignedUrlResponse>>>
+            ) {
+                if (response.isSuccessful) {
+                    val result = response.body()?.payload ?: emptyList()
+
+                    if (result.size == images.size) {
+                        var successCount = 0
+
+                        result.zip(images).forEachIndexed { index, (urlData, imageFile) ->
+                            savePresignedUrlImage(activity, urlData, imageFile) {
+                                successCount++
+
+                                // 모두 완료되면 LiveData에 할당
+                                if (successCount == images.size) {
+                                    presignedUrlBatch.value = result
+                                }
+                            }
+                        }
+                    } else {
+                        Log.e("DrinklyViewModel", "URL 수와 이미지 수가 일치하지 않습니다.")
+                    }
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("DrinklyViewModel", "Presigned 요청 실패: $errorBody")
+                }
+            }
+
+            override fun onFailure(call: Call<BaseResponse<List<PresignedUrlResponse>>>, t: Throwable) {
+                Log.e("DrinklyViewModel", "Presigned 요청 실패: ${t.message}")
+            }
+        })
+    }
+
+
+    fun savePresignedUrlImage(activity: MainActivity, presignedUrlData: PresignedUrlResponse, image: File, onSuccess: () -> Unit) {
         val apiClient = PresignedUrlApiClient(activity)
 
         val requestBody = image.asRequestBody("image/jpeg".toMediaType())
@@ -159,6 +253,8 @@ class StoreViewModel : ViewModel() {
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
                         presignedUrl.value = presignedUrlData
+                        onSuccess()
+
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: ResponseBody? = response.body()
