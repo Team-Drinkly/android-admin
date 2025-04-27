@@ -199,9 +199,10 @@ class StoreMenuFragment : Fragment() {
                         Log.e("StoreMenuFragment", "storeId is null")
                     }
 
-                    // ➡️ LiveData 값 초기화는 observe 바깥에서 안전하게 post 해줄 것
+                    // liveData 값 초기화
                     viewLifecycleOwner.lifecycleScope.launch {
                         presignedUrlBatch.postValue(null)
+                        presignedUrl.postValue(null)
                     }
                 }
             }

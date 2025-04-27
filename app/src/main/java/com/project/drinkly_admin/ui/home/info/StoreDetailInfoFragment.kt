@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.request.store.StoreDetailRequest
@@ -25,6 +26,7 @@ import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.util.MainUtil.updateViewPositionForKeyboard
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.StoreViewModel
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -137,15 +139,28 @@ class StoreDetailInfoFragment : Fragment() {
 
     fun observeViewModel() {
         viewModel.run {
-            presignedUrl.observe(viewLifecycleOwner) {
-                binding.run {
-                    var insta = if(editTextStoreInstagram.text.isNotEmpty()) { "https://www.instagram.com/${editTextStoreInstagram.text.toString()}" } else { null }
-                    var storeInfo = StoreDetailRequest(
-                        storeDescription = editTextStoreDescription.text.toString(),
-                        instagramUrl = insta,
-                        storeMainImageUrl = it?.filePath
-                    )
-                    viewModel.editStoreInfo(mainActivity, MyApplication.storeId, storeInfo)
+            presignedUrl.observe(viewLifecycleOwner) { presignedUrlData ->
+                if (presignedUrlData != null) {
+                    binding.run {
+                        val insta = if (editTextStoreInstagram.text.isNotEmpty()) {
+                            "https://www.instagram.com/${editTextStoreInstagram.text.toString()}"
+                        } else {
+                            null
+                        }
+                        val storeInfo = StoreDetailRequest(
+                            storeDescription = editTextStoreDescription.text.toString(),
+                            instagramUrl = insta,
+                            storeMainImageUrl = presignedUrlData.filePath
+                        )
+
+                        viewModel.editStoreInfo(mainActivity, MyApplication.storeId, storeInfo)
+                    }
+                    
+                    // liveData 값 초기화
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        presignedUrlBatch.postValue(null)
+                        presignedUrl.postValue(null)
+                    }
                 }
             }
         }
