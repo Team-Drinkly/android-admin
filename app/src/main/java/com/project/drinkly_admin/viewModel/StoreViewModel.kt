@@ -84,7 +84,8 @@ class StoreViewModel : ViewModel() {
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
                         storeDetailInfo.value = result?.payload!!
-                        isEdit.value = true
+
+                        activity.supportFragmentManager.popBackStack()
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<StoreDetailResponse>? = response.body()

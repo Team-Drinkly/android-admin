@@ -19,6 +19,9 @@ import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.util.MainUtil
 import com.project.drinkly_admin.util.MainUtil.updateViewPositionForKeyboard
 import com.project.drinkly_admin.viewModel.StoreViewModel
+import androidx.core.view.isVisible
+import com.project.drinkly_admin.api.request.store.StoreDetailRequest
+import com.project.drinkly_admin.util.MyApplication
 
 class StoreOpenTimeFragment : Fragment() {
 
@@ -30,6 +33,19 @@ class StoreOpenTimeFragment : Fragment() {
 
     var isFirstOpenTimeInputDone = false
     var isFirstCloseTimeInputDone = false
+
+    private val dayIdMap by lazy {
+        mapOf(
+            "MONDAY" to binding.layoutStoreMonOpenTime,
+            "TUESDAY" to binding.layoutStoreTueOpenTime,
+            "WEDNESDAY" to binding.layoutStoreWedOpenTime,
+            "THURSDAY" to binding.layoutStoreThuOpenTime,
+            "FRIDAY" to binding.layoutStoreFriOpenTime,
+            "SATURDAY" to binding.layoutStoreSatOpenTime,
+            "SUNDAY" to binding.layoutStoreSunOpenTime
+        )
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +70,14 @@ class StoreOpenTimeFragment : Fragment() {
                 mainActivity.hideKeyboard()
                 false
             }
+
+            buttonSave.setOnClickListener {
+                var storeInfo = StoreDetailRequest(
+                    openingHours = collectOpeningHours()
+                )
+
+                viewModel.editStoreInfo(mainActivity, MyApplication.storeId, storeInfo)
+            }
         }
 
         return binding.root
@@ -66,11 +90,10 @@ class StoreOpenTimeFragment : Fragment() {
 
     fun initView() {
         binding.run {
+            applyDefaultValue()
             val openHours = viewModel.storeDetailInfo.value?.openingHours
             if(openHours != null) {
                applyOpeningHours(openHours)
-            } else {
-                applyDefaultValue()
             }
 
             toolbar.run {
@@ -109,44 +132,67 @@ class StoreOpenTimeFragment : Fragment() {
     }
 
     private fun applyOpeningHours(openingHours: List<StoreOpeningHour>) {
-        val dayIdMap = mapOf(
-            "MONDAY" to binding.layoutStoreMonOpenTime,
-            "TUESDAY" to binding.layoutStoreTueOpenTime,
-            "WEDNESDAY" to binding.layoutStoreWedOpenTime,
-            "THURSDAY" to binding.layoutStoreThuOpenTime,
-            "FRIDAY" to binding.layoutStoreFriOpenTime,
-            "SATURDAY" to binding.layoutStoreThuOpenTime,
-            "SUNDAY" to binding.layoutStoreFriOpenTime
-        )
-
         for (dayInfo in openingHours) {
             val layout = dayIdMap[dayInfo.day] ?: continue
 
             layout.run {
                 if (dayInfo.isOpen == true) {
-                    checkbox.setImageResource(R.drawable.ic_checkbox_checked)
+                    checkbox.setImageResource(R.drawable.ic_checkbox_unchecked_gray7)
                     layoutTime.visibility = View.VISIBLE
                     editTextStoreOpenTime.setText(dayInfo.openTime ?: "")
                     editTextStoreCloseTime.setText(dayInfo.closeTime ?: "")
                 } else {
-                    checkbox.setImageResource(R.drawable.ic_checkbox_unchecked_gray7)
+                    checkbox.setImageResource(R.drawable.ic_checkbox_checked)
                     layoutTime.visibility = View.GONE
-                }
-
-                checkbox.setOnClickListener {
-                    val isNowVisible = layoutTime.visibility == View.VISIBLE
-                    if (isNowVisible) {
-                        layoutTime.visibility = View.GONE
-                        checkbox.setImageResource(R.drawable.ic_checkbox_unchecked_gray7)
-                        editTextStoreOpenTime.setText("")
-                        editTextStoreCloseTime.setText("")
-                    } else {
-                        layoutTime.visibility = View.VISIBLE
-                        checkbox.setImageResource(R.drawable.ic_checkbox_checked)
-                    }
                 }
             }
         }
+    }
+
+    private fun validateOpeningHours(): Boolean {
+        dayIdMap.values.forEach { layout ->
+            val isOpen = layout.layoutTime.visibility == View.VISIBLE
+            val openTimeFilled = layout.editTextStoreOpenTime.text.length == 5
+            val closeTimeFilled = layout.editTextStoreCloseTime.text.length == 5
+
+            if (isOpen) {
+                if (!openTimeFilled || !closeTimeFilled) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    private fun updateSaveButtonState() {
+        binding.buttonSave.isEnabled = validateOpeningHours()
+    }
+
+    private fun collectOpeningHours(): List<OpeningHour> {
+        val openingHours = mutableListOf<OpeningHour>()
+
+        val dayKeyList = listOf(
+            "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"
+        )
+
+        dayKeyList.forEach { dayKey ->
+            val layout = dayIdMap[dayKey] ?: return@forEach
+
+            val isOpen = layout.layoutTime.isVisible
+            val openTime = layout.editTextStoreOpenTime.text.toString().takeIf { it.isNotBlank() }
+            val closeTime = layout.editTextStoreCloseTime.text.toString().takeIf { it.isNotBlank() }
+
+            val openingHour = OpeningHour(
+                day = dayKey,
+                isOpen = isOpen,
+                openTime = if (isOpen) openTime else null,
+                closeTime = if (isOpen) closeTime else null
+            )
+
+            openingHours.add(openingHour)
+        }
+
+        return openingHours
     }
 
     private fun setupOpenTimeSync() {
@@ -197,6 +243,8 @@ class StoreOpenTimeFragment : Fragment() {
                         isFirstOpenTimeInputDone = true
                     }
                 }
+
+                updateSaveButtonState()
             }
         }
 
@@ -227,22 +275,14 @@ class StoreOpenTimeFragment : Fragment() {
                         isFirstCloseTimeInputDone = true
                     }
                 }
+
+                updateSaveButtonState()
             }
         }
     }
 
 
     private fun checkButton() {
-        val dayIdMap = mapOf(
-            "MONDAY" to binding.layoutStoreMonOpenTime,
-            "TUESDAY" to binding.layoutStoreTueOpenTime,
-            "WEDNESDAY" to binding.layoutStoreWedOpenTime,
-            "THURSDAY" to binding.layoutStoreThuOpenTime,
-            "FRIDAY" to binding.layoutStoreFriOpenTime,
-            "SATURDAY" to binding.layoutStoreThuOpenTime,
-            "SUNDAY" to binding.layoutStoreFriOpenTime
-        )
-
         binding.run {
             dayIdMap.values.forEach { layout ->
 
@@ -260,6 +300,8 @@ class StoreOpenTimeFragment : Fragment() {
                             editTextStoreOpenTime.setText("")
                             editTextStoreCloseTime.setText("")
                         }
+
+                        updateSaveButtonState()
                     }
                 }
 
