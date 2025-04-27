@@ -119,7 +119,16 @@ class StoreDetailInfoFragment : Fragment() {
             }
 
             buttonSave.setOnClickListener {
-                viewModel.getPresignedUrl(mainActivity, storeMainImage!!)
+                if(storeMainImage != null) {
+                    viewModel.getPresignedUrl(mainActivity, storeMainImage!!)
+                } else {
+                    var insta = if(editTextStoreInstagram.text.isNotEmpty()) { "https://www.instagram.com/${editTextStoreInstagram.text.toString()}" } else { null }
+                    var storeInfo = StoreDetailRequest(
+                        storeDescription = editTextStoreDescription.text.toString(),
+                        instagramUrl = insta
+                    )
+                    viewModel.editStoreInfo(mainActivity, MyApplication.storeId, storeInfo)
+                }
             }
         }
 
@@ -137,12 +146,6 @@ class StoreDetailInfoFragment : Fragment() {
                         storeMainImageUrl = it?.filePath
                     )
                     viewModel.editStoreInfo(mainActivity, MyApplication.storeId, storeInfo)
-                }
-            }
-
-            isEdit.observe(viewLifecycleOwner) {
-                if(it == true) {
-                    fragmentManager?.popBackStack()
                 }
             }
         }
@@ -185,7 +188,7 @@ class StoreDetailInfoFragment : Fragment() {
             }
 
             buttonSave.isEnabled =
-                storeMainImage != null && editTextStoreDescription.text.isNotEmpty()
+                (storeMainImage != null || viewModel.storeDetailInfo.value?.storeMainImageUrl != null) && editTextStoreDescription.text.isNotEmpty()
         }
     }
 
