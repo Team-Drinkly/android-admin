@@ -10,3 +10,8 @@ data class NewImageUrl(
     val imageUrl: String,
     val description: String
 )
+
+data class ImageData(
+    val image: Any,
+    val description: String
+)

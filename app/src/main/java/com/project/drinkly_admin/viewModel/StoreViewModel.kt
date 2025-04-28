@@ -3,7 +3,6 @@ package com.project.drinkly_admin.viewModel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.project.drinkly_admin.BuildConfig
 import com.project.drinkly_admin.api.ApiClient
 import com.project.drinkly_admin.api.PresignedUrlApiClient
 import com.project.drinkly_admin.api.TokenManager
@@ -17,14 +16,12 @@ import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.util.MyApplication
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
-import java.net.URLDecoder
 
 class StoreViewModel : ViewModel() {
 
@@ -182,16 +179,18 @@ class StoreViewModel : ViewModel() {
             })
     }
 
-    fun getPresignedUrlBatch(activity: MainActivity, images: List<File>) {
+    fun getPresignedUrlBatch(activity: MainActivity, images: List<Any>?) {
         val apiClient = ApiClient(activity)
         val tokenManager = TokenManager(activity)
 
-        val request = List(images.size) {
-            PresignedUrlRequest(
-                prefix = "${MyApplication.storeName}/availableDrinks",
-                fileName = "availableDrinks"
-            )
-        }
+        val request = images?.let {
+            List(it.size) {
+                PresignedUrlRequest(
+                    prefix = "${MyApplication.storeName}/availableDrinks",
+                    fileName = "availableDrinks"
+                )
+            }
+        } ?: emptyList()
 
         apiClient.apiService.getPresignedUrlBatch(
             tokenManager.getAccessToken().toString(),
@@ -205,21 +204,23 @@ class StoreViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     val result = response.body()?.payload ?: emptyList()
 
-                    if (result.size == images.size) {
-                        var successCount = 0
+                    if (images != null) {
+                        if (result.size == images.size) {
+                            var successCount = 0
 
-                        result.zip(images).forEachIndexed { index, (urlData, imageFile) ->
-                            savePresignedUrlImage(activity, urlData, imageFile) {
-                                successCount++
+                            result.zip(images).forEachIndexed { index, (urlData, imageFile) ->
+                                savePresignedUrlImage(activity, urlData, imageFile as File) {
+                                    successCount++
 
-                                // 모두 완료되면 LiveData에 할당
-                                if (successCount == images.size) {
-                                    presignedUrlBatch.value = result
+                                    // 모두 완료되면 LiveData에 할당
+                                    if (successCount == images.size) {
+                                        presignedUrlBatch.value = result
+                                    }
                                 }
                             }
+                        } else {
+                            Log.e("DrinklyViewModel", "URL 수와 이미지 수가 일치하지 않습니다.")
                         }
-                    } else {
-                        Log.e("DrinklyViewModel", "URL 수와 이미지 수가 일치하지 않습니다.")
                     }
                 } else {
                     val errorBody = response.errorBody()?.string()

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.project.drinkly_admin.api.request.image.ImageData
 import com.project.drinkly_admin.databinding.RowAvailableDrinkBinding
 import com.project.drinkly_admin.ui.MainActivity
 import java.io.File
@@ -12,8 +13,7 @@ import java.io.File
 
 class AvailableDrinkAdapter(
     private var activity: MainActivity,
-    private var images: List<File>?,
-    private var names: List<String>?
+    private var images: List<ImageData>?
 ) :
     RecyclerView.Adapter<AvailableDrinkAdapter.ViewHolder>() {
 
@@ -24,9 +24,8 @@ class AvailableDrinkAdapter(
         onItemClickListener = listener
     }
 
-    fun updateList(newImages: List<File>?, newNames: List<String>?) {
+    fun updateList(newImages: List<ImageData>?) {
         images = newImages
-        names = newNames
         notifyDataSetChanged()
     }
 
@@ -46,9 +45,9 @@ class AvailableDrinkAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
        with(holder.binding) {
-           textViewDrink.text = names?.get(position)
+           textViewDrink.text = images?.get(position)?.description
            Glide.with(activity)
-               .load(images?.get(position))
+               .load(images?.get(position)?.image)
                .into(imageViewAvailableDrink)
 
        }
