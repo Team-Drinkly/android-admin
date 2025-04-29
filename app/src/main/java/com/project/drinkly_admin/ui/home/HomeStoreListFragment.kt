@@ -15,6 +15,8 @@ import com.project.drinkly_admin.databinding.FragmentHomeStoreListBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.home.adapter.StoreAdapter
 import com.project.drinkly_admin.ui.home.info.StoreDetailInfoMainFragment
+import com.project.drinkly_admin.ui.home.info.StoreOpenTimeFragment
+import com.project.drinkly_admin.ui.signUp.SignUpBusinessInfoFragment
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.StoreViewModel
 import com.project.drinkly_admin.viewModel.UserViewModel
@@ -48,8 +50,20 @@ class HomeStoreListFragment : Fragment() {
         observeViewModel()
 
         binding.run {
+            // 매장 추가
             buttonAddStore.setOnClickListener {
-                // 매장 추가
+                val bundle = Bundle().apply {
+                    putBoolean("isAdd", true)
+                }
+
+                // 전달할 Fragment 생성
+                val  nextFragment = SignUpBusinessInfoFragment().apply {
+                    arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
+                }
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, nextFragment)
+                    .addToBackStack(null)
+                    .commit()
             }
         }
 

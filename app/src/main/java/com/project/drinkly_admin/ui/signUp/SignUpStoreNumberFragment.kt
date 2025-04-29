@@ -46,8 +46,16 @@ class SignUpStoreNumberFragment : Fragment() {
             buttonNext.setOnClickListener {
                 MyApplication.basicStoreInfo.storeTel = editTextStoreNumber.text.toString()
 
+                val bundle = Bundle().apply {
+                    putBoolean("isAdd", arguments?.getBoolean("isAdd") ?: false)
+                }
+
+                // 전달할 Fragment 생성
+                val  nextFragment = SignUpInfoFragment().apply {
+                    arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
+                }
                 mainActivity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView_main, SignUpInfoFragment())
+                    .replace(R.id.fragmentContainerView_main, nextFragment)
                     .addToBackStack(null)
                     .commit()
             }

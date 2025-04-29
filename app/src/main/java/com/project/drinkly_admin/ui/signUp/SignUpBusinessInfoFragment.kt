@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
+import com.project.drinkly_admin.api.request.login.BasicStoreInfoRequest
 import com.project.drinkly_admin.databinding.FragmentSignUpBusinessInfoBinding
 import com.project.drinkly_admin.ui.BasicDialogInterface
 import com.project.drinkly_admin.ui.DialogBasic
@@ -156,8 +157,16 @@ class SignUpBusinessInfoFragment : Fragment() {
             validBusinessInfo.observe(viewLifecycleOwner) {
                 when(it) {
                     "01" -> {
+                        val bundle = Bundle().apply {
+                            putBoolean("isAdd", arguments?.getBoolean("isAdd") ?: false)
+                        }
+
+                        // 전달할 Fragment 생성
+                        val  nextFragment = SignUpStoreInfoFragment().apply {
+                            arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
+                        }
                         mainActivity.supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragmentContainerView_main, SignUpStoreInfoFragment())
+                            .replace(R.id.fragmentContainerView_main, nextFragment)
                             .addToBackStack(null)
                             .commit()
                     }
@@ -178,6 +187,8 @@ class SignUpBusinessInfoFragment : Fragment() {
     }
 
     fun initView() {
+        MyApplication.resetBasicStoreInfo()
+
         binding.run {
             toolbar.run {
                 textViewTitle.text = "사업자 정보 입력"
