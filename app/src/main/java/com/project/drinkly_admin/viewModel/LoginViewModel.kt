@@ -237,7 +237,7 @@ class LoginViewModel: ViewModel() {
         val apiClient = ApiClient(activity)
         val tokenManager = TokenManager(activity)
 
-        apiClient.apiService.signUp(SignUpRequest(MyApplication.oauthId))
+        apiClient.apiService.signUp(SignUpRequest(MyApplication.oauthId, MyApplication.basicStoreInfo))
             .enqueue(object :
                 Callback<BaseResponse<SignUpResponse>> {
                 override fun onResponse(
@@ -250,9 +250,12 @@ class LoginViewModel: ViewModel() {
                         val result: BaseResponse<SignUpResponse>? = response.body()
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
-                        tokenManager.saveTokens("Bearer ${result?.payload?.accessToken}", result?.payload?.refreshToken.toString())
-                        saveBasicStoreInfo(activity)
+                        tokenManager.saveTokens("Bearer ${result?.payload?.token?.accessToken}", result?.payload?.token?.refreshToken.toString())
 
+                        activity.supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainerView_main, SignUpCompleteFragment())
+                            .addToBackStack(null)
+                            .commit()
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<SignUpResponse>? = response.body()

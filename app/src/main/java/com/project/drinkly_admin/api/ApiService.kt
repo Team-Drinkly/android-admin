@@ -55,7 +55,7 @@ interface ApiService {
     ): Call<BaseResponse<String>>
 
     // 회원가입
-    @POST("v1/member/signup/owner")
+    @POST("v1/member/signup/owner/store")
     fun signUp(
         @Body request: SignUpRequest
     ): Call<BaseResponse<SignUpResponse>>

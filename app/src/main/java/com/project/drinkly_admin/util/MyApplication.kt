@@ -8,14 +8,22 @@ class MyApplication : Application() {
         // 회원가입 정보
         var oauthId = 0
         var signUpPassAuthorization: Boolean? = null
-        var basicStoreInfo = BasicStoreInfoRequest(
-            ownerId = 0,
-            storeName = "",
-            storeTel = "",
-            storeAddress = "",
-            storeDetailAddress = null,
-            businessRegistrationNumber = ""
-        )
+        var basicStoreInfo: BasicStoreInfoRequest = getEmptyBasicInfo()
+
+        fun getEmptyBasicInfo(): BasicStoreInfoRequest {
+            return BasicStoreInfoRequest(
+                ownerId = 0,
+                storeName = "",
+                storeTel = "",
+                storeAddress = "",
+                storeDetailAddress = null,
+                businessRegistrationNumber = ""
+            )
+        }
+
+        fun resetBasicStoreInfo() {
+            basicStoreInfo = getEmptyBasicInfo()
+        }
 
         var storeId = 0
         var storeName = ""
