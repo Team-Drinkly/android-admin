@@ -79,7 +79,10 @@ class StoreDetailInfoMainFragment : Fragment() {
             }
 
             buttonNext.setOnClickListener {
-
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, HomeFragment())
+                    .addToBackStack(null)
+                    .commit()
             }
         }
 
