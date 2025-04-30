@@ -6,21 +6,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.project.drinkly_admin.R
+import com.project.drinkly_admin.api.response.home.FreeDrinkHistory
 import com.project.drinkly_admin.databinding.FragmentHomeBinding
 import com.project.drinkly_admin.ui.MainActivity
-import com.project.drinkly_admin.ui.home.info.StoreAvailableDaysFragment
+import com.project.drinkly_admin.ui.home.adapter.OrderHistoryAdapter
 import com.project.drinkly_admin.ui.home.info.StoreDetailInfoMainFragment
+import com.project.drinkly_admin.util.MainUtil.getCurrentTimeFormatted
 import com.project.drinkly_admin.util.MyApplication
+import com.project.drinkly_admin.viewModel.OrderViewModel
 import com.project.drinkly_admin.viewModel.UserViewModel
 
 class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
     lateinit var mainActivity: MainActivity
-    private val viewModel: UserViewModel by lazy {
+    private val viewModel: OrderViewModel by lazy {
+        ViewModelProvider(requireActivity())[OrderViewModel::class.java]
+    }
+    private val userViewModel: UserViewModel by lazy {
         ViewModelProvider(requireActivity())[UserViewModel::class.java]
     }
+
+    var getOrderHistory: MutableList<FreeDrinkHistory>? = mutableListOf()
+
+    lateinit var orderHistoryAdapter: OrderHistoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +41,9 @@ class HomeFragment : Fragment() {
 
         binding = FragmentHomeBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
+
+        initAdapter()
+        observeViewModel()
 
         binding.run {
             buttonOrderHistory.setOnClickListener {
@@ -48,7 +63,8 @@ class HomeFragment : Fragment() {
             }
 
             buttonRefresh.setOnClickListener {
-
+                textViewRefreshTime.text = "${getCurrentTimeFormatted()} 기준"
+                viewModel.getHomeOrderHistory(mainActivity, MyApplication.storeId)
             }
         }
 
@@ -60,11 +76,39 @@ class HomeFragment : Fragment() {
         initView()
     }
 
-    fun initView() {
+    fun initAdapter() {
+        orderHistoryAdapter =
+            OrderHistoryAdapter(mainActivity, getOrderHistory)
+
         binding.run {
-           textViewTitle.text = MyApplication.storeName
-            textViewDescription.text = "${viewModel.userName} 사장님, 안녕하세요!"
+            recyclerViewOrderHistory.apply {
+                adapter = orderHistoryAdapter
+                layoutManager = LinearLayoutManager(mainActivity, RecyclerView.VERTICAL, false)
+            }
         }
     }
 
+    fun observeViewModel() {
+        viewModel.run {
+            storeHomeOrderHistory.observe(viewLifecycleOwner) {
+                getOrderHistory = it?.getFreeDrinkHistoryResponseList as MutableList<FreeDrinkHistory>?
+
+                binding.run {
+                    textViewTitle.text = it?.storeName
+                    orderHistoryAdapter.updateList(getOrderHistory)
+                }
+            }
+        }
+    }
+
+    fun initView() {
+        viewModel.getHomeOrderHistory(mainActivity, MyApplication.storeId)
+
+        binding.run {
+           textViewTitle.text = MyApplication.storeName
+            textViewDescription.text = "${userViewModel.userName?.value} 사장님, 안녕하세요!"
+
+            textViewRefreshTime.text = "${getCurrentTimeFormatted()} 기준"
+        }
+    }
 }

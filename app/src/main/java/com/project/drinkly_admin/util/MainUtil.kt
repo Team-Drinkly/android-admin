@@ -7,6 +7,11 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.constraintlayout.widget.ConstraintLayout
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 object MainUtil {
     // 투명한 status bar
@@ -61,7 +66,7 @@ object MainUtil {
         }
     }
 
-    // 시간 단위 변환
+    // editText 시간 단위 변환
     fun formatToTime(input: String): String {
         val digits = input.filter { it.isDigit() }.take(4) // 최대 4자리까지만 허용 (HHmm)
 
@@ -71,6 +76,21 @@ object MainUtil {
             3 -> "${digits.substring(0, 2)}:${digits.substring(2)}"
             4 -> "${digits.substring(0, 2)}:${digits.substring(2)}"
             else -> digits
+        }
+    }
+
+    // 현재 시간 단위 변환
+    fun getCurrentTimeFormatted(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // API 26 이상
+            val now = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            now.format(formatter)
+        } else {
+            // API 26 미만
+            val now = Date()
+            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            formatter.format(now)
         }
     }
 }
