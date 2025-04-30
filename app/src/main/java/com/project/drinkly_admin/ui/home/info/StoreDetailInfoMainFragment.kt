@@ -171,7 +171,8 @@ class StoreDetailInfoMainFragment : Fragment() {
             toolbar.run {
                 textViewTitle.text = "매장 세부 정보 등록"
                 buttonBack.setOnClickListener {
-                    fragmentManager?.popBackStack()
+                    viewModel.storeDetailInfo.value = null
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
             }
         }

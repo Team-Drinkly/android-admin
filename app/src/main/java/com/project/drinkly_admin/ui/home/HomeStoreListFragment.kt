@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.project.drinkly_admin.R
@@ -20,6 +21,7 @@ import com.project.drinkly_admin.ui.signUp.SignUpBusinessInfoFragment
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.StoreViewModel
 import com.project.drinkly_admin.viewModel.UserViewModel
+import kotlinx.coroutines.launch
 
 
 class HomeStoreListFragment : Fragment() {
@@ -133,7 +135,8 @@ class HomeStoreListFragment : Fragment() {
                 .replace(R.id.fragmentContainerView_main, nextFragment)
                 .addToBackStack(null)
                 .commit()
-        } else {
+        } else if(getStoreDetailInfo?.isReady == false) {
+
             val bundle = Bundle().apply {
                 putInt("storeId", MyApplication.storeId)
             }
@@ -150,6 +153,9 @@ class HomeStoreListFragment : Fragment() {
     }
 
     fun initView() {
+        storeViewModel.storeDetailInfo.value = null
+        getStoreDetailInfo = null
+
         viewModel.getOwnerName(mainActivity)
         viewModel.getStoreList(mainActivity)
 

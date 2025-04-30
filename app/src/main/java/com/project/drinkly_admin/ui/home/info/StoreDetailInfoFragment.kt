@@ -124,7 +124,7 @@ class StoreDetailInfoFragment : Fragment() {
                 if(storeMainImage != null) {
                     viewModel.getPresignedUrl(mainActivity, storeMainImage!!)
                 } else {
-                    var insta = if(editTextStoreInstagram.text.isNotEmpty()) { "https://www.instagram.com/${editTextStoreInstagram.text.toString()}" } else { null }
+                    var insta = if(editTextStoreInstagram.text.isNotEmpty()) { "${editTextStoreInstagram.text.toString()}" } else { null }
                     var storeInfo = StoreDetailRequest(
                         storeDescription = editTextStoreDescription.text.toString(),
                         instagramUrl = insta
