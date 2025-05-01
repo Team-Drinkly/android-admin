@@ -1,4 +1,4 @@
-package com.project.drinkly_admin.ui.home.info
+package com.project.drinkly_admin.ui.store
 
 import android.graphics.Rect
 import android.os.Bundle
@@ -57,7 +57,8 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                 // 주류 추가
                 val bottomSheet = StoreAvailableDrinksBottomSheetFragment()
 
-                bottomSheet.setAvailableDrinkBottomSheetInterface(object : AvailableDrinkBottomSheetInterface {
+                bottomSheet.setAvailableDrinkBottomSheetInterface(object :
+                    AvailableDrinkBottomSheetInterface {
                     override fun onAvailableDrinkClickCompleteButton(imageFile: File?, name: String?) {
                         if (imageFile != null && name != null) {
                             images?.add(ImageData(imageFile, name))

@@ -1,4 +1,4 @@
-package com.project.drinkly_admin.ui.home.info
+package com.project.drinkly_admin.ui.store
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.request.store.StoreDetailRequest
 import com.project.drinkly_admin.databinding.FragmentStoreAvailableDaysBinding
 import com.project.drinkly_admin.databinding.LayoutStoreAvailableDaysBinding
