@@ -75,6 +75,15 @@ class OrderHistoryFragment : Fragment() {
 
     fun initView() {
         viewModel.getOrderHistory(mainActivity, MyApplication.storeId)
+
+        binding.run {
+            toolbar.run {
+                textViewTitle.text = "주문 내역"
+                buttonBack.setOnClickListener {
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        }
     }
 
 }
