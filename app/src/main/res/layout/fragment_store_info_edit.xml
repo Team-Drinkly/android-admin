@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.store.StoreDetailInfoMainFragment">
+    tools:context=".ui.store.StoreInfoEditFragment">
+
 
     <include
         android:id="@+id/toolbar"
@@ -30,37 +31,25 @@
 
             <TextView
                 android:id="@+id/textView_title"
-                style="@style/HeadLine2"
+                style="@style/HeadLine3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="44dp"
-                android:text="매장 세부 정보"
+                android:layout_marginTop="30dp"
+                android:text="매장 정보를 수정할 수 있어요"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textView_description"
-                style="@style/body1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:text="매장 정보를 모두 입력해야만\n드링클리 서비스를 이용할 수 있어요"
-                android:textColor="@color/gray7"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_title" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/button_store_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/background_white_radius10"
                 android:padding="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_description">
+                app:layout_constraintTop_toBottomOf="@+id/textView_title">
 
                 <TextView
                     android:id="@+id/textView_info_title1"
@@ -219,15 +208,4 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/button_next"
-        style="@style/NextButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="드링클리 시작하기"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

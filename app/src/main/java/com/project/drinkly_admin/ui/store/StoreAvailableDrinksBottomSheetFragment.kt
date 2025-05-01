@@ -1,7 +1,5 @@
-package com.project.drinkly_admin.ui.home.info
+package com.project.drinkly_admin.ui.store
 
-import android.app.Activity
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -9,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,10 +17,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.project.drinkly_admin.R
 import com.project.drinkly_admin.databinding.FragmentStoreAvailableDrinksBottomSheetBinding
 import com.project.drinkly_admin.viewModel.StoreViewModel
 import java.io.ByteArrayOutputStream

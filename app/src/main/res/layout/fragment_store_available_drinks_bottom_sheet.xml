@@ -6,7 +6,7 @@
     android:paddingHorizontal="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background_bottom_sheet"
-    tools:context=".ui.home.info.StoreAvailableDrinksBottomSheetFragment">
+    tools:context=".ui.store.StoreAvailableDrinksBottomSheetFragment">
 
     <View
         android:id="@+id/view"

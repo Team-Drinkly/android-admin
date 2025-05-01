@@ -1,6 +1,5 @@
-package com.project.drinkly_admin.ui.home.info
+package com.project.drinkly_admin.ui.store
 
-import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -12,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
@@ -27,10 +25,6 @@ import com.project.drinkly_admin.util.MainUtil.updateViewPositionForKeyboard
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.StoreViewModel
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -221,7 +215,7 @@ class StoreDetailInfoFragment : Fragment() {
         // 이미지 파일 쓰기
         try {
             val byteArrayOutputStream = ByteArrayOutputStream()
-            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 150, byteArrayOutputStream)
 
             FileOutputStream(tempFile).use { outputStream ->
                 outputStream.write(byteArrayOutputStream.toByteArray())

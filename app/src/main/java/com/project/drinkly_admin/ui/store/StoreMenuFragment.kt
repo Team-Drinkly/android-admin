@@ -1,4 +1,4 @@
-package com.project.drinkly_admin.ui.home.info
+package com.project.drinkly_admin.ui.store
 
 import android.graphics.Bitmap
 import android.graphics.Rect

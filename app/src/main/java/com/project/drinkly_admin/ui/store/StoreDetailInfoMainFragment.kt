@@ -1,4 +1,4 @@
-package com.project.drinkly_admin.ui.home.info
+package com.project.drinkly_admin.ui.store
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,15 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.project.drinkly_admin.R
-import com.project.drinkly_admin.api.request.image.StoreImageRequest
 import com.project.drinkly_admin.api.request.store.StoreDetailRequest
 import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.databinding.FragmentStoreDetailInfoMainBinding
 import com.project.drinkly_admin.ui.MainActivity
-import com.project.drinkly_admin.ui.home.HomeFragment
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.StoreViewModel
-import com.project.drinkly_admin.viewModel.UserViewModel
 
 class StoreDetailInfoMainFragment : Fragment() {
 

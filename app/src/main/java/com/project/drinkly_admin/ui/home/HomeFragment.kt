@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,8 +13,9 @@ import com.project.drinkly_admin.api.response.home.FreeDrinkHistory
 import com.project.drinkly_admin.databinding.FragmentHomeBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.home.adapter.OrderHistoryAdapter
-import com.project.drinkly_admin.ui.home.info.StoreDetailInfoMainFragment
+import com.project.drinkly_admin.ui.store.StoreDetailInfoMainFragment
 import com.project.drinkly_admin.ui.order.OrderHistoryFragment
+import com.project.drinkly_admin.ui.store.StoreInfoEditFragment
 import com.project.drinkly_admin.util.MainUtil.getCurrentTimeFormatted
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.OrderViewModel
@@ -67,7 +67,7 @@ class HomeFragment : Fragment() {
             buttonStoreInfo.setOnClickListener {
                 // 정보 설정 화면으로 이동
                 mainActivity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView_main, StoreDetailInfoMainFragment())
+                    .replace(R.id.fragmentContainerView_main, StoreInfoEditFragment())
                     .addToBackStack(null)
                     .commit()
             }

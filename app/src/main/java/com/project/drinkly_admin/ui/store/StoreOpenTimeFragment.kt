@@ -1,7 +1,6 @@
-package com.project.drinkly_admin.ui.home.info
+package com.project.drinkly_admin.ui.store
 
 import android.os.Bundle
-import android.text.Layout
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,6 @@ import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.request.store.OpeningHour
 import com.project.drinkly_admin.api.response.home.StoreOpeningHour
 import com.project.drinkly_admin.databinding.FragmentStoreOpenTimeBinding
-import com.project.drinkly_admin.databinding.LayoutStoreOpenTimeBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.util.MainUtil
 import com.project.drinkly_admin.util.MainUtil.updateViewPositionForKeyboard
