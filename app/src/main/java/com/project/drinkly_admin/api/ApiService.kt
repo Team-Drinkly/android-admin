@@ -11,6 +11,7 @@ import com.project.drinkly_admin.api.request.login.BasicStoreInfoRequest
 import com.project.drinkly_admin.api.request.login.SignUpRequest
 import com.project.drinkly_admin.api.request.store.StoreDetailRequest
 import com.project.drinkly_admin.api.response.BaseResponse
+import com.project.drinkly_admin.api.response.coupon.CouponListResponse
 import com.project.drinkly_admin.api.response.home.FreeDrinkHistory
 import com.project.drinkly_admin.api.response.home.OrderHistoryResponse
 import com.project.drinkly_admin.api.response.home.StoreDetailResponse
@@ -129,17 +130,24 @@ interface ApiService {
         @Body request: BasicStoreInfoRequest
     ): Call<BaseResponse<BasicStoreInfoResponse>>
 
-    // 업체 기본 정보 저장 (3개)
+    // 주문 내역 조회 (3개)
     @GET("v1/store/o/{storeId}")
     fun getHomeOrderHistory(
         @Header("Authorization") token: String,
         @Path("storeId") storeId: Int
     ): Call<BaseResponse<OrderHistoryResponse>>
 
-    // 업체 기본 정보 저장
+    // 주문 내역 조회
     @GET("v1/store/o/free-drink/{storeId}")
     fun getOrderHistory(
         @Header("Authorization") token: String,
         @Path("storeId") storeId: Int
     ): Call<BaseResponse<List<FreeDrinkHistory>>>
+
+    // 쿠폰 내역 조회
+    @GET("v1/coupon/o/{storeId}/list")
+    fun getCouponList(
+        @Header("Authorization") token: String,
+        @Path("storeId") storeId: Int
+    ): Call<BaseResponse<List<CouponListResponse>>>
 }
