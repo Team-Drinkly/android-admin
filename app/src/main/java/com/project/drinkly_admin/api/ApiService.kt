@@ -137,7 +137,7 @@ interface ApiService {
     ): Call<BaseResponse<OrderHistoryResponse>>
 
     // 업체 기본 정보 저장
-    @GET("store/o/free-drink/{storeId}")
+    @GET("v1/store/o/free-drink/{storeId}")
     fun getOrderHistory(
         @Header("Authorization") token: String,
         @Path("storeId") storeId: Int
