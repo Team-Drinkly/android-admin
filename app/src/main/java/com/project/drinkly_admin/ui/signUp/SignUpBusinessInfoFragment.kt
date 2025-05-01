@@ -16,6 +16,7 @@ import com.project.drinkly_admin.ui.BasicDialogInterface
 import com.project.drinkly_admin.ui.DialogBasic
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.viewModel.LoginViewModel
+import com.project.drinkly_admin.viewModel.UserViewModel
 
 class SignUpBusinessInfoFragment : Fragment() {
 
@@ -130,7 +131,8 @@ class SignUpBusinessInfoFragment : Fragment() {
 
             buttonNext.setOnClickListener {
                 MyApplication.basicStoreInfo.businessRegistrationNumber = editTextBusinessNumber.text.toString()
-                viewModel.getOwnerNameForValid(mainActivity, businessNumber, openDate)
+
+                viewModel.getOwnerNameForValid(mainActivity, arguments?.getBoolean("isAdd") ?: false, businessNumber, openDate)
             }
         }
 
@@ -169,6 +171,8 @@ class SignUpBusinessInfoFragment : Fragment() {
                             .replace(R.id.fragmentContainerView_main, nextFragment)
                             .addToBackStack(null)
                             .commit()
+
+                        viewModel.validBusinessInfo.value = null
                     }
                     "02" -> {
                         val dialog = DialogBasic("사업자 정보가 일치하지 않습니다.\n다시 한번 확인해주세요.")

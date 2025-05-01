@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.addTextChangedListener
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.databinding.FragmentSignUpStoreInfoBinding
@@ -49,12 +50,7 @@ class SignUpStoreInfoFragment : Fragment() {
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-                    if(editTextStoreName.text.isNotEmpty()) {
-                        editTextStoreName.setBackgroundResource(R.drawable.background_edittext_radius50_filled)
-                    } else {
-                        editTextStoreName.setBackgroundResource(R.drawable.background_edittext_radius50_default)
-                    }
-
+                    checkInput()
                     checkEnabled()
                 }
 
@@ -66,6 +62,10 @@ class SignUpStoreInfoFragment : Fragment() {
                     // 도로명 주소 검색 기능
                     openKakaoAddressWebView()
                 }
+
+                addTextChangedListener {
+                    checkInput()
+                }
             }
 
             editTextStoreAddressDetail.addTextChangedListener(object : TextWatcher {
@@ -73,12 +73,7 @@ class SignUpStoreInfoFragment : Fragment() {
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-                    if(editTextStoreAddressDetail.text.isNotEmpty()) {
-                        editTextStoreAddressDetail.setBackgroundResource(R.drawable.background_edittext_radius50_filled)
-                    } else {
-                        editTextStoreAddressDetail.setBackgroundResource(R.drawable.background_edittext_radius50_default)
-                    }
-
+                    checkInput()
                     checkEnabled()
                 }
 
@@ -128,12 +123,36 @@ class SignUpStoreInfoFragment : Fragment() {
         }
     }
 
+    fun checkInput() {
+        binding.run {
+            if(editTextStoreName.text.isNotEmpty()) {
+                editTextStoreName.setBackgroundResource(R.drawable.background_edittext_radius50_filled)
+            } else {
+                editTextStoreName.setBackgroundResource(R.drawable.background_edittext_radius50_default)
+            }
+
+            if(editTextStoreAddressMain.text.isNotEmpty()) {
+                editTextStoreAddressMain.setBackgroundResource(R.drawable.background_edittext_radius50_filled)
+            } else {
+                editTextStoreAddressMain.setBackgroundResource(R.drawable.background_edittext_radius50_default)
+            }
+
+            if(editTextStoreAddressDetail.text.isNotEmpty()) {
+                editTextStoreAddressDetail.setBackgroundResource(R.drawable.background_edittext_radius50_filled)
+            } else {
+                editTextStoreAddressDetail.setBackgroundResource(R.drawable.background_edittext_radius50_default)
+            }
+        }
+    }
+
     fun initView() {
         binding.run {
+            checkInput()
+
             toolbar.run {
                 textViewTitle.text = "매장 정보 입력"
                 buttonBack.setOnClickListener {
-                    fragmentManager?.popBackStack()
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
             }
         }
