@@ -55,6 +55,7 @@
             </androidx.recyclerview.widget.RecyclerView>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/button_add_store"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_gray3_radius10"
@@ -66,7 +67,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/recyclerView_store">
 
                 <LinearLayout
-                    android:id="@+id/button_add_store"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
@@ -80,7 +80,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_plus" />
+                        android:src="@drawable/ic_plus_gray6" />
 
                     <TextView
                         android:id="@+id/textView_plus"

@@ -6,15 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.project.drinkly_admin.R
+import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.api.response.home.StoreListResponse
 import com.project.drinkly_admin.databinding.FragmentHomeStoreListBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.home.adapter.StoreAdapter
 import com.project.drinkly_admin.ui.home.info.StoreDetailInfoMainFragment
+import com.project.drinkly_admin.ui.home.info.StoreOpenTimeFragment
+import com.project.drinkly_admin.ui.signUp.SignUpBusinessInfoFragment
+import com.project.drinkly_admin.util.MyApplication
+import com.project.drinkly_admin.viewModel.StoreViewModel
 import com.project.drinkly_admin.viewModel.UserViewModel
+import kotlinx.coroutines.launch
 
 
 class HomeStoreListFragment : Fragment() {
@@ -24,10 +31,14 @@ class HomeStoreListFragment : Fragment() {
     private val viewModel: UserViewModel by lazy {
         ViewModelProvider(requireActivity())[UserViewModel::class.java]
     }
+    private val storeViewModel: StoreViewModel by lazy {
+        ViewModelProvider(requireActivity())[StoreViewModel::class.java]
+    }
 
     lateinit var storeAdapter : StoreAdapter
 
-    var getStoreInfo: List<StoreListResponse>? = null
+    private var getStoreInfo: List<StoreListResponse>? = null
+    private var getStoreDetailInfo: StoreDetailResponse? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,8 +52,20 @@ class HomeStoreListFragment : Fragment() {
         observeViewModel()
 
         binding.run {
+            // 매장 추가
             buttonAddStore.setOnClickListener {
-                // 매장 추가
+                val bundle = Bundle().apply {
+                    putBoolean("isAdd", true)
+                }
+
+                // 전달할 Fragment 생성
+                val  nextFragment = SignUpBusinessInfoFragment().apply {
+                    arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
+                }
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, nextFragment)
+                    .addToBackStack(null)
+                    .commit()
             }
         }
 
@@ -58,18 +81,7 @@ class HomeStoreListFragment : Fragment() {
         storeAdapter = StoreAdapter(mainActivity, getStoreInfo).apply {
             itemClickListener = object : StoreAdapter.OnItemClickListener {
                 override fun onItemClick(position: Int) {
-                    val bundle = Bundle().apply {
-                        putInt("storeId", getStoreInfo?.get(position)?.storeId ?: 0)
-                    }
-
-                    // 전달할 Fragment 생성
-                    val  nextFragment = StoreDetailInfoMainFragment().apply {
-                        arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
-                    }
-                    mainActivity.supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView_main, nextFragment)
-                        .addToBackStack(null)
-                        .commit()
+                    storeViewModel.getStoreDetail(mainActivity, getStoreInfo?.get(position)?.storeId ?: 0)
                 }
             }
         }
@@ -96,9 +108,53 @@ class HomeStoreListFragment : Fragment() {
                 storeAdapter.updateList(getStoreInfo)
             }
         }
+
+        storeViewModel.run {
+            storeDetailInfo.observe(viewLifecycleOwner) {
+                getStoreDetailInfo = it
+
+                checkInfo()
+            }
+        }
+    }
+
+    fun checkInfo() {
+        MyApplication.storeId = getStoreDetailInfo?.storeId ?: 0
+        MyApplication.storeName = getStoreDetailInfo?.storeName ?: ""
+
+        if(getStoreDetailInfo?.isReady == true) {
+            val bundle = Bundle().apply {
+                putInt("storeId", MyApplication.storeId)
+            }
+
+            // 전달할 Fragment 생성
+            val  nextFragment = HomeFragment().apply {
+                arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
+            }
+            mainActivity.supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView_main, nextFragment)
+                .commit()
+        } else if(getStoreDetailInfo?.isReady == false) {
+
+            val bundle = Bundle().apply {
+                putInt("storeId", MyApplication.storeId)
+            }
+
+            // 전달할 Fragment 생성
+            val  nextFragment = StoreDetailInfoMainFragment().apply {
+                arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
+            }
+            mainActivity.supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView_main, nextFragment)
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     fun initView() {
+        storeViewModel.storeDetailInfo.value = null
+        getStoreDetailInfo = null
+
         viewModel.getOwnerName(mainActivity)
         viewModel.getStoreList(mainActivity)
 

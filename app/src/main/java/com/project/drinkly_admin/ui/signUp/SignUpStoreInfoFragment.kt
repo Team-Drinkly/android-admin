@@ -27,7 +27,7 @@ class SignUpStoreInfoFragment : Fragment() {
             val address = result.data?.getStringExtra("address")
             binding.editTextStoreAddressMain.run {
                 setText(address)
-                setBackgroundResource(R.drawable.background_edittext_success)
+                setBackgroundResource(R.drawable.background_edittext_radius50_filled)
             }
             checkEnabled()
         } else {
@@ -50,9 +50,9 @@ class SignUpStoreInfoFragment : Fragment() {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                     if(editTextStoreName.text.isNotEmpty()) {
-                        editTextStoreName.setBackgroundResource(R.drawable.background_edittext_success)
+                        editTextStoreName.setBackgroundResource(R.drawable.background_edittext_radius50_filled)
                     } else {
-                        editTextStoreName.setBackgroundResource(R.drawable.background_edittext_default)
+                        editTextStoreName.setBackgroundResource(R.drawable.background_edittext_radius50_default)
                     }
 
                     checkEnabled()
@@ -74,9 +74,9 @@ class SignUpStoreInfoFragment : Fragment() {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                     if(editTextStoreAddressDetail.text.isNotEmpty()) {
-                        editTextStoreAddressDetail.setBackgroundResource(R.drawable.background_edittext_success)
+                        editTextStoreAddressDetail.setBackgroundResource(R.drawable.background_edittext_radius50_filled)
                     } else {
-                        editTextStoreAddressDetail.setBackgroundResource(R.drawable.background_edittext_default)
+                        editTextStoreAddressDetail.setBackgroundResource(R.drawable.background_edittext_radius50_default)
                     }
 
                     checkEnabled()
@@ -90,8 +90,16 @@ class SignUpStoreInfoFragment : Fragment() {
                 MyApplication.basicStoreInfo.storeAddress = editTextStoreAddressMain.text.toString()
                 MyApplication.basicStoreInfo.storeDetailAddress = editTextStoreAddressDetail.text.toString()
 
+                val bundle = Bundle().apply {
+                    putBoolean("isAdd", arguments?.getBoolean("isAdd") ?: false)
+                }
+
+                // 전달할 Fragment 생성
+                val  nextFragment = SignUpStoreNumberFragment().apply {
+                    arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
+                }
                 mainActivity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView_main, SignUpStoreNumberFragment())
+                    .replace(R.id.fragmentContainerView_main, nextFragment)
                     .addToBackStack(null)
                     .commit()
             }

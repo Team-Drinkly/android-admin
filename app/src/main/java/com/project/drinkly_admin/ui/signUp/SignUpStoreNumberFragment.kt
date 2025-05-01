@@ -32,10 +32,10 @@ class SignUpStoreNumberFragment : Fragment() {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                     if(editTextStoreNumber.text.isNotEmpty()) {
-                        editTextStoreNumber.setBackgroundResource(R.drawable.background_edittext_success)
+                        editTextStoreNumber.setBackgroundResource(R.drawable.background_edittext_radius50_filled)
                         buttonNext.isEnabled = true
                     } else {
-                        editTextStoreNumber.setBackgroundResource(R.drawable.background_edittext_default)
+                        editTextStoreNumber.setBackgroundResource(R.drawable.background_edittext_radius50_default)
                         buttonNext.isEnabled = false
                     }
                 }
@@ -46,8 +46,16 @@ class SignUpStoreNumberFragment : Fragment() {
             buttonNext.setOnClickListener {
                 MyApplication.basicStoreInfo.storeTel = editTextStoreNumber.text.toString()
 
+                val bundle = Bundle().apply {
+                    putBoolean("isAdd", arguments?.getBoolean("isAdd") ?: false)
+                }
+
+                // 전달할 Fragment 생성
+                val  nextFragment = SignUpInfoFragment().apply {
+                    arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
+                }
                 mainActivity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView_main, SignUpInfoFragment())
+                    .replace(R.id.fragmentContainerView_main, nextFragment)
                     .addToBackStack(null)
                     .commit()
             }

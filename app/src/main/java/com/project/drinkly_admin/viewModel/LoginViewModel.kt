@@ -86,17 +86,18 @@ class LoginViewModel: ViewModel() {
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
                         if(result?.payload?.isRegistered == true) {
+                            MyApplication.oauthId = result.payload.oauthId ?: 0
                             tokenManager.saveUserId(result.payload.oauthId ?: 0)
                             tokenManager.saveTokens("Bearer ${result.payload.accessToken}", result.payload.refreshToken)
 
-                            // 홈화면 이동
+                            // 매장 리스트 화면으로 이동
                             activity.supportFragmentManager.beginTransaction()
                                 .replace(R.id.fragmentContainerView_main, HomeStoreListFragment())
-                                .addToBackStack(null)
                                 .commit()
                         } else {
                             MyApplication.oauthId = result?.payload?.oauthId ?: 0
-                            // 회원가입 화면 이동
+                            tokenManager.saveUserId(result?.payload?.oauthId ?: 0)
+                            // 회원가입 화면으로 이동
                             activity.supportFragmentManager.beginTransaction()
                                 .replace(R.id.fragmentContainerView_main, SignUpAgreementFragment())
                                 .addToBackStack(null)
@@ -237,7 +238,7 @@ class LoginViewModel: ViewModel() {
         val apiClient = ApiClient(activity)
         val tokenManager = TokenManager(activity)
 
-        apiClient.apiService.signUp(SignUpRequest(MyApplication.oauthId))
+        apiClient.apiService.signUp(SignUpRequest(MyApplication.oauthId, MyApplication.basicStoreInfo))
             .enqueue(object :
                 Callback<BaseResponse<SignUpResponse>> {
                 override fun onResponse(
@@ -250,9 +251,12 @@ class LoginViewModel: ViewModel() {
                         val result: BaseResponse<SignUpResponse>? = response.body()
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
-                        tokenManager.saveTokens("Bearer ${result?.payload?.accessToken}", result?.payload?.refreshToken.toString())
-                        saveBasicStoreInfo(activity)
+                        tokenManager.saveTokens("Bearer ${result?.payload?.token?.accessToken}", result?.payload?.token?.refreshToken.toString())
 
+                        activity.supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainerView_main, SignUpCompleteFragment())
+                            .addToBackStack(null)
+                            .commit()
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<SignUpResponse>? = response.body()

@@ -30,7 +30,11 @@ class SignUpInfoFragment : Fragment() {
 
         binding.run {
             buttonSignUp.setOnClickListener {
-                viewModel.signUp(mainActivity)
+                if(arguments?.getBoolean("isAdd") == true) {
+                    viewModel.saveBasicStoreInfo(mainActivity)
+                } else {
+                    viewModel.signUp(mainActivity)
+                }
             }
         }
 

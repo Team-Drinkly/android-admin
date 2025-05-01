@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.project.drinkly_admin.api.ApiClient
 import com.project.drinkly_admin.api.TokenManager
 import com.project.drinkly_admin.api.response.BaseResponse
+import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.api.response.home.StoreListResponse
 import com.project.drinkly_admin.api.response.login.OwnerNameResponse
 import com.project.drinkly_admin.ui.MainActivity

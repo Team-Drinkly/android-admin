@@ -25,6 +25,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "SERVER_URL", "\"${properties["server_url"]}\"")
+        buildConfigField("String", "PRESIGNED_URL", "\"${properties["presigned_url"]}\"")
         buildConfigField("String", "PASS_URL", "\"${properties["pass_url"]}\"")
         buildConfigField("String", "DATA_API_URL", "\"${properties["data_api_url"]}\"")
 

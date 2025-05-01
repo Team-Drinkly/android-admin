@@ -8,18 +8,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.project.drinkly_admin.R
+import com.project.drinkly_admin.api.request.login.BasicStoreInfoRequest
 import com.project.drinkly_admin.databinding.FragmentSignUpCompleteBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.home.HomeStoreListFragment
+import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.LoginViewModel
 
 class SignUpCompleteFragment : Fragment() {
 
     lateinit var binding: FragmentSignUpCompleteBinding
     lateinit var mainActivity: MainActivity
-    private val viewModel: LoginViewModel by lazy {
-        ViewModelProvider(requireActivity())[LoginViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +30,9 @@ class SignUpCompleteFragment : Fragment() {
 
         binding.run {
             buttonNext.setOnClickListener {
+                // 값 초기화
+                MyApplication.resetBasicStoreInfo()
+
                 // 이전 BackStack의 모든 Fragment 제거
                 mainActivity.supportFragmentManager.popBackStackImmediate(
                     null,
