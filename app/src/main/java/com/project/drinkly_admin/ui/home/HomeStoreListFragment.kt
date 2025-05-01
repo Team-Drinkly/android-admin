@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.project.drinkly_admin.R
@@ -15,13 +14,11 @@ import com.project.drinkly_admin.api.response.home.StoreListResponse
 import com.project.drinkly_admin.databinding.FragmentHomeStoreListBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.home.adapter.StoreAdapter
-import com.project.drinkly_admin.ui.home.info.StoreDetailInfoMainFragment
-import com.project.drinkly_admin.ui.home.info.StoreOpenTimeFragment
+import com.project.drinkly_admin.ui.store.StoreDetailInfoMainFragment
 import com.project.drinkly_admin.ui.signUp.SignUpBusinessInfoFragment
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.StoreViewModel
 import com.project.drinkly_admin.viewModel.UserViewModel
-import kotlinx.coroutines.launch
 
 
 class HomeStoreListFragment : Fragment() {
