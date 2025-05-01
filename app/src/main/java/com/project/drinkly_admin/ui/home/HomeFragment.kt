@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ import com.project.drinkly_admin.ui.home.info.StoreDetailInfoMainFragment
 import com.project.drinkly_admin.util.MainUtil.getCurrentTimeFormatted
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.OrderViewModel
+import com.project.drinkly_admin.viewModel.StoreViewModel
 import com.project.drinkly_admin.viewModel.UserViewModel
 
 class HomeFragment : Fragment() {
@@ -28,6 +30,9 @@ class HomeFragment : Fragment() {
     }
     private val userViewModel: UserViewModel by lazy {
         ViewModelProvider(requireActivity())[UserViewModel::class.java]
+    }
+    private val storeViewModel: StoreViewModel by lazy {
+        ViewModelProvider(requireActivity())[StoreViewModel::class.java]
     }
 
     var getOrderHistory: MutableList<FreeDrinkHistory>? = mutableListOf()
@@ -59,6 +64,12 @@ class HomeFragment : Fragment() {
                 mainActivity.supportFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerView_main, StoreDetailInfoMainFragment())
                     .addToBackStack(null)
+                    .commit()
+            }
+
+            buttonChangeStore.setOnClickListener {
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, HomeStoreListFragment())
                     .commit()
             }
 
@@ -102,10 +113,12 @@ class HomeFragment : Fragment() {
     }
 
     fun initView() {
+        storeViewModel.storeDetailInfo.value = null
+
         viewModel.getHomeOrderHistory(mainActivity, MyApplication.storeId)
 
         binding.run {
-           textViewTitle.text = MyApplication.storeName
+            textViewTitle.text = MyApplication.storeName
             textViewDescription.text = "${userViewModel.userName?.value} 사장님, 안녕하세요!"
 
             textViewRefreshTime.text = "${getCurrentTimeFormatted()} 기준"
