@@ -17,7 +17,7 @@ class SignUpAgreementFragment : Fragment() {
     lateinit var binding: FragmentSignUpAgreementBinding
     lateinit var mainActivity: MainActivity
 
-    val isAgree = MutableList(4) { false }
+    val isAgree = MutableList(3) { false }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,25 +40,17 @@ class SignUpAgreementFragment : Fragment() {
                 isAgree[2] = !isAgree[2]
                 checkAgree(2, checkbox2)
             }
-            checkbox3.setOnClickListener {
-                isAgree[3] = !isAgree[3]
-                checkAgree(3, checkbox3)
-            }
 
-            // 서비스 이용 약관 확인
+            // 운영정책 및 이용약관
             textViewAgreement1.setOnClickListener {
-                var intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://drinkly.notion.site/1ae09cf02bf980eb87bdf92be7d48e54"))
+                var intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://drinkly.notion.site/1de09cf02bf9802ca5cef1af2451833d"))
                 startActivity(intent)
             }
 
             // 개인정보 수집 및 이용동의서 확인
             textViewAgreement2.setOnClickListener {
-                var intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://drinkly.notion.site/1ae09cf02bf980a79391e106aac091d3"))
+                var intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://drinkly.notion.site/1de09cf02bf98035afefe350bbbcc716"))
                 startActivity(intent)
-            }
-
-            // 제 3자 정보 제공 동의서 확인
-            textViewAgreement3.setOnClickListener {
             }
 
             buttonNext.setOnClickListener {
@@ -96,8 +88,7 @@ class SignUpAgreementFragment : Fragment() {
         binding.run {
             listOf(
                 checkbox1,
-                checkbox2,
-                checkbox3
+                checkbox2
             ).forEachIndexed { index, checkbox ->
                 checkAgree(index + 1, checkbox)
             }
@@ -111,7 +102,7 @@ class SignUpAgreementFragment : Fragment() {
             view.setImageResource(R.drawable.ic_check_unchecked)
         }
         checkEnable()
-        if(isAgree[1] && isAgree[2] && isAgree[3]) {
+        if(isAgree[1] && isAgree[2]) {
             isAgree[0] = true
             binding.checkboxAll.setImageResource(R.drawable.ic_checkbox_checked)
         } else {
