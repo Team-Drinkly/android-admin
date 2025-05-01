@@ -133,7 +133,6 @@ class HomeStoreListFragment : Fragment() {
             }
             mainActivity.supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView_main, nextFragment)
-                .addToBackStack(null)
                 .commit()
         } else if(getStoreDetailInfo?.isReady == false) {
 

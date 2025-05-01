@@ -86,17 +86,18 @@ class LoginViewModel: ViewModel() {
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
                         if(result?.payload?.isRegistered == true) {
+                            MyApplication.oauthId = result.payload.oauthId ?: 0
                             tokenManager.saveUserId(result.payload.oauthId ?: 0)
                             tokenManager.saveTokens("Bearer ${result.payload.accessToken}", result.payload.refreshToken)
 
-                            // 홈화면 이동
+                            // 매장 리스트 화면으로 이동
                             activity.supportFragmentManager.beginTransaction()
                                 .replace(R.id.fragmentContainerView_main, HomeStoreListFragment())
-                                .addToBackStack(null)
                                 .commit()
                         } else {
                             MyApplication.oauthId = result?.payload?.oauthId ?: 0
-                            // 회원가입 화면 이동
+                            tokenManager.saveUserId(result?.payload?.oauthId ?: 0)
+                            // 회원가입 화면으로 이동
                             activity.supportFragmentManager.beginTransaction()
                                 .replace(R.id.fragmentContainerView_main, SignUpAgreementFragment())
                                 .addToBackStack(null)
