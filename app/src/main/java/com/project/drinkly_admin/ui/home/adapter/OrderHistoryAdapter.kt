@@ -48,7 +48,7 @@ class OrderHistoryAdapter(
 
         with(holder.binding) {
             textViewDrinks.text = item?.providedDrink
-            textViewCustomerName.text = item?.memberNickname
+            textViewCustomerName.text = "사용 고객 : ${item?.memberNickname}"
             textViewOrderTime.text = item?.createdAt
         }
     }

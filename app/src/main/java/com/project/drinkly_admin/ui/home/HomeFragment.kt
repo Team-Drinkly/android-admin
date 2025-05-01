@@ -15,6 +15,7 @@ import com.project.drinkly_admin.databinding.FragmentHomeBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.home.adapter.OrderHistoryAdapter
 import com.project.drinkly_admin.ui.home.info.StoreDetailInfoMainFragment
+import com.project.drinkly_admin.ui.order.OrderHistoryFragment
 import com.project.drinkly_admin.util.MainUtil.getCurrentTimeFormatted
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.OrderViewModel
@@ -53,6 +54,10 @@ class HomeFragment : Fragment() {
         binding.run {
             buttonOrderHistory.setOnClickListener {
                 // 주문 내역 관리 화면으로 이동
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, OrderHistoryFragment())
+                    .addToBackStack(null)
+                    .commit()
             }
 
             buttonCoupon.setOnClickListener {
