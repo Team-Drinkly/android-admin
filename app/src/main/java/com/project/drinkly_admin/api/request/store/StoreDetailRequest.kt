@@ -11,7 +11,8 @@ data class StoreDetailRequest(
     val instagramUrl: String? = null,
     val availableDays: String? = null,
     val latitude: String? = null,
-    val longitude: String? = null
+    val longitude: String? = null,
+    val isReady: Boolean? = null
 )
 
 

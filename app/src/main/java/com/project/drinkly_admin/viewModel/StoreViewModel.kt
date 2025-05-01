@@ -1,8 +1,10 @@
 package com.project.drinkly_admin.viewModel
 
 import android.util.Log
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.ApiClient
 import com.project.drinkly_admin.api.PresignedUrlApiClient
 import com.project.drinkly_admin.api.TokenManager
@@ -14,6 +16,7 @@ import com.project.drinkly_admin.api.request.store.StoreDetailRequest
 import com.project.drinkly_admin.api.response.BaseResponse
 import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.ui.MainActivity
+import com.project.drinkly_admin.ui.home.HomeFragment
 import com.project.drinkly_admin.util.MyApplication
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -85,7 +88,16 @@ class StoreViewModel : ViewModel() {
 
                         storeDetailInfo.value = result?.payload!!
 
-                        activity.supportFragmentManager.popBackStack()
+                        if(storeInfo.isReady != null) {
+                            activity.supportFragmentManager.popBackStack()
+
+                            activity.supportFragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainerView_main, HomeFragment())
+                                .addToBackStack(null)
+                                .commit()
+                        } else {
+                            activity.supportFragmentManager.popBackStack()
+                        }
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<StoreDetailResponse>? = response.body()

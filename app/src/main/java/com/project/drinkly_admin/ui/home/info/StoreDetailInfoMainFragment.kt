@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.project.drinkly_admin.R
+import com.project.drinkly_admin.api.request.image.StoreImageRequest
+import com.project.drinkly_admin.api.request.store.StoreDetailRequest
 import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.databinding.FragmentStoreDetailInfoMainBinding
 import com.project.drinkly_admin.ui.MainActivity
@@ -79,10 +81,12 @@ class StoreDetailInfoMainFragment : Fragment() {
             }
 
             buttonNext.setOnClickListener {
-                mainActivity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView_main, HomeFragment())
-                    .addToBackStack(null)
-                    .commit()
+                var storeInfo =
+                    StoreDetailRequest(
+                        isReady = true
+                    )
+
+                viewModel.editStoreInfo(mainActivity, MyApplication.storeId, storeInfo)
             }
         }
 
