@@ -30,6 +30,8 @@ class SignUpInfoFragment : Fragment() {
 
         binding.run {
             buttonSignUp.setOnClickListener {
+                MyApplication.basicStoreInfo.ownerId = TokenManager(mainActivity).getUserId()
+
                 if(arguments?.getBoolean("isAdd") == true) {
                     viewModel.saveBasicStoreInfo(mainActivity)
                 } else {

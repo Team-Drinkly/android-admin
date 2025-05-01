@@ -238,7 +238,7 @@ class LoginViewModel: ViewModel() {
         val apiClient = ApiClient(activity)
         val tokenManager = TokenManager(activity)
 
-        apiClient.apiService.signUp(SignUpRequest(MyApplication.oauthId, MyApplication.basicStoreInfo))
+        apiClient.apiService.signUp(SignUpRequest(tokenManager.getUserId(), MyApplication.basicStoreInfo))
             .enqueue(object :
                 Callback<BaseResponse<SignUpResponse>> {
                 override fun onResponse(
@@ -252,6 +252,7 @@ class LoginViewModel: ViewModel() {
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
                         tokenManager.saveTokens("Bearer ${result?.payload?.token?.accessToken}", result?.payload?.token?.refreshToken.toString())
+                        tokenManager.saveUserId(result?.payload?.registerStoreResponse?.ownerId ?: 0)
 
                         activity.supportFragmentManager.beginTransaction()
                             .replace(R.id.fragmentContainerView_main, SignUpCompleteFragment())
