@@ -63,6 +63,7 @@ class CouponCreateFragment : Fragment() {
 
                 dialog.setSelectDialogInterface(object : SelectDialogInterface {
                     override fun onClickYesButton() {
+                        viewModel.createCoupon(mainActivity, editTextCouponTitle.text.toString(), editTextCouponDescription.text.toString(), editTextCouponNum.text.toString().toInt(), editTextCouponDate.text.toString())
                     }
                 })
 
