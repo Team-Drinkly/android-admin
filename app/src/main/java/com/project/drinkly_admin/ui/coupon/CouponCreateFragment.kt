@@ -59,6 +59,14 @@ class CouponCreateFragment : Fragment() {
             }
 
             buttonCreateCoupon.setOnClickListener {
+                val dialog = DialogSelect("쿠폰을 발행하시겠어요?\n발행된 쿠폰은 수정 또는 삭제가 불가능해요")
+
+                dialog.setSelectDialogInterface(object : SelectDialogInterface {
+                    override fun onClickYesButton() {
+                    }
+                })
+
+                dialog.show(mainActivity.supportFragmentManager, "DialogCreateCoupon")
             }
         }
 
