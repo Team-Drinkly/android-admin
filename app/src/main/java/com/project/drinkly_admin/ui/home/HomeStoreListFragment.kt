@@ -78,6 +78,9 @@ class HomeStoreListFragment : Fragment() {
         storeAdapter = StoreAdapter(mainActivity, getStoreInfo).apply {
             itemClickListener = object : StoreAdapter.OnItemClickListener {
                 override fun onItemClick(position: Int) {
+                    MyApplication.storeId = getStoreInfo?.get(position)?.storeId ?: 0
+                    MyApplication.storeName = getStoreInfo?.get(position)?.storeName ?: ""
+
                     storeViewModel.getStoreDetail(mainActivity, getStoreInfo?.get(position)?.storeId ?: 0)
                 }
             }
@@ -116,9 +119,6 @@ class HomeStoreListFragment : Fragment() {
     }
 
     fun checkInfo() {
-        MyApplication.storeId = getStoreDetailInfo?.storeId ?: 0
-        MyApplication.storeName = getStoreDetailInfo?.storeName ?: ""
-
         if(getStoreDetailInfo?.isReady == true) {
             val bundle = Bundle().apply {
                 putInt("storeId", MyApplication.storeId)

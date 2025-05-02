@@ -52,6 +52,7 @@ class StoreViewModel : ViewModel() {
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
                         storeDetailInfo.value = result?.payload!!
+                        MyApplication.storeId = result.payload.storeId ?: 0
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<StoreDetailResponse>? = response.body()
@@ -86,16 +87,21 @@ class StoreViewModel : ViewModel() {
                         val result: BaseResponse<StoreDetailResponse>? = response.body()
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
-                        storeDetailInfo.value = result?.payload!!
+                        MyApplication.storeId = result?.payload?.storeId ?: 0
 
                         if(storeInfo.isReady != null) {
-                            activity.supportFragmentManager.popBackStack()
+                            // 이전 BackStack의 모든 Fragment 제거
+                            activity.supportFragmentManager.popBackStackImmediate(
+                                null,
+                                FragmentManager.POP_BACK_STACK_INCLUSIVE
+                            )
 
                             activity.supportFragmentManager.beginTransaction()
                                 .replace(R.id.fragmentContainerView_main, HomeFragment())
-                                .addToBackStack(null)
                                 .commit()
                         } else {
+                            storeDetailInfo.value = result?.payload!!
+
                             activity.supportFragmentManager.popBackStack()
                         }
                     } else {

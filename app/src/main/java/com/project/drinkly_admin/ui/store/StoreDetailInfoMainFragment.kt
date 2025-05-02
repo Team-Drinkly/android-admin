@@ -34,6 +34,9 @@ class StoreDetailInfoMainFragment : Fragment() {
         binding = FragmentStoreDetailInfoMainBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
 
+        MyApplication.storeId = arguments?.getInt("storeId") ?: 0
+        viewModel.getStoreDetail(mainActivity, arguments?.getInt("storeId") ?: 0)
+
         observeViewModel()
 
         binding.run {
@@ -159,8 +162,6 @@ class StoreDetailInfoMainFragment : Fragment() {
     }
 
     fun initView() {
-        viewModel.getStoreDetail(mainActivity, arguments?.getInt("storeId") ?: 0)
-
         binding.run {
 
             if(isSaveInfo.all { it }) {

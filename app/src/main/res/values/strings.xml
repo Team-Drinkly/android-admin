@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Drinkly-Admin</string>
+    <string name="app_name">드링클리 사장님</string>
 
     <!-- 약관 -->
     <string name="agreement1"><u>운영정책 및 이용약관 (필수)</u></string>

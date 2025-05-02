@@ -5,12 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.project.drinkly_admin.api.response.coupon.CouponListResponse
-import com.project.drinkly_admin.api.response.home.FreeDrinkHistory
-import com.project.drinkly_admin.api.response.home.OrderHistoryResponse
-import com.project.drinkly_admin.api.response.home.StoreListResponse
 import com.project.drinkly_admin.databinding.RowCouponBinding
-import com.project.drinkly_admin.databinding.RowOrderHistoryBinding
-import com.project.drinkly_admin.databinding.RowStoreListBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.R
 
@@ -53,12 +48,15 @@ class CouponAdapter(
             textViewCouponTitle.text = item?.title
             textViewCouponDescription.text = item?.description
             textViewCouponExpiredDate.text = "유효 기간 : ${item?.expirationDate}까지"
+            textViewCouponNum.text = "${(item?.remainingCount ?: 0)} / ${item?.totalCount}개"
             if(item?.available == true) {
-                textViewCouponNum.text = "${(item?.remainingCount ?: 0)} / ${item?.totalCount}개"
+                imageViewCoupon.setImageResource(R.drawable.ic_coupon_primary50)
+                textViewCouponNumTitle.text = "현재 남은 수량"
                 layoutCoupon.setBackgroundResource(R.drawable.background_primary10_radius10)
                 root.setBackgroundResource(R.drawable.background_white_radius10_stroke_gray3)
             } else {
-                textViewCouponNum.text = "${(item?.totalCount ?: 0) - (item?.remainingCount ?: 0)} / ${item?.totalCount}개"
+                imageViewCoupon.setImageResource(R.drawable.ic_coupon_gray8)
+                textViewCouponNumTitle.text = "총 발행 수량"
                 layoutCoupon.setBackgroundResource(R.drawable.background_gray2_radius10)
                 root.setBackgroundResource(R.drawable.background_gray3_radius10)
             }

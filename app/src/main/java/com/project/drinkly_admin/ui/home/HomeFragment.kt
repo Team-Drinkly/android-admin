@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
+import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,6 +54,10 @@ class HomeFragment : Fragment() {
         initAdapter()
         observeViewModel()
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            requireActivity().finishAffinity()
+        }
+
         binding.run {
             buttonOrderHistory.setOnClickListener {
                 // 주문 내역 관리 화면으로 이동
@@ -96,6 +102,7 @@ class HomeFragment : Fragment() {
         super.onResume()
         initView()
     }
+
 
     fun initAdapter() {
         orderHistoryAdapter =

@@ -215,7 +215,7 @@ class StoreDetailInfoFragment : Fragment() {
         // 이미지 파일 쓰기
         try {
             val byteArrayOutputStream = ByteArrayOutputStream()
-            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 150, byteArrayOutputStream)
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
 
             FileOutputStream(tempFile).use { outputStream ->
                 outputStream.write(byteArrayOutputStream.toByteArray())
