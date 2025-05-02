@@ -90,4 +90,7 @@ dependencies {
 
     // dot indicator
     implementation("com.tbuonomo:dotsindicator:5.1.0")
+
+    // calendar
+    implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
 }

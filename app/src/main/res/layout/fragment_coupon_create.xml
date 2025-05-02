@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.coupon.CouponCreateFragment" >
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_back_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingVertical="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/imageView_coupon"
+                        android:layout_width="100dp"
+                        android:layout_height="68dp"
+                        android:src="@drawable/img_coupon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView_title"
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:text="쿠폰을 만들어\n가게 매출을 높여보세요!"
+                        android:textColor="@color/gray8" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/textView_coupon_title"
+                style="@style/HeadLine3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="36dp"
+                android:text="쿠폰 내용"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_title" />
+
+            <TextView
+                android:id="@+id/textView_coupon_title_essential"
+                style="@style/HeadLine3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="*"
+                android:textColor="@color/red"
+                app:layout_constraintStart_toEndOf="@+id/textView_coupon_title"
+                app:layout_constraintTop_toTopOf="@+id/textView_coupon_title"
+                app:layout_constraintBottom_toBottomOf="@+id/textView_coupon_title"/>
+
+            <TextView
+                android:id="@+id/textView_coupon_title_description"
+                style="@style/body3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="5dp"
+                android:text="만들고 싶은 쿠폰 내용을 자유롭게 작성해주세요"
+                android:textColor="@color/gray7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_coupon_title" />
+
+            <EditText
+                android:id="@+id/editText_coupon_title"
+                style="@style/InfoEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="20dp"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:hint="쿠폰 내용"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_coupon_title_description" />
+
+
+            <TextView
+                android:id="@+id/textView_coupon_description"
+                style="@style/HeadLine3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="30dp"
+                android:text="사용 조건"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_coupon_title" />
+
+            <TextView
+                android:id="@+id/textView_coupon_description_description"
+                style="@style/body3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="5dp"
+                android:text="사용 조건이 있다면 작성해주세요"
+                android:textColor="@color/gray7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_coupon_description" />
+
+            <EditText
+                android:id="@+id/editText_coupon_description"
+                style="@style/InfoEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="20dp"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:hint="사용 조건"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_coupon_description_description" />
+
+            <TextView
+                android:id="@+id/textView_coupon_num"
+                style="@style/HeadLine3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="30dp"
+                android:text="쿠폰 발행 개수"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_coupon_description" />
+
+            <TextView
+                android:id="@+id/textView_coupon_num_essential"
+                style="@style/HeadLine3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="*"
+                android:textColor="@color/red"
+                app:layout_constraintStart_toEndOf="@+id/textView_coupon_num"
+                app:layout_constraintTop_toTopOf="@+id/textView_coupon_num"
+                app:layout_constraintBottom_toBottomOf="@+id/textView_coupon_num"/>
+
+            <EditText
+                android:id="@+id/editText_coupon_num"
+                style="@style/InfoEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="20dp"
+                android:ems="4"
+                android:inputType="number"
+                android:hint="0"
+                android:textAlignment="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_coupon_num_essential" />
+
+            <TextView
+                android:id="@+id/textView_coupon_num_unit"
+                style="@style/body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="장"
+                app:layout_constraintBottom_toBottomOf="@+id/editText_coupon_num"
+                app:layout_constraintStart_toEndOf="@+id/editText_coupon_num"
+                app:layout_constraintTop_toTopOf="@+id/editText_coupon_num" />
+
+            <TextView
+                android:id="@+id/textView_coupon_date"
+                style="@style/HeadLine3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="30dp"
+                android:text="쿠폰 사용 기간"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_coupon_num" />
+
+            <TextView
+                android:id="@+id/textView_coupon_date_essential"
+                style="@style/HeadLine3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="*"
+                android:textColor="@color/red"
+                app:layout_constraintStart_toEndOf="@+id/textView_coupon_date"
+                app:layout_constraintTop_toTopOf="@+id/textView_coupon_date"
+                app:layout_constraintBottom_toBottomOf="@+id/textView_coupon_date"/>
+
+            <EditText
+                android:id="@+id/editText_coupon_date"
+                style="@style/InfoEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="8dp"
+                android:ems="8"
+                android:focusable="false"
+                android:hint="2025-01-01"
+                android:inputType="number"
+                android:textAlignment="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_coupon_date" />
+
+            <TextView
+                android:id="@+id/textView_coupon_date_unit"
+                style="@style/body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="까지"
+                app:layout_constraintBottom_toBottomOf="@+id/editText_coupon_date"
+                app:layout_constraintStart_toEndOf="@+id/editText_coupon_date"
+                app:layout_constraintTop_toTopOf="@+id/editText_coupon_date" />
+
+            <Button
+                android:id="@+id/button_create_coupon"
+                style="@style/NextButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="30dp"
+                android:enabled="false"
+                android:text="쿠폰 발행하기"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_coupon_date" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

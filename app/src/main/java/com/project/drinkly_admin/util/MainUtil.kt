@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -92,5 +93,12 @@ object MainUtil {
             val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
             formatter.format(now)
         }
+    }
+
+    // 오늘 날짜 형식 변환
+    fun getTodayDateString(): String {
+        val calendar = Calendar.getInstance() // 현재 날짜 가져오기
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+        return dateFormat.format(calendar.time) // 날짜를 원하는 형식으로 변환
     }
 }

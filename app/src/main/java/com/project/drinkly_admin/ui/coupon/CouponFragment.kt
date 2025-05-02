@@ -43,7 +43,12 @@ class CouponFragment : Fragment() {
         observeViewModel()
 
         binding.run {
-
+            buttonCreateCoupon.setOnClickListener {
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, CouponCreateFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
 
         return binding.root

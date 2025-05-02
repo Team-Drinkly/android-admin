@@ -3,6 +3,7 @@ package com.project.drinkly_admin.api
 import com.project.drinkly.api.response.login.LoginResponse
 import com.project.drinkly.api.response.login.NiceUrlResponse
 import com.project.drinkly.api.response.login.SignUpResponse
+import com.project.drinkly_admin.api.request.coupon.CreateCouponRequest
 import com.project.drinkly_admin.api.request.image.PresignedUrlBatchRequest
 import com.project.drinkly_admin.api.request.image.PresignedUrlRequest
 import com.project.drinkly_admin.api.request.image.PresignedUrlResponse
@@ -150,4 +151,11 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("storeId") storeId: Int
     ): Call<BaseResponse<List<CouponListResponse>>>
+
+    // 쿠폰 발행
+    @POST("v1/coupon/o/create")
+    fun createCoupon(
+        @Header("Authorization") token: String,
+        @Body request: CreateCouponRequest
+    ): Call<BaseResponse<Int>>
 }
