@@ -42,6 +42,20 @@ class CouponCreateFragment : Fragment() {
                 checkEnabled()
             }
             editTextCouponDate.setOnClickListener {
+                val dateBottomsheet =
+                    DateBottomSheetFragment(getTodayDateString())
+
+                dateBottomsheet.setDateBottomSheetInterface(object : DateBottomSheetInterface {
+                    override fun onDateClickCompleteButton(date: String) {
+                        editTextCouponDate.setText(date)
+                        checkEnabled()
+                    }
+                })
+
+                dateBottomsheet.show(
+                    mainActivity.supportFragmentManager,
+                    "DateBottomsheet"
+                )
             }
 
             buttonCreateCoupon.setOnClickListener {
