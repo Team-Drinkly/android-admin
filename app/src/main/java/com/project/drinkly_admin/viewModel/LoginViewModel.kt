@@ -218,7 +218,7 @@ class LoginViewModel: ViewModel() {
                             Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
                             validateBusinessInfo(activity, ValidateBusinessInfoRequest(listOf(
-                                BusinessCheck(businessNumber, openDate, "변상우"))))
+                                BusinessCheck(businessNumber, openDate, result?.payload?.ownerName ?: ""))))
                         } else {
                             // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                             var result: BaseResponse<OwnerNameResponse>? = response.body()
@@ -249,7 +249,7 @@ class LoginViewModel: ViewModel() {
                             Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
                             validateBusinessInfo(activity, ValidateBusinessInfoRequest(listOf(
-                                BusinessCheck(businessNumber, openDate, "변상우"))))
+                                BusinessCheck(businessNumber, openDate, result?.payload?.ownerName ?: ""))))
                         } else {
                             // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                             var result: BaseResponse<OwnerNameResponse>? = response.body()
