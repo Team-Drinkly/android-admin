@@ -76,7 +76,16 @@ class CouponFragment : Fragment() {
             storeCoupons.observe(viewLifecycleOwner) {
                 getCoupons = it as MutableList<CouponListResponse>?
 
-                couponAdapter.updateList(getCoupons)
+                binding.run {
+                    if(getCoupons?.size == 0) {
+                        layoutEmpty.visibility = View.VISIBLE
+                        recyclerViewOrderHistory.visibility = View.GONE
+                    } else {
+                        layoutEmpty.visibility = View.GONE
+                        recyclerViewOrderHistory.visibility = View.VISIBLE
+                        couponAdapter.updateList(getCoupons)
+                    }
+                }
             }
         }
     }
@@ -85,6 +94,8 @@ class CouponFragment : Fragment() {
         viewModel.getCouponList(mainActivity, MyApplication.storeId)
 
         binding.run {
+            layoutEmpty.visibility = View.VISIBLE
+
             toolbar.run {
                 textViewTitle.text = "쿠폰 관리"
                 buttonBack.setOnClickListener {
