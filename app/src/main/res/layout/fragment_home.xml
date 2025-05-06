@@ -33,11 +33,11 @@
                 android:id="@+id/button_change_store"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_stroke_primary50"
+                android:background="@drawable/background_stroke_primary40"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="4dp"
                 android:text="가게 변경"
-                android:textColor="@color/primary_50"
+                android:textColor="@color/primary_40"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView_title" />
 

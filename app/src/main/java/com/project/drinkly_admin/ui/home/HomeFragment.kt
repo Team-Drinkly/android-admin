@@ -147,8 +147,6 @@ class HomeFragment : Fragment() {
             textViewDescription.text = "${userViewModel.userName?.value} 사장님, 안녕하세요!"
 
             textViewRefreshTime.text = "${getCurrentTimeFormatted()} 기준"
-
-            layoutEmpty.visibility = View.VISIBLE
         }
     }
 }

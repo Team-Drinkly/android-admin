@@ -94,8 +94,6 @@ class CouponFragment : Fragment() {
         viewModel.getCouponList(mainActivity, MyApplication.storeId)
 
         binding.run {
-            layoutEmpty.visibility = View.VISIBLE
-
             toolbar.run {
                 textViewTitle.text = "쿠폰 관리"
                 buttonBack.setOnClickListener {

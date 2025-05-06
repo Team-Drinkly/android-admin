@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray2"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingHorizontal="20dp"
     tools:context=".ui.order.OrderHistoryFragment">
@@ -40,5 +41,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_title"
         app:layout_constraintVertical_bias="0.0" />
+
+    <LinearLayout
+        android:id="@+id/layout_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_title">
+
+        <ImageView
+            android:id="@+id/imageView_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/img_coupon_empty" />
+
+        <TextView
+            android:id="@+id/textView_empty1"
+            style="@style/SubTitle3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="쿠폰을 발행하고 손님을 보아보세요!"
+            android:textAlignment="center"
+            android:textColor="@color/gray6" />
+
+        <TextView
+            android:id="@+id/button_create_coupon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/background_stroke_primary40"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:text="쿠폰 발행하기"
+            android:textColor="@color/primary_40" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
