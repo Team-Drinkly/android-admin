@@ -17,6 +17,8 @@ import com.project.drinkly_admin.ui.home.adapter.StoreAdapter
 import com.project.drinkly_admin.ui.store.StoreDetailInfoMainFragment
 import com.project.drinkly_admin.ui.signUp.SignUpBusinessInfoFragment
 import com.project.drinkly_admin.util.MyApplication
+import com.project.drinkly_admin.viewModel.CouponViewModel
+import com.project.drinkly_admin.viewModel.OrderViewModel
 import com.project.drinkly_admin.viewModel.StoreViewModel
 import com.project.drinkly_admin.viewModel.UserViewModel
 
@@ -30,6 +32,12 @@ class HomeStoreListFragment : Fragment() {
     }
     private val storeViewModel: StoreViewModel by lazy {
         ViewModelProvider(requireActivity())[StoreViewModel::class.java]
+    }
+    private val couponViewModel: CouponViewModel by lazy {
+        ViewModelProvider(requireActivity())[CouponViewModel::class.java]
+    }
+    private val orderViewModel: OrderViewModel by lazy {
+        ViewModelProvider(requireActivity())[OrderViewModel::class.java]
     }
 
     lateinit var storeAdapter : StoreAdapter
@@ -120,6 +128,12 @@ class HomeStoreListFragment : Fragment() {
 
     fun checkInfo() {
         if(getStoreDetailInfo?.isReady == true) {
+            couponViewModel.storeCoupons.value = null
+            orderViewModel.run {
+                storeHomeOrderHistory.value = null
+                storeOrderHistory.value = null
+            }
+
             val bundle = Bundle().apply {
                 putInt("storeId", MyApplication.storeId)
             }
