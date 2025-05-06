@@ -123,7 +123,15 @@ class HomeFragment : Fragment() {
 
                 binding.run {
                     textViewTitle.text = it?.storeName
-                    orderHistoryAdapter.updateList(getOrderHistory)
+
+                    if(getOrderHistory?.size == 0) {
+                        layoutEmpty.visibility = View.VISIBLE
+                        recyclerViewOrderHistory.visibility = View.GONE
+                    } else {
+                        layoutEmpty.visibility = View.GONE
+                        recyclerViewOrderHistory.visibility = View.VISIBLE
+                        orderHistoryAdapter.updateList(getOrderHistory)
+                    }
                 }
             }
         }

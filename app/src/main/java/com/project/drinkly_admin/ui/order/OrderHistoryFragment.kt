@@ -1,6 +1,7 @@
 package com.project.drinkly_admin.ui.order
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.response.home.FreeDrinkHistory
 import com.project.drinkly_admin.databinding.FragmentOrderHistoryBinding
 import com.project.drinkly_admin.ui.MainActivity
+import com.project.drinkly_admin.ui.coupon.CouponCreateFragment
 import com.project.drinkly_admin.ui.home.adapter.OrderHistoryAdapter
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.OrderViewModel
@@ -40,6 +42,15 @@ class OrderHistoryFragment : Fragment() {
         initAdapter()
         observeViewModel()
 
+        binding.run {
+            buttonCreateCoupon.setOnClickListener {
+                mainActivity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView_main, CouponCreateFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+
         return binding.root
     }
 
@@ -67,7 +78,16 @@ class OrderHistoryFragment : Fragment() {
 
                 binding.run {
                     textViewTitle.text = it?.storeName
-                    orderHistoryAdapter.updateList(getOrderHistory)
+
+                    if(getOrderHistory?.size == 0 || getOrderHistory?.isEmpty() == true) {
+                        layoutEmpty.visibility = View.VISIBLE
+                        recyclerViewOrderHistory.visibility = View.GONE
+                    } else {
+                        Log.d("##", "size : ${getOrderHistory?.size}")
+                        layoutEmpty.visibility = View.GONE
+                        recyclerViewOrderHistory.visibility = View.VISIBLE
+                        orderHistoryAdapter.updateList(getOrderHistory)
+                    }
                 }
             }
         }
