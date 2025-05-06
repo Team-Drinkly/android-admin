@@ -17,6 +17,8 @@ import com.project.drinkly_admin.api.request.image.NewImageUrl
 import com.project.drinkly_admin.api.request.image.StoreImageRequest
 import com.project.drinkly_admin.api.response.home.StoreImageInfo
 import com.project.drinkly_admin.databinding.FragmentStoreDetailAvailableDrinksBinding
+import com.project.drinkly_admin.ui.BasicDialogInterface
+import com.project.drinkly_admin.ui.DialogBasic
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.home.adapter.AvailableDrinkAdapter
 import com.project.drinkly_admin.util.ImageUtil
@@ -36,8 +38,12 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
 
     var previousAvailableDrinkImages: List<StoreImageInfo>? = mutableListOf()
     var newAvailableDrinkImages: MutableList<ImageData>? = mutableListOf()
+    var newCommonAvailableDrinkImages: MutableList<ImageData>? = mutableListOf()
     var removedAvailableDrinkImages: MutableList<Int>? = mutableListOf()
     var images: MutableList<ImageData>? = mutableListOf()
+
+    var newSojuIndex: Int = 0
+    var newBeerIndex: Int = 0
 
     lateinit var availableDrinkAdapter: AvailableDrinkAdapter
 
@@ -60,12 +66,14 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                 bottomSheet.setAvailableDrinkBottomSheetInterface(object :
                     AvailableDrinkBottomSheetInterface {
                     override fun onAvailableDrinkClickCompleteButton(imageFile: File?, name: String?) {
-                        if (imageFile != null && name != null) {
-                            images?.add(ImageData(imageFile, name))
-                            newAvailableDrinkImages?.add(ImageData(imageFile, name))
-                        }
+                        if(checkDrinks(name.toString())) {
+                            if (imageFile != null && name != null) {
+                                images?.add(ImageData(imageFile, name))
+                                newAvailableDrinkImages?.add(ImageData(imageFile, name))
+                            }
 
-                        checkComplete()
+                            checkComplete()
+                        }
                     }
                 })
 
@@ -76,17 +84,39 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
             }
             buttonAddSoju.setOnClickListener {
                 // 소주 추가
-                images?.add(ImageData(ImageUtil.copyRawToFile(mainActivity, R.drawable.img_soju, "soju.png"), "소주"))
-                newAvailableDrinkImages?.add(ImageData(ImageUtil.copyRawToFile(mainActivity, R.drawable.img_soju, "soju.png"), "소주"))
+                if(checkDrinks("소주")) {
+                    images?.add(ImageData(ImageUtil.copyRawToFile(mainActivity, R.drawable.img_soju, "soju.png"), "소주"))
+                    newCommonAvailableDrinkImages?.add(ImageData(ImageUtil.copyRawToFile(mainActivity, R.drawable.img_soju, "soju.png"), "소주"))
+                    newSojuIndex = newAvailableDrinkImages?.size ?: 0
 
-                checkComplete()
+                    checkComplete()
+                }
             }
             buttonAddBeer.setOnClickListener {
                 // 맥주 추가
-                images?.add(ImageData(ImageUtil.copyRawToFile(mainActivity, R.drawable.img_beer, "beer.png"), "맥주"))
-                newAvailableDrinkImages?.add(ImageData(ImageUtil.copyRawToFile(mainActivity, R.drawable.img_beer, "beer.png"), "맥주"))
+                if(checkDrinks("맥주")) {
+                    images?.add(
+                        ImageData(
+                            ImageUtil.copyRawToFile(
+                                mainActivity,
+                                R.drawable.img_beer,
+                                "beer.png"
+                            ), "맥주"
+                        )
+                    )
+                    newCommonAvailableDrinkImages?.add(
+                        ImageData(
+                            ImageUtil.copyRawToFile(
+                                mainActivity,
+                                R.drawable.img_beer,
+                                "beer.png"
+                            ), "맥주"
+                        )
+                    )
+                    newBeerIndex = newAvailableDrinkImages?.size ?: 0
 
-                checkComplete()
+                    checkComplete()
+                }
             }
 
             buttonSave.setOnClickListener {
@@ -149,6 +179,12 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                             }
                         } else if(images?.get(position)?.image is File) {
                             (images?.get(position))?.let { file ->
+                                if((newAvailableDrinkImages?.indexOf(file) ?: 0) < newSojuIndex) {
+                                    newSojuIndex -= 1
+                                }
+                                if((newAvailableDrinkImages?.indexOf(file) ?: 0) < newBeerIndex) {
+                                    newBeerIndex -= 1
+                                }
                                 newAvailableDrinkImages?.remove(file)
                             }
                         }
@@ -181,7 +217,33 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                             imageUrl = newImageUrl.filePath,
                             description = "${newAvailableDrinkImages?.get(index)?.description}"
                         )
+                    }.toMutableList() // ✨ 중간 삽입 위해 mutableList로 변환
+
+                    // 소주가 추가되어 있는 경우
+                    if (newCommonAvailableDrinkImages?.any { it.description == "소주" } == true) {
+                        mappedNewImageUrls.add(
+                            newSojuIndex,
+                            NewImageUrl(
+                                imageUrl = "공통주류/20250502162032-11f10447-1597-48b6-9ec8-28e0c37ab3ba-soju",
+                                description = "소주"
+                            )
+                        )
+
+                        // ⚠️ 맥주 삽입 시 소주 이후일 경우 인덱스 +1 보정 필요
+                        newBeerIndex = if (newSojuIndex <= newBeerIndex) newBeerIndex + 1 else newBeerIndex
                     }
+
+                    // 맥주가 추가되어 있는 경우
+                    if (newCommonAvailableDrinkImages?.any { it.description == "맥주" } == true) {
+                        mappedNewImageUrls.add(
+                            newBeerIndex,
+                            NewImageUrl(
+                                imageUrl = "공통주류/20250502162032-b7a26511-55a9-4811-92a2-1ff564a34449-beer",
+                                description = "맥주"
+                            )
+                        )
+                    }
+
 
                     MyApplication.storeId?.let { storeId ->
                         val storeInfo = StoreImageRequest(
@@ -204,6 +266,22 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
             }
 
         }
+    }
+
+    fun checkDrinks(description: String) : Boolean {
+        if(images?.any { it.description.contains(description) } == true) {
+            val dialog = DialogBasic("이미 등록되어 있는 주류에요\n같은 이름으로는 추가가 불가능해요")
+
+            dialog.setBasicDialogInterface(object : BasicDialogInterface {
+                override fun onClickYesButton() {
+
+                }
+            })
+
+            dialog.show(mainActivity.supportFragmentManager, "DialogStoreAvailableDrink")
+        }
+
+        return images?.any { it.description.contains(description) } == false
     }
 
     fun initView() {
