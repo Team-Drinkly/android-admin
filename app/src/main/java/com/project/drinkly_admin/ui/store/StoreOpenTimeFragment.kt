@@ -19,6 +19,9 @@ import com.project.drinkly_admin.util.MainUtil.updateViewPositionForKeyboard
 import com.project.drinkly_admin.viewModel.StoreViewModel
 import androidx.core.view.isVisible
 import com.project.drinkly_admin.api.request.store.StoreDetailRequest
+import com.project.drinkly_admin.ui.BasicDialogInterface
+import com.project.drinkly_admin.ui.DialogBasic
+import com.project.drinkly_admin.util.MainUtil.isValidTimeFormat
 import com.project.drinkly_admin.util.MyApplication
 
 class StoreOpenTimeFragment : Fragment() {
@@ -70,11 +73,15 @@ class StoreOpenTimeFragment : Fragment() {
             }
 
             buttonSave.setOnClickListener {
-                var storeInfo = StoreDetailRequest(
-                    openingHours = collectOpeningHours()
-                )
+                var time = collectOpeningHours()
 
-                viewModel.editStoreInfo(mainActivity, MyApplication.storeId, storeInfo)
+                if(time.isNotEmpty()) {
+                    var storeInfo = StoreDetailRequest(
+                        openingHours = collectOpeningHours()
+                    )
+
+                    viewModel.editStoreInfo(mainActivity, MyApplication.storeId, storeInfo)
+                }
             }
         }
 
@@ -179,6 +186,23 @@ class StoreOpenTimeFragment : Fragment() {
             val isOpen = layout.layoutTime.isVisible
             val openTime = layout.editTextStoreOpenTime.text.toString().takeIf { it.isNotBlank() }
             val closeTime = layout.editTextStoreCloseTime.text.toString().takeIf { it.isNotBlank() }
+
+            if (isOpen) {
+                // 시간 단위 유효성 검사
+                if (!isValidTimeFormat(openTime) || !isValidTimeFormat(closeTime)) {
+                    val dialog = DialogBasic("영업 시작 및 종료 시간은 00:00부터\n23:59까지의 형식으로 입력해주세요!")
+
+                    dialog.setBasicDialogInterface(object : BasicDialogInterface {
+                        override fun onClickYesButton() {
+
+                        }
+                    })
+
+                    dialog.show(mainActivity.supportFragmentManager, "DialogStoreOpenTime")
+
+                    return emptyList()
+                }
+            }
 
             val openingHour = OpeningHour(
                 day = dayKey,

@@ -101,4 +101,13 @@ object MainUtil {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
         return dateFormat.format(calendar.time) // 날짜를 원하는 형식으로 변환
     }
+
+    // 시간 단위 유효성 확인
+    fun isValidTimeFormat(time: String?): Boolean {
+        if (time == null || !time.matches(Regex("\\d{2}:\\d{2}"))) return false
+
+        val (hour, minute) = time.split(":").map { it.toIntOrNull() ?: return false }
+
+        return hour in 0..23 && minute in 0..59
+    }
 }
