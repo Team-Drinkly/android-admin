@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.collection.mutableLongSetOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -122,6 +123,38 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
             buttonSave.setOnClickListener {
                 if(!newAvailableDrinkImages.isNullOrEmpty()) {
                     viewModel.getPresignedUrlBatch(mainActivity, newAvailableDrinkImages?.map { it.image })
+                } else if(!newCommonAvailableDrinkImages.isNullOrEmpty()) {
+                    // 소주가 추가되어 있는 경우
+                    val newImageUrls = mutableListOf<NewImageUrl>()
+
+                    newCommonAvailableDrinkImages?.forEach { imageData ->
+                        when (imageData.description) {
+                            "소주" -> {
+                                newImageUrls.add(
+                                    NewImageUrl(
+                                        imageUrl = "공통주류/20250502162032-11f10447-1597-48b6-9ec8-28e0c37ab3ba-soju",
+                                        description = "소주"
+                                    )
+                                )
+                            }
+                            "맥주" -> {
+                                newImageUrls.add(
+                                    NewImageUrl(
+                                        imageUrl = "공통주류/20250502162032-b7a26511-55a9-4811-92a2-1ff564a34449-beer",
+                                        description = "맥주"
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    var storeInfo =
+                        StoreImageRequest(
+                            type = "availableDrinks",
+                            newImageUrls = newImageUrls ?: emptyList<NewImageUrl>(),
+                            removeImageIds = removedAvailableDrinkImages?: emptyList()
+                        )
+                    viewModel.editStoreImage(mainActivity, MyApplication.storeId, storeInfo)
                 } else {
                     var storeInfo =
                         StoreImageRequest(
@@ -141,7 +174,7 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
         availableDrinkAdapter.updateList(images)
 
         binding.run {
-            if((newAvailableDrinkImages?.size ?: 0) > 0 || (removedAvailableDrinkImages?.size ?: 0) > 0) {
+            if((newAvailableDrinkImages?.size ?: 0) > 0 || (newCommonAvailableDrinkImages?.size ?: 0) > 0 || (removedAvailableDrinkImages?.size ?: 0) > 0) {
                 buttonSave.isEnabled = true
             } else {
                 buttonSave.isEnabled = false

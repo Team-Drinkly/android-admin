@@ -22,8 +22,6 @@ class StoreDetailInfoMainFragment : Fragment() {
         ViewModelProvider(requireActivity())[StoreViewModel::class.java]
     }
 
-    private var getStoreDetailInfo: StoreDetailResponse? = null
-
     private var isSaveInfo = MutableList(5) { false }
 
     override fun onCreateView(
@@ -163,7 +161,6 @@ class StoreDetailInfoMainFragment : Fragment() {
 
     fun initView() {
         binding.run {
-
             if(isSaveInfo.all { it }) {
                 buttonNext.visibility = View.VISIBLE
             } else {
