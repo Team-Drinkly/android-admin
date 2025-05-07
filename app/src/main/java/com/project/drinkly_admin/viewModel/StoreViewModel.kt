@@ -28,7 +28,7 @@ import java.io.File
 
 class StoreViewModel : ViewModel() {
 
-    var storeDetailInfo: MutableLiveData<StoreDetailResponse> = MutableLiveData()
+    var storeDetailInfo: MutableLiveData<StoreDetailResponse?> = MutableLiveData()
     var isEdit: MutableLiveData<Boolean> = MutableLiveData()
 
     var presignedUrl: MutableLiveData<PresignedUrlResponse> = MutableLiveData()
@@ -51,8 +51,8 @@ class StoreViewModel : ViewModel() {
                         val result: BaseResponse<StoreDetailResponse>? = response.body()
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
-                        storeDetailInfo.value = result?.payload!!
-                        MyApplication.storeId = result.payload.storeId ?: 0
+                        storeDetailInfo.value = result?.payload
+                        MyApplication.storeId = result?.payload?.storeId ?: 0
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<StoreDetailResponse>? = response.body()
@@ -100,7 +100,7 @@ class StoreViewModel : ViewModel() {
                                 .replace(R.id.fragmentContainerView_main, HomeFragment())
                                 .commit()
                         } else {
-                            storeDetailInfo.value = result?.payload!!
+                            storeDetailInfo.value = result?.payload
 
                             activity.supportFragmentManager.popBackStack()
                         }
@@ -140,7 +140,7 @@ class StoreViewModel : ViewModel() {
                         val result: BaseResponse<StoreDetailResponse>? = response.body()
                         Log.d("DrinklyViewModel", "onResponse 성공 - : " + result?.toString())
 
-                        storeDetailInfo.value = result?.payload!!
+                        storeDetailInfo.value = result?.payload
 
                         activity.supportFragmentManager.popBackStack()
                     } else {

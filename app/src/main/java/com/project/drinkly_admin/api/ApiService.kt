@@ -3,6 +3,7 @@ package com.project.drinkly_admin.api
 import com.project.drinkly.api.response.login.LoginResponse
 import com.project.drinkly.api.response.login.NiceUrlResponse
 import com.project.drinkly.api.response.login.SignUpResponse
+import com.project.drinkly_admin.api.request.coupon.CouponNotificationRequest
 import com.project.drinkly_admin.api.request.coupon.CreateCouponRequest
 import com.project.drinkly_admin.api.request.image.PresignedUrlBatchRequest
 import com.project.drinkly_admin.api.request.image.PresignedUrlRequest
@@ -158,4 +159,11 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Body request: CreateCouponRequest
     ): Call<BaseResponse<Int>>
+
+    // 쿠폰 발행 후 푸시알림 전송
+    @POST("v1/coupon/o/notify")
+    fun sendNotificationForCoupon(
+        @Header("Authorization") token: String,
+        @Body request: CouponNotificationRequest
+    ): Call<BaseResponse<String>>
 }

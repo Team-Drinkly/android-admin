@@ -10,11 +10,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.databinding.FragmentSignUpStoreInfoBinding
 import com.project.drinkly_admin.ui.MainActivity
+import com.project.drinkly_admin.util.MainUtil.updateViewPositionForKeyboard
 
 class SignUpStoreInfoFragment : Fragment() {
 
@@ -44,7 +47,19 @@ class SignUpStoreInfoFragment : Fragment() {
         binding = FragmentSignUpStoreInfoBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
 
+        ViewCompat.setOnApplyWindowInsetsListener(requireActivity().window.decorView.rootView) { _, insets ->
+            val sysBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            updateViewPositionForKeyboard(binding.scrollView, imeHeight - sysBarInsets.bottom)
+            insets
+        }
+
         binding.run {
+            scrollView.setOnTouchListener { v, event ->
+                mainActivity.hideKeyboard()
+                false
+            }
+
             editTextStoreName.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
