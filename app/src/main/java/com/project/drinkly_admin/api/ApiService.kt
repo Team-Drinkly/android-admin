@@ -20,6 +20,7 @@ import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.api.response.home.StoreListResponse
 import com.project.drinkly_admin.api.response.login.BasicStoreInfoResponse
 import com.project.drinkly_admin.api.response.login.OwnerNameResponse
+import com.project.drinkly_admin.api.response.login.ReissueTokenResponse
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -36,6 +37,13 @@ import retrofit2.http.Url
 import java.io.File
 
 interface ApiService {
+
+    // 토큰 재발급
+    @POST("/api/v1/member/reissue/OWNER")
+    fun refreshToken(
+        @Header("RefreshToken") token: String
+    ): Call<BaseResponse<ReissueTokenResponse>>
+
     // OAuth로그인
     @POST("v1/member/oauth/OWNER/{provider}")
     fun login(

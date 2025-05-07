@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.project.drinkly_admin.api.ApiClient
 import com.project.drinkly_admin.api.TokenManager
+import com.project.drinkly_admin.api.TokenUtil
 import com.project.drinkly_admin.api.response.BaseResponse
 import com.project.drinkly_admin.api.response.home.FreeDrinkHistory
 import com.project.drinkly_admin.api.response.home.OrderHistoryResponse
@@ -43,6 +44,13 @@ class OrderViewModel: ViewModel() {
                         val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
                         Log.d("DrinklyViewModel", "Error Response: $errorBody")
 
+                        when(response.code()) {
+                            498 -> {
+                                TokenUtil.refreshToken(activity) {
+                                    getHomeOrderHistory(activity, storeId)
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -78,6 +86,13 @@ class OrderViewModel: ViewModel() {
                         val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
                         Log.d("DrinklyViewModel", "Error Response: $errorBody")
 
+                        when(response.code()) {
+                            498 -> {
+                                TokenUtil.refreshToken(activity) {
+                                    getOrderHistory(activity, storeId)
+                                }
+                            }
+                        }
                     }
                 }
 

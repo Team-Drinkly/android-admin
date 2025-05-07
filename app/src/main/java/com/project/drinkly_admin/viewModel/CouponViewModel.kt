@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.ApiClient
 import com.project.drinkly_admin.api.TokenManager
+import com.project.drinkly_admin.api.TokenUtil
 import com.project.drinkly_admin.api.request.coupon.CouponNotificationRequest
 import com.project.drinkly_admin.api.request.coupon.CreateCouponRequest
 import com.project.drinkly_admin.api.response.BaseResponse
@@ -48,6 +49,13 @@ class CouponViewModel: ViewModel() {
                         val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
                         Log.d("DrinklyViewModel", "Error Response: $errorBody")
 
+                        when(response.code()) {
+                            498 -> {
+                                TokenUtil.refreshToken(activity) {
+                                    getCouponList(activity, storeId)
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -89,6 +97,13 @@ class CouponViewModel: ViewModel() {
                         val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
                         Log.d("DrinklyViewModel", "Error Response: $errorBody")
 
+                        when(response.code()) {
+                            498 -> {
+                                TokenUtil.refreshToken(activity) {
+                                    createCoupon(activity, couponTitle, couponDescription, couponNum, couponDate)
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -125,6 +140,13 @@ class CouponViewModel: ViewModel() {
                         val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
                         Log.d("DrinklyViewModel", "Error Response: $errorBody")
 
+                        when(response.code()) {
+                            498 -> {
+                                TokenUtil.refreshToken(activity) {
+                                    sendNotificationForCoupon(activity, couponId, storeName)
+                                }
+                            }
+                        }
                     }
                 }
 
