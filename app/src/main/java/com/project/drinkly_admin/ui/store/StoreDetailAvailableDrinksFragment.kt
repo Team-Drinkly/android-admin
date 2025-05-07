@@ -132,7 +132,7 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                             "소주" -> {
                                 newImageUrls.add(
                                     NewImageUrl(
-                                        imageUrl = "공통주류/20250502162032-11f10447-1597-48b6-9ec8-28e0c37ab3ba-soju",
+                                        imageUrl = "공통주류/20250507034147-40441a71-23e6-4166-8965-ce331aab5998-soju",
                                         description = "소주"
                                     )
                                 )
@@ -140,7 +140,7 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                             "맥주" -> {
                                 newImageUrls.add(
                                     NewImageUrl(
-                                        imageUrl = "공통주류/20250502162032-b7a26511-55a9-4811-92a2-1ff564a34449-beer",
+                                        imageUrl = "공통주류/20250507034229-20802afc-98f4-44ce-aec7-12a559a96668-beer",
                                         description = "맥주"
                                     )
                                 )
