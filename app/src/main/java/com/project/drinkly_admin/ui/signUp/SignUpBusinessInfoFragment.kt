@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
@@ -15,6 +17,7 @@ import com.project.drinkly_admin.databinding.FragmentSignUpBusinessInfoBinding
 import com.project.drinkly_admin.ui.BasicDialogInterface
 import com.project.drinkly_admin.ui.DialogBasic
 import com.project.drinkly_admin.ui.MainActivity
+import com.project.drinkly_admin.util.MainUtil.updateViewPositionForKeyboard
 import com.project.drinkly_admin.viewModel.LoginViewModel
 import com.project.drinkly_admin.viewModel.UserViewModel
 
@@ -37,9 +40,21 @@ class SignUpBusinessInfoFragment : Fragment() {
         binding = FragmentSignUpBusinessInfoBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
 
+        ViewCompat.setOnApplyWindowInsetsListener(requireActivity().window.decorView.rootView) { _, insets ->
+            val sysBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            updateViewPositionForKeyboard(binding.scrollView, imeHeight - sysBarInsets.bottom)
+            insets
+        }
+
         observeViewModel()
 
         binding.run {
+            scrollView.setOnTouchListener { v, event ->
+                mainActivity.hideKeyboard()
+                false
+            }
+
             editTextBusinessNumber.addTextChangedListener(object : TextWatcher {
                 private var currentText = ""
                 private var isFormatting = false

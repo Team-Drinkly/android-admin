@@ -7,10 +7,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.databinding.FragmentSignUpStoreNumberBinding
 import com.project.drinkly_admin.ui.MainActivity
+import com.project.drinkly_admin.util.MainUtil.updateViewPositionForKeyboard
 
 class SignUpStoreNumberFragment : Fragment() {
 
@@ -25,7 +28,19 @@ class SignUpStoreNumberFragment : Fragment() {
         binding = FragmentSignUpStoreNumberBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
 
+        ViewCompat.setOnApplyWindowInsetsListener(requireActivity().window.decorView.rootView) { _, insets ->
+            val sysBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            updateViewPositionForKeyboard(binding.scrollView, imeHeight - sysBarInsets.bottom)
+            insets
+        }
+
         binding.run {
+            scrollView.setOnTouchListener { v, event ->
+                mainActivity.hideKeyboard()
+                false
+            }
+
             editTextStoreNumber.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
