@@ -11,6 +11,7 @@ import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.ApiClient
 import com.project.drinkly_admin.api.TokenManager
+import com.project.drinkly_admin.api.TokenUtil
 import com.project.drinkly_admin.api.openData.DataApiClient
 import com.project.drinkly_admin.api.openData.request.BusinessCheck
 import com.project.drinkly_admin.api.openData.request.ValidateBusinessInfoRequest
@@ -337,6 +338,13 @@ class LoginViewModel: ViewModel() {
                         val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
                         Log.d("DrinklyViewModel", "Error Response: $errorBody")
 
+                        when(response.code()) {
+                            498 -> {
+                                TokenUtil.refreshToken(activity) {
+                                    saveBasicStoreInfo(activity)
+                                }
+                            }
+                        }
                     }
                 }
 

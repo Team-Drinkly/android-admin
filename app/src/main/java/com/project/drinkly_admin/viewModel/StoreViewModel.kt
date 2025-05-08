@@ -8,6 +8,7 @@ import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.ApiClient
 import com.project.drinkly_admin.api.PresignedUrlApiClient
 import com.project.drinkly_admin.api.TokenManager
+import com.project.drinkly_admin.api.TokenUtil
 import com.project.drinkly_admin.api.request.image.PresignedUrlBatchRequest
 import com.project.drinkly_admin.api.request.image.PresignedUrlRequest
 import com.project.drinkly_admin.api.request.image.PresignedUrlResponse
@@ -36,7 +37,6 @@ class StoreViewModel : ViewModel() {
 
     fun getStoreDetail(activity: MainActivity, storeId: Int) {
         val apiClient = ApiClient(activity)
-        val tokenManager = TokenManager(activity)
 
         apiClient.apiService.getStoreDetailInfo(storeId)
             .enqueue(object :
@@ -60,6 +60,13 @@ class StoreViewModel : ViewModel() {
                         val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
                         Log.d("DrinklyViewModel", "Error Response: $errorBody")
 
+                        when(response.code()) {
+                            498 -> {
+                                TokenUtil.refreshToken(activity) {
+                                    getStoreDetail(activity, storeId)
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -112,6 +119,14 @@ class StoreViewModel : ViewModel() {
                         Log.d("DrinklyViewModel", "Error Response: $errorBody")
 
                         isEdit.value = false
+
+                        when(response.code()) {
+                            498 -> {
+                                TokenUtil.refreshToken(activity) {
+                                    editStoreInfo(activity, storeId, storeInfo)
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -151,6 +166,14 @@ class StoreViewModel : ViewModel() {
                         Log.d("DrinklyViewModel", "Error Response: $errorBody")
 
                         isEdit.value = false
+
+                        when(response.code()) {
+                            498 -> {
+                                TokenUtil.refreshToken(activity) {
+                                    editStoreImage(activity, storeId, storeImageInfo)
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -187,6 +210,13 @@ class StoreViewModel : ViewModel() {
                         val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
                         Log.d("DrinklyViewModel", "Error Response: $errorBody")
 
+                        when(response.code()) {
+                            498 -> {
+                                TokenUtil.refreshToken(activity) {
+                                    getPresignedUrl(activity, image)
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -243,6 +273,14 @@ class StoreViewModel : ViewModel() {
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e("DrinklyViewModel", "Presigned 요청 실패: $errorBody")
+
+                    when(response.code()) {
+                        498 -> {
+                            TokenUtil.refreshToken(activity) {
+                                getPresignedUrlBatch(activity, images)
+                            }
+                        }
+                    }
                 }
             }
 
