@@ -196,7 +196,7 @@ class StoreViewModel : ViewModel() {
         val apiClient = ApiClient(activity)
         val tokenManager = TokenManager(activity)
 
-        apiClient.apiService.getPresignedUrl(tokenManager.getAccessToken().toString(), PresignedUrlRequest(MyApplication.storeName))
+        apiClient.apiService.getPresignedUrl(tokenManager.getAccessToken().toString(), PresignedUrlRequest("${MyApplication.storeName}/main"))
             .enqueue(object :
                 Callback<BaseResponse<PresignedUrlResponse>> {
                 override fun onResponse(
@@ -236,15 +236,15 @@ class StoreViewModel : ViewModel() {
             })
     }
 
-    fun getPresignedUrlBatch(activity: MainActivity, images: List<Any>?) {
+    fun getPresignedUrlBatch(activity: MainActivity, images: List<Any>?, imageType : String) {
         val apiClient = ApiClient(activity)
         val tokenManager = TokenManager(activity)
 
         val request = images?.let {
             List(it.size) {
                 PresignedUrlRequest(
-                    prefix = "${MyApplication.storeName}/availableDrinks",
-                    fileName = "availableDrinks"
+                    prefix = "${MyApplication.storeName}/${imageType}",
+                    fileName = "${imageType}"
                 )
             }
         } ?: emptyList()
@@ -286,7 +286,7 @@ class StoreViewModel : ViewModel() {
                     when(response.code()) {
                         498 -> {
                             TokenUtil.refreshToken(activity) {
-                                getPresignedUrlBatch(activity, images)
+                                getPresignedUrlBatch(activity, images, imageType)
                             }
                         }
                     }

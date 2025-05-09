@@ -89,7 +89,7 @@ class StoreMenuFragment : Fragment() {
         binding.run {
             buttonSave.setOnClickListener {
                 if(!newMenuImages.isNullOrEmpty()) {
-                    viewModel.getPresignedUrlBatch(mainActivity, newMenuImages!!)
+                    viewModel.getPresignedUrlBatch(mainActivity, newMenuImages!!, "menu")
                 } else {
                     var storeInfo =
                         StoreImageRequest(

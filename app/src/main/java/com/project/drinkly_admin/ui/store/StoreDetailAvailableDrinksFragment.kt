@@ -122,7 +122,7 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
 
             buttonSave.setOnClickListener {
                 if(!newAvailableDrinkImages.isNullOrEmpty()) {
-                    viewModel.getPresignedUrlBatch(mainActivity, newAvailableDrinkImages?.map { it.image })
+                    viewModel.getPresignedUrlBatch(mainActivity, newAvailableDrinkImages?.map { it.image }, "availableDrinks")
                 } else if(!newCommonAvailableDrinkImages.isNullOrEmpty()) {
                     // 소주가 추가되어 있는 경우
                     val newImageUrls = mutableListOf<NewImageUrl>()
