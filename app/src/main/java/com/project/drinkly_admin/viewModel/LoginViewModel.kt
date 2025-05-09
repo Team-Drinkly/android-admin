@@ -14,13 +14,11 @@ import com.project.drinkly_admin.api.ApiClient
 import com.project.drinkly_admin.api.TokenManager
 import com.project.drinkly_admin.api.TokenUtil
 import com.project.drinkly_admin.api.openData.DataApiClient
-import com.project.drinkly_admin.api.openData.request.BusinessCheck
 import com.project.drinkly_admin.api.openData.request.ValidateBusinessInfoRequest
 import com.project.drinkly_admin.api.openData.response.ValidateBusinessInfoResponse
 import com.project.drinkly_admin.api.request.login.SignUpRequest
 import com.project.drinkly_admin.api.response.BaseResponse
 import com.project.drinkly_admin.api.response.login.BasicStoreInfoResponse
-import com.project.drinkly_admin.api.response.login.OwnerNameResponse
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.home.HomeStoreListFragment
 import com.project.drinkly_admin.ui.signUp.PassWebActivity
@@ -34,7 +32,7 @@ import java.net.URLEncoder
 class LoginViewModel: ViewModel() {
     var passUrl: MutableLiveData<String> = MutableLiveData()
 
-    var validBusinessInfo: MutableLiveData<String> = MutableLiveData()
+    var validBusinessInfo: MutableLiveData<Boolean> = MutableLiveData()
 
     fun validateBusinessInfo(activity: MainActivity, businessData: ValidateBusinessInfoRequest) {
         val apiClient = DataApiClient(activity)
@@ -52,7 +50,11 @@ class LoginViewModel: ViewModel() {
                         val result: ValidateBusinessInfoResponse? = response.body()
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
-                        validBusinessInfo.value = result?.data?.get(0)?.valid
+                        if(result?.match_cnt != null) {
+                            validBusinessInfo.value = true
+                        } else {
+                            validBusinessInfo.value = false
+                        }
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: ValidateBusinessInfoResponse? = response.body()
@@ -60,12 +62,15 @@ class LoginViewModel: ViewModel() {
                         val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
                         Log.d("DrinklyViewModel", "Error Response: $errorBody")
 
+                        validBusinessInfo.value = false
                     }
                 }
 
                 override fun onFailure(call: Call<ValidateBusinessInfoResponse>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    validBusinessInfo.value = false
                 }
             })
     }
@@ -201,75 +206,6 @@ class LoginViewModel: ViewModel() {
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
                 }
             })
-    }
-
-    fun getOwnerNameForValid(activity: MainActivity, isEdit: Boolean, businessNumber: String, openDate: String) {
-        val apiClient = ApiClient(activity)
-        val tokenManager = TokenManager(activity)
-
-        if(isEdit) {
-            apiClient.apiService.getOwnerName(tokenManager.getUserId())
-                .enqueue(object :
-                    Callback<BaseResponse<OwnerNameResponse>> {
-                    override fun onResponse(
-                        call: Call<BaseResponse<OwnerNameResponse>>,
-                        response: Response<BaseResponse<OwnerNameResponse>>
-                    ) {
-                        Log.d("DrinklyViewModel", "onResponse 성공: " + response.body().toString())
-                        if (response.isSuccessful) {
-                            // 정상적으로 통신이 성공된 경우
-                            val result: BaseResponse<OwnerNameResponse>? = response.body()
-                            Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
-
-                            validateBusinessInfo(activity, ValidateBusinessInfoRequest(listOf(
-                                BusinessCheck(businessNumber, openDate, result?.payload?.ownerName ?: ""))))
-                        } else {
-                            // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                            var result: BaseResponse<OwnerNameResponse>? = response.body()
-                            Log.d("DrinklyViewModel", "onResponse 실패: " + response.body())
-                            val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
-                            Log.d("DrinklyViewModel", "Error Response: $errorBody")
-
-                        }
-                    }
-
-                    override fun onFailure(call: Call<BaseResponse<OwnerNameResponse>>, t: Throwable) {
-                        // 통신 실패
-                        Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
-                    }
-                })
-        } else {
-            apiClient.apiService.getOwnerNameForValid(MyApplication.oauthId)
-                .enqueue(object :
-                    Callback<BaseResponse<OwnerNameResponse>> {
-                    override fun onResponse(
-                        call: Call<BaseResponse<OwnerNameResponse>>,
-                        response: Response<BaseResponse<OwnerNameResponse>>
-                    ) {
-                        Log.d("DrinklyViewModel", "onResponse 성공: " + response.body().toString())
-                        if (response.isSuccessful) {
-                            // 정상적으로 통신이 성공된 경우
-                            val result: BaseResponse<OwnerNameResponse>? = response.body()
-                            Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
-
-                            validateBusinessInfo(activity, ValidateBusinessInfoRequest(listOf(
-                                BusinessCheck(businessNumber, openDate, result?.payload?.ownerName ?: ""))))
-                        } else {
-                            // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
-                            var result: BaseResponse<OwnerNameResponse>? = response.body()
-                            Log.d("DrinklyViewModel", "onResponse 실패: " + response.body())
-                            val errorBody = response.errorBody()?.string() // 에러 응답 데이터를 문자열로 얻음
-                            Log.d("DrinklyViewModel", "Error Response: $errorBody")
-
-                        }
-                    }
-
-                    override fun onFailure(call: Call<BaseResponse<OwnerNameResponse>>, t: Throwable) {
-                        // 통신 실패
-                        Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
-                    }
-                })
-        }
     }
 
     fun signUp(activity: MainActivity) {

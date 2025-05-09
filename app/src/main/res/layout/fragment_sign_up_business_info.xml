@@ -70,39 +70,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="50dp"
                 android:ems="10"
-                android:inputType="number"
                 android:hint="사업자 등록번호를 입력해주세요"
+                android:inputType="number"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/textView_subtitle1"
                 app:layout_constraintStart_toStartOf="@+id/textView_subtitle1"
                 app:layout_constraintTop_toBottomOf="@+id/textView_subtitle1" />
-
-            <TextView
-                android:id="@+id/textView_subtitle2"
-                style="@style/SubTitle2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:text="개업 일자"
-                android:textColor="@color/gray7"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText_business_number" />
-
-            <EditText
-                android:id="@+id/editText_open_date"
-                style="@style/SignUpEditText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="50dp"
-                android:ems="10"
-                android:hint="개업 일자를 입력해주세요 (YYYY-MM-dd)"
-                android:inputType="number"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/textView_subtitle2"
-                app:layout_constraintStart_toStartOf="@+id/textView_subtitle2"
-                app:layout_constraintTop_toBottomOf="@+id/textView_subtitle2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

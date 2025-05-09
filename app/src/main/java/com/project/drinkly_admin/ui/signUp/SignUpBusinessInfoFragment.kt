@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
+import com.project.drinkly_admin.api.openData.request.ValidateBusinessInfoRequest
 import com.project.drinkly_admin.api.request.login.BasicStoreInfoRequest
 import com.project.drinkly_admin.databinding.FragmentSignUpBusinessInfoBinding
 import com.project.drinkly_admin.ui.BasicDialogInterface
@@ -30,7 +31,6 @@ class SignUpBusinessInfoFragment : Fragment() {
     }
 
     private var businessNumber = ""
-    private var openDate = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,9 +59,13 @@ class SignUpBusinessInfoFragment : Fragment() {
                 private var currentText = ""
                 private var isFormatting = false
 
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    checkEnabled()
+                }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    checkEnabled()
+                }
 
                 override fun afterTextChanged(s: Editable?) {
                     if (isFormatting) return
@@ -99,55 +103,10 @@ class SignUpBusinessInfoFragment : Fragment() {
                 }
             })
 
-
-            editTextOpenDate.addTextChangedListener(object : TextWatcher {
-                private var isFormatting = false
-                private var currentText = ""
-
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-                override fun afterTextChanged(s: Editable?) {
-                    if (isFormatting) return
-
-                    val digitsOnly = s.toString().filter { it.isDigit() }
-                    val limited = digitsOnly.take(8)  // yyyyMMdd 최대 8자리까지만
-
-                    val formatted = buildString {
-                        for (i in limited.indices) {
-                            append(limited[i])
-                            if (i == 3 || i == 5) append("-")  // yyyy-MM-dd 형식
-                        }
-                    }
-
-                    if (formatted == currentText) return  // 중복 setText 방지
-
-                    isFormatting = true
-                    currentText = formatted
-                    editTextOpenDate.setText(formatted)
-                    editTextOpenDate.setSelection(formatted.length.coerceAtMost(formatted.length))
-                    isFormatting = false
-
-                    // 배경 설정
-                    if (formatted.isNotEmpty()) {
-                        editTextOpenDate.setBackgroundResource(R.drawable.background_edittext_radius50_filled)
-                    } else {
-                        editTextOpenDate.setBackgroundResource(R.drawable.background_edittext_radius50_default)
-                    }
-
-                    // 하이픈 없는 원본 날짜 저장
-                    openDate = limited
-
-                    checkEnabled()
-                }
-            })
-
-
             buttonNext.setOnClickListener {
                 MyApplication.basicStoreInfo.businessRegistrationNumber = editTextBusinessNumber.text.toString()
 
-                viewModel.getOwnerNameForValid(mainActivity, arguments?.getBoolean("isAdd") ?: false, businessNumber, openDate)
+                viewModel.validateBusinessInfo(mainActivity, ValidateBusinessInfoRequest(listOf(businessNumber)))
             }
         }
 
@@ -161,7 +120,7 @@ class SignUpBusinessInfoFragment : Fragment() {
 
     fun checkEnabled() {
         binding.run {
-            if(businessNumber.length == 10 && openDate.length == 8) {
+            if(businessNumber.length == 10) {
                 buttonNext.isEnabled = true
             } else {
                 buttonNext.isEnabled = false
@@ -172,34 +131,29 @@ class SignUpBusinessInfoFragment : Fragment() {
     fun observeViewModel() {
         viewModel.run {
             validBusinessInfo.observe(viewLifecycleOwner) {
-                when(it) {
-                    "01" -> {
-                        val bundle = Bundle().apply {
-                            putBoolean("isAdd", arguments?.getBoolean("isAdd") ?: false)
-                        }
-
-                        // 전달할 Fragment 생성
-                        val  nextFragment = SignUpStoreInfoFragment().apply {
-                            arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
-                        }
-                        mainActivity.supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragmentContainerView_main, nextFragment)
-                            .addToBackStack(null)
-                            .commit()
-
-                        viewModel.validBusinessInfo.value = null
+                if(it == true) {
+                    val bundle = Bundle().apply {
+                        putBoolean("isAdd", arguments?.getBoolean("isAdd") ?: false)
                     }
-                    "02" -> {
-                        val dialog = DialogBasic("사업자 정보가 일치하지 않습니다.\n다시 한번 확인해주세요.")
 
-                        dialog.setBasicDialogInterface(object : BasicDialogInterface {
-                            override fun onClickYesButton() {
-
-                            }
-                        })
-
-                        dialog.show(mainActivity.supportFragmentManager, "DialogBusinessInfo")
+                    // 전달할 Fragment 생성
+                    val  nextFragment = SignUpStoreInfoFragment().apply {
+                        arguments = bundle // 생성한 Bundle을 Fragment의 arguments에 설정
                     }
+                    mainActivity.supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView_main, nextFragment)
+                        .addToBackStack(null)
+                        .commit()
+                } else if(it == false) {
+                    val dialog = DialogBasic("사업자 정보가 일치하지 않습니다.\n다시 한번 확인해주세요.")
+
+                    dialog.setBasicDialogInterface(object : BasicDialogInterface {
+                        override fun onClickYesButton() {
+
+                        }
+                    })
+
+                    dialog.show(mainActivity.supportFragmentManager, "DialogBusinessInfo")
                 }
             }
         }
@@ -212,6 +166,7 @@ class SignUpBusinessInfoFragment : Fragment() {
             toolbar.run {
                 textViewTitle.text = "사업자 정보 입력"
                 buttonBack.setOnClickListener {
+                    viewModel.validBusinessInfo.value = null
                     fragmentManager?.popBackStack()
                 }
             }
