@@ -40,6 +40,8 @@ class SignUpInfoFragment : Fragment() {
                 } else {
                     viewModel.signUp(mainActivity)
                 }
+
+                buttonSignUp.isEnabled = false
             }
         }
 

@@ -100,6 +100,8 @@ class StoreMenuFragment : Fragment() {
                         )
                     viewModel.editStoreImage(mainActivity, MyApplication.storeId, storeInfo)
                 }
+
+                buttonSave.isEnabled = false
             }
         }
 

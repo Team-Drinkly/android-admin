@@ -58,6 +58,8 @@ class StoreAvailableDaysFragment : Fragment() {
                 )
 
                 viewModel.editStoreInfo(mainActivity, MyApplication.storeId, storeInfo)
+
+                buttonSave.isEnabled = false
             }
         }
 
