@@ -137,7 +137,7 @@ class StoreDetailInfoFragment : Fragment() {
                 if (presignedUrlData != null) {
                     binding.run {
                         val insta = if (editTextStoreInstagram.text.isNotEmpty()) {
-                            "https://www.instagram.com/${editTextStoreInstagram.text.toString()}"
+                            "${editTextStoreInstagram.text.toString()}"
                         } else {
                             null
                         }
