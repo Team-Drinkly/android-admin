@@ -27,17 +27,9 @@ class SplashFragment : Fragment() {
         mainActivity = activity as MainActivity
 
         Handler().postDelayed({
-            val tokenManager = TokenManager(mainActivity)
-
-            if(tokenManager.getAccessToken() != null) {
-                mainActivity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView_main, HomeStoreListFragment())
-                    .commit()
-            } else {
-                mainActivity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView_main, LoginFragment())
-                    .commit()
-            }
+            mainActivity.supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView_main, LoginFragment())
+                .commit()
         }, 3000)
 
         return binding.root
