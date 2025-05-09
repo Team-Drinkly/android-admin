@@ -49,30 +49,27 @@ class StoreMenuFragment : Fragment() {
     lateinit var menuAdapter: MenuAdapter
 
 
-    // Registers a photo picker activity launcher in single-select mode.
-    val pickMedia =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            // Callback is invoked after the user selects a media item or closes the photo picker.
-            if (uri != null) {
-                Log.d("PhotoPicker", "Selected URI: $uri")
+    // 여러 장 선택 가능한 Photo Picker 등록
+    val pickMultipleMedia =
+        registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
+            if (!uris.isNullOrEmpty()) {
+                for (uri in uris) {
+                    Log.d("PhotoPicker", "Selected URI: $uri")
 
-                // 이미지 처리 및 압축
-                val resizedUri = convertResizeImage(uri) // 기존 이미지를 리사이징한 후 Uri 얻기
-                val compressedFile = File(resizedUri.path!!)
+                    val resizedUri = convertResizeImage(uri)
+                    val compressedFile = File(resizedUri.path!!)
 
-                println("image: ${compressedFile}")
-                // 파일이 정상적으로 생성되었는지 확인
-                if (compressedFile.exists() && compressedFile.length() > 0) {
-                    newMenuImages?.add(compressedFile)
-                    images?.add(compressedFile)
-
-                    menuAdapter.updateList(images)
-                    println(images)
-
-                    checkComplete()
-                } else {
-                    Log.e("ImageCompression", "압축된 파일이 존재하지 않거나 비어 있습니다.")
+                    if (compressedFile.exists() && compressedFile.length() > 0) {
+                        newMenuImages?.add(compressedFile)
+                        images?.add(compressedFile)
+                    } else {
+                        Log.e("ImageCompression", "압축된 파일이 존재하지 않거나 비어 있습니다.")
+                    }
                 }
+
+                menuAdapter.updateList(images)
+                println(images)
+                checkComplete()
             } else {
                 Log.d("PhotoPicker", "No media selected")
             }
@@ -157,7 +154,9 @@ class StoreMenuFragment : Fragment() {
                     override fun onGalleryClick(position: Int) {
                         // 갤러리 오픈
                         // Launch the photo picker and let the user choose only images.
-                        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                        pickMultipleMedia.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
                     }
                 }
             }
