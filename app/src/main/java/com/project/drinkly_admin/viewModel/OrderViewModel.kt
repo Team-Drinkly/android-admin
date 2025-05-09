@@ -1,6 +1,7 @@
 package com.project.drinkly_admin.viewModel
 
 import android.util.Log
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.project.drinkly_admin.api.ApiClient
@@ -36,7 +37,9 @@ class OrderViewModel: ViewModel() {
                         val result: BaseResponse<OrderHistoryResponse>? = response.body()
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
-                        storeHomeOrderHistory.value = result?.payload!!
+                        if(result?.payload != null) {
+                            storeHomeOrderHistory.value = result.payload!!
+                        }
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<OrderHistoryResponse>? = response.body()
@@ -57,6 +60,8 @@ class OrderViewModel: ViewModel() {
                 override fun onFailure(call: Call<BaseResponse<OrderHistoryResponse>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }
@@ -78,7 +83,9 @@ class OrderViewModel: ViewModel() {
                         val result: BaseResponse<List<FreeDrinkHistory>>? = response.body()
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
-                        storeOrderHistory.value = result?.payload!!
+                        if(result?.payload != null) {
+                            storeOrderHistory.value = result?.payload!!
+                        }
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<List<FreeDrinkHistory>>? = response.body()
@@ -99,6 +106,8 @@ class OrderViewModel: ViewModel() {
                 override fun onFailure(call: Call<BaseResponse<List<FreeDrinkHistory>>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }

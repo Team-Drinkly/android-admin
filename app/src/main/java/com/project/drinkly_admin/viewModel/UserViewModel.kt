@@ -1,6 +1,7 @@
 package com.project.drinkly_admin.viewModel
 
 import android.util.Log
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.project.drinkly_admin.api.ApiClient
@@ -39,7 +40,15 @@ class UserViewModel : ViewModel() {
                         val result: BaseResponse<OwnerNameResponse>? = response.body()
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
-                        userName.value = result?.payload?.ownerName
+                        when(result?.result?.code) {
+                            in 200 .. 299 -> {
+                                userName.value = result?.payload?.ownerName
+                            }
+
+                            in 400..499 -> {
+                                activity.goToLogin()
+                            }
+                        }
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<OwnerNameResponse>? = response.body()
@@ -53,6 +62,8 @@ class UserViewModel : ViewModel() {
                 override fun onFailure(call: Call<BaseResponse<OwnerNameResponse>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }
@@ -110,6 +121,8 @@ class UserViewModel : ViewModel() {
                 override fun onFailure(call: Call<BaseResponse<List<StoreListResponse>>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }

@@ -1,6 +1,7 @@
 package com.project.drinkly_admin.viewModel
 
 import android.util.Log
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.project.drinkly.api.response.login.LoginResponse
@@ -117,6 +118,8 @@ class LoginViewModel: ViewModel() {
                 override fun onFailure(call: Call<BaseResponse<LoginResponse>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }
@@ -306,12 +309,15 @@ class LoginViewModel: ViewModel() {
                 override fun onFailure(call: Call<BaseResponse<SignUpResponse>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }
 
     fun saveBasicStoreInfo(activity: MainActivity) {
         val apiClient = ApiClient(activity)
+        val tokenManager = TokenManager(activity)
 
         apiClient.apiService.saveBasicStoreInfo(MyApplication.basicStoreInfo)
             .enqueue(object :
@@ -351,6 +357,8 @@ class LoginViewModel: ViewModel() {
                 override fun onFailure(call: Call<BaseResponse<BasicStoreInfoResponse>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }

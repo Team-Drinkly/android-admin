@@ -11,8 +11,11 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.FragmentManager
 import com.project.drinkly_admin.R
+import com.project.drinkly_admin.api.TokenManager
 import com.project.drinkly_admin.databinding.ActivityMainBinding
+import com.project.drinkly_admin.ui.onboarding.LoginFragment
 import com.project.drinkly_admin.util.MainUtil.setStatusBarTransparent
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -41,6 +44,15 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
+
+    fun goToLogin() {
+        TokenManager(this).clearAll()
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView_main, LoginFragment())
+            .commit()
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.P)
     fun getKeyHash() {
