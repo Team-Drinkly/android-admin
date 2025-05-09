@@ -1,8 +1,11 @@
 package com.project.drinkly_admin.ui.store
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -64,6 +67,8 @@ class StoreAvailableDrinksBottomSheetFragment() : DialogFragment() {
                     }
 
                     availableDrinkImage = compressedFile
+
+                    checkComplete()
                 } else {
                     Log.e("ImageCompression", "압축된 파일이 존재하지 않거나 비어 있습니다.")
                 }
@@ -157,32 +162,56 @@ class StoreAvailableDrinksBottomSheetFragment() : DialogFragment() {
 
     private fun convertResizeImage(imageUri: Uri): Uri {
         val contentResolver = requireContext().contentResolver
-        val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+        val inputStream = contentResolver.openInputStream(imageUri) ?: return imageUri
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+        inputStream.close()
+
+        // 회전 보정
+        val rotatedBitmap = rotateBitmapIfRequired(bitmap, imageUri)
 
         // 이미지 리사이즈 (절반 크기로)
-        val resizedBitmap =
-            Bitmap.createScaledBitmap(bitmap, bitmap.width / 2, bitmap.height / 2, true)
+        val resizedBitmap = Bitmap.createScaledBitmap(
+            rotatedBitmap,
+            rotatedBitmap.width / 2,
+            rotatedBitmap.height / 2,
+            true
+        )
 
         // 임시 파일 생성
         val tempFile = File.createTempFile("resized_image", ".jpg", requireContext().cacheDir)
 
-        // 이미지 파일 쓰기
         try {
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
-
-            FileOutputStream(tempFile).use { outputStream ->
-                outputStream.write(byteArrayOutputStream.toByteArray())
-                outputStream.flush()
-            }
-
+            val outputStream = FileOutputStream(tempFile)
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+            outputStream.flush()
+            outputStream.close()
         } catch (e: Exception) {
             Log.e("ImageResize", "Failed to write file: ${e.message}")
         } finally {
-            // 메모리 해제
             resizedBitmap.recycle()
         }
 
         return Uri.fromFile(tempFile)
+    }
+
+    private fun rotateBitmapIfRequired(bitmap: Bitmap, uri: Uri): Bitmap {
+        val inputStream = requireContext().contentResolver.openInputStream(uri) ?: return bitmap
+        val exif = ExifInterface(inputStream)
+
+        val orientation = exif.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_NORMAL
+        )
+
+        val matrix = Matrix()
+        when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+            else -> return bitmap
+        }
+
+        inputStream.close()
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 }
