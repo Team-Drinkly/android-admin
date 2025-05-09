@@ -1,6 +1,7 @@
 package com.project.drinkly_admin.viewModel
 
 import android.util.Log
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.project.drinkly_admin.R
@@ -41,7 +42,10 @@ class CouponViewModel: ViewModel() {
                         val result: BaseResponse<List<CouponListResponse>>? = response.body()
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
-                        storeCoupons.value = result?.payload!!
+                        if(result?.payload != null) {
+                            storeCoupons.value = result.payload!!
+                        }
+
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<List<CouponListResponse>>? = response.body()
@@ -62,6 +66,8 @@ class CouponViewModel: ViewModel() {
                 override fun onFailure(call: Call<BaseResponse<List<CouponListResponse>>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }
@@ -110,6 +116,8 @@ class CouponViewModel: ViewModel() {
                 override fun onFailure(call: Call<BaseResponse<Int>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }
@@ -153,6 +161,8 @@ class CouponViewModel: ViewModel() {
                 override fun onFailure(call: Call<BaseResponse<String>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }

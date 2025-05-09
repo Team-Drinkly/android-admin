@@ -1,14 +1,19 @@
 package com.project.drinkly_admin.ui.home
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.project.drinkly_admin.R
+import com.project.drinkly_admin.api.TokenManager
 import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.api.response.home.StoreListResponse
 import com.project.drinkly_admin.databinding.FragmentHomeStoreListBinding
@@ -45,6 +50,9 @@ class HomeStoreListFragment : Fragment() {
     private var getStoreInfo: List<StoreListResponse>? = null
     private var getStoreDetailInfo: StoreDetailResponse? = null
 
+    private var backPressedOnce = false
+    private val backPressHandler = Handler(Looper.getMainLooper())
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -80,6 +88,19 @@ class HomeStoreListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         initView()
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (backPressedOnce) {
+                requireActivity().finishAffinity() // 앱 완전 종료
+            } else {
+                backPressedOnce = true
+                Toast.makeText(requireContext(), "뒤로가기 버튼을\n한 번 더 누르면 종료됩니다", Toast.LENGTH_SHORT).show()
+
+                backPressHandler.postDelayed({
+                    backPressedOnce = false
+                }, 2000)
+            }
+        }
     }
 
     fun initAdapter() {
@@ -168,10 +189,6 @@ class HomeStoreListFragment : Fragment() {
 
         viewModel.getOwnerName(mainActivity)
         viewModel.getStoreList(mainActivity)
-
-        binding.run {
-            textViewTitle.text = "사장님, 안녕하세요!"
-        }
     }
 
 }

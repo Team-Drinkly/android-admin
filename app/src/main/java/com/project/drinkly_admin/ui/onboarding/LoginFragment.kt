@@ -18,8 +18,10 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.project.drinkly_admin.R
+import com.project.drinkly_admin.api.TokenManager
 import com.project.drinkly_admin.databinding.FragmentLoginBinding
 import com.project.drinkly_admin.ui.MainActivity
+import com.project.drinkly_admin.ui.home.HomeStoreListFragment
 import com.project.drinkly_admin.viewModel.LoginViewModel
 
 class LoginFragment : Fragment() {
@@ -55,10 +57,6 @@ class LoginFragment : Fragment() {
         mainActivity = activity as MainActivity
 
         binding.run {
-            root.post {
-                setupViewPager()  // post()를 사용하여 뷰가 완전히 생성된 후 실행
-            }
-
             buttonKakao.setOnClickListener {
                 // 카카오 로그인
                 // 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
@@ -88,6 +86,22 @@ class LoginFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.root.post {
+            setupViewPager()  // post()를 사용하여 뷰가 완전히 생성된 후 실행
+        }
+
+        val tokenManager = TokenManager(mainActivity)
+
+        if(tokenManager.getAccessToken() != null) {
+            mainActivity.supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView_main, HomeStoreListFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     private fun setupViewPager() {

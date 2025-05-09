@@ -1,77 +1,22 @@
 package com.project.drinkly_admin.api.openData.response
 
-import com.google.gson.annotations.SerializedName
-
 data class ValidateBusinessInfoResponse(
-    @SerializedName("request_cnt")
-    val requestCnt: Int,
-
-    @SerializedName("valid_cnt")
-    val validCnt: Int?,
-
-    @SerializedName("status_code")
-    val statusCode: String,
-
-    val data: List<BusinessCheckItem>
+    val status_code: String,
+    val match_cnt: Int?,
+    val request_cnt: Int,
+    val data: List<BizInfo>
 )
 
-data class BusinessCheckItem(
-    @SerializedName("b_no")
-    val bNo: String,
-
-    val valid: String,
-
-    @SerializedName("valid_msg")
-    val validMsg: String?,
-
-    @SerializedName("request_param")
-    val requestParam: RequestParam,
-
-    val status: BusinessStatus?
-)
-
-data class RequestParam(
-    @SerializedName("b_no")
-    val bNo: String,
-
-    @SerializedName("start_dt")
-    val startDt: String,
-
-    @SerializedName("p_nm")
-    val pNm: String
-)
-
-data class BusinessStatus(
-    @SerializedName("b_no")
-    val bNo: String,
-
-    @SerializedName("b_stt")
-    val bStt: String,
-
-    @SerializedName("b_stt_cd")
-    val bSttCd: String,
-
-    @SerializedName("tax_type")
-    val taxType: String,
-
-    @SerializedName("tax_type_cd")
-    val taxTypeCd: String,
-
-    @SerializedName("end_dt")
-    val endDt: String,
-
-    @SerializedName("utcc_yn")
-    val utccYn: String,
-
-    @SerializedName("tax_type_change_dt")
-    val taxTypeChangeDt: String,
-
-    @SerializedName("invoice_apply_dt")
-    val invoiceApplyDt: String,
-
-    @SerializedName("rbf_tax_type")
-    val rbfTaxType: String,
-
-    @SerializedName("rbf_tax_type_cd")
-    val rbfTaxTypeCd: String
+data class BizInfo(
+    val b_no: String,
+    val b_stt: String,
+    val b_stt_cd: String,
+    val tax_type: String,
+    val tax_type_cd: String,
+    val end_dt: String,
+    val utcc_yn: String,
+    val tax_type_change_dt: String,
+    val invoice_apply_dt: String,
+    val rbf_tax_type: String,
+    val rbf_tax_type_cd: String
 )

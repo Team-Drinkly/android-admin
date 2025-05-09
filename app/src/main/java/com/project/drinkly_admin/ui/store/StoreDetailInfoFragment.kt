@@ -60,6 +60,8 @@ class StoreDetailInfoFragment : Fragment() {
                     }
 
                     storeMainImage = compressedFile
+
+                    checkComplete()
                 } else {
                     Log.e("ImageCompression", "압축된 파일이 존재하지 않거나 비어 있습니다.")
                 }
@@ -125,6 +127,8 @@ class StoreDetailInfoFragment : Fragment() {
                     )
                     viewModel.editStoreInfo(mainActivity, MyApplication.storeId, storeInfo)
                 }
+
+                buttonSave.isEnabled = false
             }
         }
 
@@ -137,7 +141,7 @@ class StoreDetailInfoFragment : Fragment() {
                 if (presignedUrlData != null) {
                     binding.run {
                         val insta = if (editTextStoreInstagram.text.isNotEmpty()) {
-                            "https://www.instagram.com/${editTextStoreInstagram.text.toString()}"
+                            "${editTextStoreInstagram.text.toString()}"
                         } else {
                             null
                         }

@@ -37,6 +37,7 @@ class StoreViewModel : ViewModel() {
 
     fun getStoreDetail(activity: MainActivity, storeId: Int) {
         val apiClient = ApiClient(activity)
+        val tokenManager = TokenManager(activity)
 
         apiClient.apiService.getStoreDetailInfo(storeId)
             .enqueue(object :
@@ -73,6 +74,8 @@ class StoreViewModel : ViewModel() {
                 override fun onFailure(call: Call<BaseResponse<StoreDetailResponse>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }
@@ -134,6 +137,8 @@ class StoreViewModel : ViewModel() {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
                     isEdit.value = false
+
+                    activity.goToLogin()
                 }
             })
     }
@@ -181,6 +186,8 @@ class StoreViewModel : ViewModel() {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
                     isEdit.value = false
+
+                    activity.goToLogin()
                 }
             })
     }
@@ -189,7 +196,7 @@ class StoreViewModel : ViewModel() {
         val apiClient = ApiClient(activity)
         val tokenManager = TokenManager(activity)
 
-        apiClient.apiService.getPresignedUrl(tokenManager.getAccessToken().toString(), PresignedUrlRequest(MyApplication.storeName))
+        apiClient.apiService.getPresignedUrl(tokenManager.getAccessToken().toString(), PresignedUrlRequest("${MyApplication.storeName}/main"))
             .enqueue(object :
                 Callback<BaseResponse<PresignedUrlResponse>> {
                 override fun onResponse(
@@ -223,19 +230,21 @@ class StoreViewModel : ViewModel() {
                 override fun onFailure(call: Call<BaseResponse<PresignedUrlResponse>>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }
 
-    fun getPresignedUrlBatch(activity: MainActivity, images: List<Any>?) {
+    fun getPresignedUrlBatch(activity: MainActivity, images: List<Any>?, imageType : String) {
         val apiClient = ApiClient(activity)
         val tokenManager = TokenManager(activity)
 
         val request = images?.let {
             List(it.size) {
                 PresignedUrlRequest(
-                    prefix = "${MyApplication.storeName}/availableDrinks",
-                    fileName = "availableDrinks"
+                    prefix = "${MyApplication.storeName}/${imageType}",
+                    fileName = "${imageType}"
                 )
             }
         } ?: emptyList()
@@ -277,7 +286,7 @@ class StoreViewModel : ViewModel() {
                     when(response.code()) {
                         498 -> {
                             TokenUtil.refreshToken(activity) {
-                                getPresignedUrlBatch(activity, images)
+                                getPresignedUrlBatch(activity, images, imageType)
                             }
                         }
                     }
@@ -286,6 +295,8 @@ class StoreViewModel : ViewModel() {
 
             override fun onFailure(call: Call<BaseResponse<List<PresignedUrlResponse>>>, t: Throwable) {
                 Log.e("DrinklyViewModel", "Presigned 요청 실패: ${t.message}")
+
+                activity.goToLogin()
             }
         })
     }
@@ -293,6 +304,7 @@ class StoreViewModel : ViewModel() {
 
     fun savePresignedUrlImage(activity: MainActivity, presignedUrlData: PresignedUrlResponse, image: File, onSuccess: () -> Unit) {
         val apiClient = PresignedUrlApiClient(activity)
+        val tokenManager = TokenManager(activity)
 
         val requestBody = image.asRequestBody("image/jpeg".toMediaType())
         val call = apiClient.apiService.uploadFileToS3(presignedUrlData.url, requestBody)
@@ -325,6 +337,8 @@ class StoreViewModel : ViewModel() {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     // 통신 실패
                     Log.d("DrinklyViewModel", "onFailure 에러: " + t.message.toString())
+
+                    activity.goToLogin()
                 }
             })
     }

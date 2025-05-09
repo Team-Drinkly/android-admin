@@ -12,7 +12,7 @@ import retrofit2.http.Query
 
 interface DataApiService {
     // 사업자 정보 진위 확인
-    @POST("validate")
+    @POST("status")
     fun validateBusinessInfo(
         @Query("serviceKey") serviceKey: String,
         @Body request: ValidateBusinessInfoRequest

@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:hint="09:00"
             android:textAlignment="center"
-            android:inputType="textMultiLine" />
+            android:inputType="number" />
 
         <TextView
             android:id="@+id/textView_description1"
@@ -74,7 +74,7 @@
             android:layout_marginStart="10dp"
             android:hint="09:00"
             android:textAlignment="center"
-            android:inputType="textMultiLine" />
+            android:inputType="number" />
 
         <TextView
             android:id="@+id/textView_description2"

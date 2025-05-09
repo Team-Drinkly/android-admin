@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.request.store.StoreDetailRequest
@@ -171,10 +172,17 @@ class StoreDetailInfoMainFragment : Fragment() {
                 textViewTitle.text = "매장 세부 정보 등록"
                 buttonBack.setOnClickListener {
                     viewModel.storeDetailInfo.value = null
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    fragmentManager?.popBackStack()
                 }
             }
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                viewModel.storeDetailInfo.value = null
+                fragmentManager?.popBackStack()
+            }
+        })
     }
 
 }

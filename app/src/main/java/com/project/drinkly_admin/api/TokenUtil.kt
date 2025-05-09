@@ -2,9 +2,11 @@ package com.project.drinkly_admin.api
 
 import android.util.Log
 import androidx.fragment.app.FragmentManager
+import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.response.BaseResponse
 import com.project.drinkly_admin.api.response.login.ReissueTokenResponse
 import com.project.drinkly_admin.ui.MainActivity
+import com.project.drinkly_admin.ui.onboarding.LoginFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,18 +37,20 @@ object TokenUtil {
                             }
 
                             400 -> {
-                                tokenManager.deleteAccessToken()
-                                tokenManager.deleteRefreshToken()
-                                activity.supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                activity.goToLogin()
                             }
                         }
                     } else {
                         Log.e("TokenUtil", "재발급 실패: ${response.errorBody()?.string()}")
+
+                        activity.goToLogin()
                     }
                 }
 
                 override fun onFailure(call: Call<BaseResponse<ReissueTokenResponse>>, t: Throwable) {
                     Log.e("TokenUtil", "onFailure: ${t.message}")
+
+                    activity.goToLogin()
                 }
             })
     }

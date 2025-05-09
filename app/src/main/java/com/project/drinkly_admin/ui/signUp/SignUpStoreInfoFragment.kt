@@ -13,16 +13,21 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.ViewModelProvider
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.databinding.FragmentSignUpStoreInfoBinding
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.util.MainUtil.updateViewPositionForKeyboard
+import com.project.drinkly_admin.viewModel.LoginViewModel
 
 class SignUpStoreInfoFragment : Fragment() {
 
     lateinit var binding: FragmentSignUpStoreInfoBinding
     lateinit var mainActivity: MainActivity
+    private val viewModel: LoginViewModel by lazy {
+        ViewModelProvider(requireActivity())[LoginViewModel::class.java]
+    }
 
     private val kakaoAddressLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -161,6 +166,8 @@ class SignUpStoreInfoFragment : Fragment() {
     }
 
     fun initView() {
+        viewModel.validBusinessInfo.value = null
+
         binding.run {
             checkInput()
 

@@ -1,10 +1,13 @@
 package com.project.drinkly_admin.ui.home
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.lifecycle.ViewModelProvider
@@ -42,6 +45,9 @@ class HomeFragment : Fragment() {
     var getOrderHistory: MutableList<FreeDrinkHistory>? = mutableListOf()
 
     lateinit var orderHistoryAdapter: OrderHistoryAdapter
+
+    private var backPressedOnce = false
+    private val backPressHandler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -101,6 +107,19 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         initView()
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (backPressedOnce) {
+                requireActivity().finishAffinity() // 앱 완전 종료
+            } else {
+                backPressedOnce = true
+                Toast.makeText(requireContext(), "뒤로가기 버튼을\n한 번 더 누르면 종료됩니다", Toast.LENGTH_SHORT).show()
+
+                backPressHandler.postDelayed({
+                    backPressedOnce = false
+                }, 2000)
+            }
+        }
     }
 
 
