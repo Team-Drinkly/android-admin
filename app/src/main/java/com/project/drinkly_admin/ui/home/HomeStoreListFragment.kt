@@ -1,26 +1,37 @@
 package com.project.drinkly_admin.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.project.drinkly_admin.R
-import com.project.drinkly_admin.api.TokenManager
+import com.project.drinkly_admin.UpdateManager
 import com.project.drinkly_admin.api.response.home.StoreDetailResponse
 import com.project.drinkly_admin.api.response.home.StoreListResponse
 import com.project.drinkly_admin.databinding.FragmentHomeStoreListBinding
+import com.project.drinkly_admin.ui.BasicDialogInterface
+import com.project.drinkly_admin.ui.DialogBasic
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.ui.home.adapter.StoreAdapter
-import com.project.drinkly_admin.ui.store.StoreDetailInfoMainFragment
 import com.project.drinkly_admin.ui.signUp.SignUpBusinessInfoFragment
+import com.project.drinkly_admin.ui.store.StoreDetailInfoMainFragment
 import com.project.drinkly_admin.util.MyApplication
 import com.project.drinkly_admin.viewModel.CouponViewModel
 import com.project.drinkly_admin.viewModel.OrderViewModel
@@ -45,6 +56,10 @@ class HomeStoreListFragment : Fragment() {
         ViewModelProvider(requireActivity())[OrderViewModel::class.java]
     }
 
+    private lateinit var appUpdateManager: AppUpdateManager
+    private val MY_REQUEST_CODE = 1001
+    private var isDialogShown = false
+
     lateinit var storeAdapter : StoreAdapter
 
     private var getStoreInfo: List<StoreListResponse>? = null
@@ -60,6 +75,7 @@ class HomeStoreListFragment : Fragment() {
 
         binding = FragmentHomeStoreListBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
+        appUpdateManager = AppUpdateManagerFactory.create(requireActivity())
 
         initAdapter()
         observeViewModel()
@@ -88,19 +104,6 @@ class HomeStoreListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         initView()
-
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            if (backPressedOnce) {
-                requireActivity().finishAffinity() // 앱 완전 종료
-            } else {
-                backPressedOnce = true
-                Toast.makeText(requireContext(), "뒤로가기 버튼을\n한 번 더 누르면 종료됩니다", Toast.LENGTH_SHORT).show()
-
-                backPressHandler.postDelayed({
-                    backPressedOnce = false
-                }, 2000)
-            }
-        }
     }
 
     fun initAdapter() {
@@ -187,8 +190,72 @@ class HomeStoreListFragment : Fragment() {
         storeViewModel.storeDetailInfo.value = null
         getStoreDetailInfo = null
 
-        viewModel.getOwnerName(mainActivity)
-        viewModel.getStoreList(mainActivity)
+        checkForUpdate()
+
+        viewModel.run {
+            getOwnerName(mainActivity)
+            getStoreList(mainActivity)
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (backPressedOnce) {
+                requireActivity().finishAffinity() // 앱 완전 종료
+            } else {
+                backPressedOnce = true
+                Toast.makeText(requireContext(), "뒤로가기 버튼을\n한 번 더 누르면 종료됩니다", Toast.LENGTH_SHORT).show()
+
+                backPressHandler.postDelayed({
+                    backPressedOnce = false
+                }, 2000)
+            }
+        }
+    }
+
+    private fun checkForUpdate() {
+        if (isDialogShown) return
+
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            val isUpdateAvailable =
+                appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE &&
+                        appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+
+            if (isUpdateAvailable) {
+                isDialogShown = true
+
+                Log.e("##", "Update available")
+
+                val dialog = DialogBasic("새로운 업데이트 사항이 있어요\n최신 버전으로 업데이트해주세요!", "업데이트 하기", false)
+
+                dialog.setBasicDialogInterface(object : BasicDialogInterface {
+                    override fun onClickYesButton() {
+                        // IMMEDIATE 업데이트 요청
+                        appUpdateManager.startUpdateFlowForResult(
+                            appUpdateInfo,
+                            AppUpdateType.IMMEDIATE,
+                            mainActivity,
+                            MY_REQUEST_CODE
+                        )
+                    }
+                })
+
+                dialog.show(mainActivity.supportFragmentManager, "DialogUpdate")
+            } else {
+                Log.e("##", "No update available")
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == MY_REQUEST_CODE) {
+            if (resultCode != RESULT_OK) {
+                Log.e("AppUpdate", "업데이트 실패 또는 취소됨")
+
+                checkForUpdate()
+            }
+        }
     }
 
 }
