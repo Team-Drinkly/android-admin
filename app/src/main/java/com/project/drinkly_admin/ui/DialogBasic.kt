@@ -15,7 +15,7 @@ interface BasicDialogInterface {
     fun onClickYesButton()
 }
 
-class DialogBasic(var message: String) : DialogFragment() {
+class DialogBasic(var message: String, var buttonText: String = "확인", var isCancel: Boolean = true) : DialogFragment() {
 
     // 뷰 바인딩 정의
     private var _binding: DialogBasicBinding? = null
@@ -41,8 +41,11 @@ class DialogBasic(var message: String) : DialogFragment() {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
+        isCancelable = isCancel
+
         binding.run {
             textViewDialogDescription.text = message
+            buttonCheck.text = buttonText
 
             buttonCheck.setOnClickListener {
                 listener?.onClickYesButton() // 인터페이스를 통해 이벤트 전달
