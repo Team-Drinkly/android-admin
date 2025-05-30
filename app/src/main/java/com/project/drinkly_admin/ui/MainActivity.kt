@@ -6,11 +6,8 @@ import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.TokenManager
@@ -52,7 +49,6 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fragmentContainerView_main, LoginFragment())
             .commit()
     }
-
 
     @RequiresApi(Build.VERSION_CODES.P)
     fun getKeyHash() {
