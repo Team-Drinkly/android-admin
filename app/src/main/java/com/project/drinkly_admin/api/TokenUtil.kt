@@ -39,6 +39,10 @@ object TokenUtil {
                             400 -> {
                                 activity.goToLogin()
                             }
+
+                            else -> {
+                                retryRequest()
+                            }
                         }
                     } else {
                         Log.e("TokenUtil", "재발급 실패: ${response.errorBody()?.string()}")
