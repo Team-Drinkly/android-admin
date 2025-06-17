@@ -39,6 +39,13 @@ object TokenUtil {
                             400 -> {
                                 activity.goToLogin()
                             }
+                            else -> {
+                                Log.e(
+                                    "TokenUtil",
+                                    "Unexpected token-refresh code ${result?.result?.code}; forcing re-auth"
+                                )
+                                activity.goToLogin()
+                            }
                         }
                     } else {
                         Log.e("TokenUtil", "재발급 실패: ${response.errorBody()?.string()}")

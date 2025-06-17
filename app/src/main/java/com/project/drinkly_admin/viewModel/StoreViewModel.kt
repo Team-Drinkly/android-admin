@@ -100,12 +100,6 @@ class StoreViewModel : ViewModel() {
                         MyApplication.storeId = result?.payload?.storeId ?: 0
 
                         if(storeInfo.isReady != null) {
-                            // 이전 BackStack의 모든 Fragment 제거
-                            activity.supportFragmentManager.popBackStackImmediate(
-                                null,
-                                FragmentManager.POP_BACK_STACK_INCLUSIVE
-                            )
-
                             activity.supportFragmentManager.beginTransaction()
                                 .replace(R.id.fragmentContainerView_main, HomeFragment())
                                 .commit()
