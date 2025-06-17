@@ -42,6 +42,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Logs out the current user and navigates to the login screen.
+     *
+     * Clears all stored authentication tokens, removes all fragments from the back stack, and replaces the main fragment container with the login fragment.
+     */
     fun goToLogin() {
         TokenManager(this).clearAll()
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
@@ -50,6 +55,12 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
+    /**
+     * Computes and logs the app's signing key hash using SHA and Base64 encoding.
+     *
+     * This function retrieves the app's signing certificates and logs the key hash for each signature.
+     * Requires API level 28 (Android Pie) or higher.
+     */
     @RequiresApi(Build.VERSION_CODES.P)
     fun getKeyHash() {
         try {

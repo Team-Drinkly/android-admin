@@ -13,6 +13,15 @@ import retrofit2.Response
 
 object TokenUtil {
 
+    /**
+     * Attempts to refresh the authentication token and handles the result.
+     *
+     * If the token refresh is successful, saves the new tokens and retries the original request via the provided lambda.
+     * If the refresh fails or returns a bad request, navigates the user to the login screen.
+     * For other response codes, retries the original request without updating tokens.
+     *
+     * @param retryRequest Lambda to invoke the original request after a successful token refresh or for unexpected response codes.
+     */
     fun refreshToken(activity: MainActivity, retryRequest: () -> Unit) {
         val apiClient = ApiClient(activity)
         val tokenManager = TokenManager(activity)

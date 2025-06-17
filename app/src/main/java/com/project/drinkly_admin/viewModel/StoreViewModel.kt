@@ -80,6 +80,11 @@ class StoreViewModel : ViewModel() {
             })
     }
 
+    /**
+     * Sends a request to update store information and handles the response.
+     *
+     * On success, updates the global store ID and either navigates to the home screen if the store is marked as ready, or updates the store detail LiveData and pops the fragment back stack. On error, sets the edit status to false and refreshes the token if expired. On network failure, sets the edit status to false and redirects to the login screen.
+     */
     fun editStoreInfo(activity: MainActivity, storeId: Int, storeInfo: StoreDetailRequest) {
         val apiClient = ApiClient(activity)
         val tokenManager = TokenManager(activity)
