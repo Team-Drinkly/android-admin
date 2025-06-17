@@ -53,7 +53,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView_title" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/button_store_info"
+                android:id="@+id/button_available_drink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
@@ -68,12 +68,23 @@
                     style="@style/SubTitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="매장 정보"
+                    android:text="멤버십 제공 주류"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView_info_next1"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView_info_title1_essential"
+                    style="@style/SubTitle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="*"
+                    android:textColor="@color/red"
+                    app:layout_constraintStart_toEndOf="@+id/textView_info_title1"
+                    app:layout_constraintTop_toTopOf="@+id/textView_info_title1"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView_info_title1"/>
 
                 <ImageView
                     android:id="@+id/imageView_info_next1"
@@ -86,40 +97,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/button_available_drink"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/background_white_radius10"
-                android:padding="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_store_info">
-
-                <TextView
-                    android:id="@+id/textView_info_title2"
-                    style="@style/SubTitle2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="멤버십 제공 주류"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView_info_next2"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/imageView_info_next2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_next"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/button_menu"
+                android:id="@+id/button_available_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -130,19 +108,30 @@
                 app:layout_constraintTop_toBottomOf="@+id/button_available_drink">
 
                 <TextView
-                    android:id="@+id/textView_info_title3"
+                    android:id="@+id/textView_info_title2"
                     style="@style/SubTitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="메뉴판"
+                    android:text="멤버십 이용 가능 요일"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView_info_next3"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/textView_info_title5_essential"
+                    style="@style/SubTitle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="*"
+                    android:textColor="@color/red"
+                    app:layout_constraintStart_toEndOf="@+id/textView_info_title2"
+                    app:layout_constraintTop_toTopOf="@+id/textView_info_title2"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView_info_title2"/>
+
                 <ImageView
-                    android:id="@+id/imageView_info_next3"
+                    android:id="@+id/imageView_info_next2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_next"
@@ -160,14 +149,59 @@
                 android:padding="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_menu">
+                app:layout_constraintTop_toBottomOf="@+id/button_available_date">
+
+                <TextView
+                    android:id="@+id/textView_info_title3"
+                    style="@style/SubTitle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="영업시간"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView_info_title3_essential"
+                    style="@style/SubTitle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="*"
+                    android:textColor="@color/red"
+                    app:layout_constraintStart_toEndOf="@+id/textView_info_title3"
+                    app:layout_constraintTop_toTopOf="@+id/textView_info_title3"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView_info_title3"/>
+
+
+                <ImageView
+                    android:id="@+id/imageView_info_next3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_next"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/button_store_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/background_white_radius10"
+                android:padding="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_open_time">
 
                 <TextView
                     android:id="@+id/textView_info_title4"
                     style="@style/SubTitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="영업시간"
+                    android:text="매장 정보"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/imageView_info_next4"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -185,7 +219,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/button_available_date"
+                android:id="@+id/button_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -195,14 +229,14 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_open_time">
+                app:layout_constraintTop_toBottomOf="@+id/button_store_info">
 
                 <TextView
                     android:id="@+id/textView_info_title5"
                     style="@style/SubTitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="멤버십 이용 가능 요일"
+                    android:text="메뉴판"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/imageView_info_next5"
                     app:layout_constraintHorizontal_bias="0.0"

@@ -98,16 +98,10 @@ class StoreViewModel : ViewModel() {
                         Log.d("DrinklyViewModel", "onResponse 성공: " + result?.toString())
 
                         MyApplication.storeId = result?.payload?.storeId ?: 0
+                        storeDetailInfo.value = result?.payload
 
-                        if(storeInfo.isReady != null) {
-                            activity.supportFragmentManager.beginTransaction()
-                                .replace(R.id.fragmentContainerView_main, HomeFragment())
-                                .commit()
-                        } else {
-                            storeDetailInfo.value = result?.payload
+                        activity.supportFragmentManager.popBackStack()
 
-                            activity.supportFragmentManager.popBackStack()
-                        }
                     } else {
                         // 통신이 실패한 경우(응답코드 3xx, 4xx 등)
                         var result: BaseResponse<StoreDetailResponse>? = response.body()
