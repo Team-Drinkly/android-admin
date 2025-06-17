@@ -39,9 +39,12 @@ object TokenUtil {
                             400 -> {
                                 activity.goToLogin()
                             }
-
                             else -> {
-                                retryRequest()
+                                Log.e(
+                                    "TokenUtil",
+                                    "Unexpected token-refresh code ${result?.result?.code}; forcing re-auth"
+                                )
+                                activity.goToLogin()
                             }
                         }
                     } else {
