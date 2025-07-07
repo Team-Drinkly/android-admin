@@ -29,13 +29,14 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp">
+            android:paddingHorizontal="15dp">
 
             <TextView
                 android:id="@+id/textView_title"
                 style="@style/HeadLine2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
                 android:layout_marginTop="30dp"
                 android:text="멤버십 제공 주류"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -48,6 +49,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
+                android:layout_marginHorizontal="5dp"
                 android:text="드링클리 멤버십 구독 손님들에게\n제공할 주류 정보를 추가해주세요"
                 android:textColor="@color/gray7"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -59,6 +61,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
+                android:layout_marginHorizontal="5dp"
                 android:background="@drawable/background_primary10_radius10_stroke_primary50"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -85,10 +88,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layout_basic_drinks"
+                android:id="@+id/layout_basic_drinks1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="11dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="5dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -97,7 +101,7 @@
                 <TextView
                     android:id="@+id/button_add_soju"
                     style="@style/SubTitle3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/background_white_radius10_stroke_green"
@@ -113,7 +117,7 @@
                 <TextView
                     android:id="@+id/button_add_beer"
                     style="@style/SubTitle3"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/background_white_radius10_stroke_pink"
@@ -123,17 +127,56 @@
                     android:textColor="@color/pink" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/layout_basic_drinks2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="5dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_basic_drinks1">
+
+                <TextView
+                    android:id="@+id/button_add_draftbeer"
+                    style="@style/SubTitle3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_white_radius10_stroke_yellow"
+                    android:paddingVertical="15dp"
+                    android:text="생맥주 추가"
+                    android:textAlignment="center"
+                    android:textColor="@color/yellow" />
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/button_add_highball"
+                    style="@style/SubTitle3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/background_white_radius10_stroke_primary30"
+                    android:paddingVertical="15dp"
+                    android:text="하이볼 추가"
+                    android:textAlignment="center"
+                    android:textColor="@color/primary_30" />
+            </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_available_drink"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="150dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_basic_drinks" />
-
+                app:layout_constraintTop_toBottomOf="@+id/layout_basic_drinks2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
