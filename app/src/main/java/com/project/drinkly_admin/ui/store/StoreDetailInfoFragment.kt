@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.project.drinkly_admin.R
 import com.project.drinkly_admin.api.request.store.StoreDetailRequest
 import com.project.drinkly_admin.databinding.FragmentStoreDetailInfoBinding
+import com.project.drinkly_admin.ui.BasicToast
 import com.project.drinkly_admin.ui.MainActivity
 import com.project.drinkly_admin.util.MainUtil.updateViewPositionForKeyboard
 import com.project.drinkly_admin.util.MyApplication
@@ -168,12 +169,17 @@ class StoreDetailInfoFragment : Fragment() {
         binding.run {
             editTextStoreDescription.setText(viewModel.storeDetailInfo.value?.storeDescription)
             editTextStoreInstagram.setText(viewModel.storeDetailInfo.value?.instagramUrl)
+            if(viewModel.storeDetailInfo.value?.instagramUrl.isNullOrEmpty()) {
+                BasicToast.showBasicToast(requireContext(), "대표 이미지를 등록하면 홍보에 더 도움이 돼요!", R.drawable.ic_check, binding.buttonSave)
+            }
+
             if(viewModel.storeDetailInfo.value?.storeMainImageUrl != null) {
                 Glide.with(mainActivity).load(viewModel.storeDetailInfo.value?.storeMainImageUrl).into(imageViewStoreImage)
                 layoutStoreImage.visibility = View.INVISIBLE
             } else {
                 layoutStoreImage.visibility = View.VISIBLE
             }
+
 
             toolbar.run {
                 textViewTitle.text = "매장 정보"
