@@ -207,7 +207,7 @@ class StoreDetailInfoFragment : Fragment() {
             }
 
             buttonSave.isEnabled =
-                (storeMainImage != null || viewModel.storeDetailInfo.value?.storeMainImageUrl != null) && editTextStoreDescription.text.isNotEmpty()
+                (storeMainImage != null || viewModel.storeDetailInfo.value?.storeMainImageUrl != null) || editTextStoreDescription.text.isNotEmpty() || editTextStoreInstagram.text.isNotEmpty()
         }
     }
 
