@@ -100,10 +100,10 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                 }
             }
             buttonAddBeer.setOnClickListener {
-                // 맥주 추가
-                if(checkDrinks("맥주")) {
-                    images?.add(ImageData(ImageUtil.copyRawToFile(mainActivity, R.drawable.img_beer, "beer.png"), "맥주"))
-                    newCommonAvailableDrinkImages?.add(CommonImageData(ImageUtil.copyRawToFile(mainActivity, R.drawable.img_beer, "beer.png"), "beer", "맥주"))
+                // 병맥주 추가
+                if(checkDrinks("병맥주")) {
+                    images?.add(ImageData(ImageUtil.copyRawToFile(mainActivity, R.drawable.img_beer, "beer.png"), "병맥주"))
+                    newCommonAvailableDrinkImages?.add(CommonImageData(ImageUtil.copyRawToFile(mainActivity, R.drawable.img_beer, "beer.png"), "beer", "병맥주"))
                     newBeerIndex = newAvailableDrinkImages?.size ?: 0
 
                     checkComplete()
@@ -151,7 +151,7 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                                 newImageUrls.add(
                                     NewImageUrl(
                                         imageUrl = "공통주류/20250507034229-20802afc-98f4-44ce-aec7-12a559a96668-beer",
-                                        description = "맥주"
+                                        description = "병맥주"
                                     )
                                 )
                             }
@@ -273,7 +273,7 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
 
                                     when (targetImage.description) {
                                         "소주" -> newSojuIndex = 0
-                                        "맥주" -> newBeerIndex = 0
+                                        "병맥주" -> newBeerIndex = 0
                                         "생맥주" -> newDraftBeerIndex = 0
                                         "하이볼" -> newHighballIndex = 0
                                     }
@@ -311,7 +311,7 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                     newCommonAvailableDrinkImages?.forEach { imageData ->
                         val insertIndex = when (imageData.description) {
                             "소주" -> newSojuIndex
-                            "맥주" -> newBeerIndex
+                            "병맥주" -> newBeerIndex
                             "생맥주" -> newDraftBeerIndex
                             "하이볼" -> newHighballIndex
                             else -> {
