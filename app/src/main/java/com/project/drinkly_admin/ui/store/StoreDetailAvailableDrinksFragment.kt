@@ -32,6 +32,14 @@ import java.io.File
 
 class StoreDetailAvailableDrinksFragment : Fragment() {
 
+    companion object {
+        val SOJU_IMAGE_URL = "공통주류/20250507034147-40441a71-23e6-4166-8965-ce331aab5998-soju"
+        val BEER_IMAGE_URL =  "공통주류/20250507034229-20802afc-98f4-44ce-aec7-12a559a96668-beer"
+        val DRAFT_IMAGE_URL = "공통주류/20250617200637-a0444443-5965-418e-9802-19cca40de2c8-draft"
+        val HIGHBALL_IMAGE_URL = "공통주류/20250617200742-72659ec0-e6ea-498e-baaf-197f4997f833-highball"
+        val BASIC_IMAGE_URL = "공통주류/20250618155356-8e22ebc7-72a0-4c19-b5e5-7a2c4c880c68-basic"
+    }
+
     lateinit var binding: FragmentStoreDetailAvailableDrinksBinding
     lateinit var mainActivity: MainActivity
     private val viewModel: StoreViewModel by lazy {
@@ -142,7 +150,7 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                             "soju" -> {
                                 newImageUrls.add(
                                     NewImageUrl(
-                                        imageUrl = "공통주류/20250507034147-40441a71-23e6-4166-8965-ce331aab5998-soju",
+                                        imageUrl = SOJU_IMAGE_URL,
                                         description = "소주"
                                     )
                                 )
@@ -150,7 +158,7 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                             "beer" -> {
                                 newImageUrls.add(
                                     NewImageUrl(
-                                        imageUrl = "공통주류/20250507034229-20802afc-98f4-44ce-aec7-12a559a96668-beer",
+                                        imageUrl = BEER_IMAGE_URL,
                                         description = "병맥주"
                                     )
                                 )
@@ -158,7 +166,7 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                             "draft-beer" -> {
                                 newImageUrls.add(
                                     NewImageUrl(
-                                        imageUrl = "공통주류/20250617200637-a0444443-5965-418e-9802-19cca40de2c8-draft",
+                                        imageUrl = DRAFT_IMAGE_URL,
                                         description = "생맥주"
                                     )
                                 )
@@ -166,7 +174,7 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                             "highball" -> {
                                 newImageUrls.add(
                                     NewImageUrl(
-                                        imageUrl = "공통주류/20250617200742-72659ec0-e6ea-498e-baaf-197f4997f833-highball",
+                                        imageUrl = HIGHBALL_IMAGE_URL,
                                         description = "하이볼"
                                     )
                                 )
@@ -174,7 +182,7 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                             "basic" -> {
                                 newImageUrls.add(
                                     NewImageUrl(
-                                        imageUrl = "공통주류/20250618155356-8e22ebc7-72a0-4c19-b5e5-7a2c4c880c68-basic",
+                                        imageUrl = BASIC_IMAGE_URL,
                                         description = imageData.description
                                     )
                                 )
@@ -322,12 +330,12 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                         }
 
                         val imageUrl = when (imageData.type) {
-                            "soju" -> "공통주류/20250502162032-11f10447-1597-48b6-9ec8-28e0c37ab3ba-soju"
-                            "beer" -> "공통주류/20250502162032-b7a26511-55a9-4811-92a2-1ff564a34449-beer"
-                            "draft-beer" -> "공통주류/20250617200637-a0444443-5965-418e-9802-19cca40de2c8-draft"
-                            "highball" -> "공통주류/20250617200742-72659ec0-e6ea-498e-baaf-197f4997f833-highball"
-                            "basic" -> "공통주류/20250618155356-8e22ebc7-72a0-4c19-b5e5-7a2c4c880c68-basic"
-                            else -> ""
+                            "soju" -> SOJU_IMAGE_URL
+                            "beer" -> BEER_IMAGE_URL
+                            "draft-beer" -> DRAFT_IMAGE_URL
+                            "highball" -> HIGHBALL_IMAGE_URL
+                            "basic" -> BASIC_IMAGE_URL
+                            else -> BASIC_IMAGE_URL
                         }
 
                         val clampedIndex = insertIndex.coerceIn(0, mappedNewImageUrls.size)
