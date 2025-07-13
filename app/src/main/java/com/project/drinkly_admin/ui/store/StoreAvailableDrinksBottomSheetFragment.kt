@@ -147,7 +147,7 @@ class StoreAvailableDrinksBottomSheetFragment() : DialogFragment() {
 
     fun checkComplete() {
         binding.run {
-            if(isImageUpload && editTextAvailableDrink.text.isNotEmpty()) {
+            if(editTextAvailableDrink.text.isNotEmpty()) {
                 buttonAdd.isEnabled = true
             } else {
                 buttonAdd.isEnabled = false

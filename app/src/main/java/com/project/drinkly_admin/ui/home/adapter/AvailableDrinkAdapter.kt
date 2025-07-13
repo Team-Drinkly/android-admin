@@ -45,7 +45,7 @@ class AvailableDrinkAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
        with(holder.binding) {
-           textViewDrink.text = images?.get(position)?.description
+           textViewDrink.setText(images?.get(position)?.description)
            Glide.with(activity)
                .load(images?.get(position)?.image)
                .into(imageViewAvailableDrink)

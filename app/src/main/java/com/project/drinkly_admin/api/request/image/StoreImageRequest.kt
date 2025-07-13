@@ -15,3 +15,9 @@ data class ImageData(
     val image: Any,
     val description: String
 )
+
+data class CommonImageData(
+    val image: Any,
+    val type: String,
+    val description: String
+)
