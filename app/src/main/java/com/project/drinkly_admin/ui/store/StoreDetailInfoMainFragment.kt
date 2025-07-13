@@ -24,8 +24,6 @@ class StoreDetailInfoMainFragment : Fragment() {
         ViewModelProvider(requireActivity())[StoreViewModel::class.java]
     }
 
-    private var isSaveInfo = MutableList(5) { false }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -107,52 +105,42 @@ class StoreDetailInfoMainFragment : Fragment() {
         binding.run {
             // 제공하는 주류
             if(storeInfo?.availableDrinkImageUrls?.size != 0) {
-                isSaveInfo[0] = true
                 buttonAvailableDrink.setBackgroundResource(R.drawable.background_primary10_radius10)
                 imageViewInfoNext1.setImageResource(R.drawable.ic_check_circle_checked)
             } else {
-                isSaveInfo[0] = false
                 buttonAvailableDrink.setBackgroundResource(R.drawable.background_white_radius10)
                 imageViewInfoNext1.setImageResource(R.drawable.ic_next)
             }
             // 멤버십 이용 가능 요일
             if(storeInfo?.availableDays != null) {
-                isSaveInfo[1] = true
                 buttonAvailableDate.setBackgroundResource(R.drawable.background_primary10_radius10)
                 imageViewInfoNext2.setImageResource(R.drawable.ic_check_circle_checked)
             } else {
-                isSaveInfo[1] = false
                 buttonAvailableDate.setBackgroundResource(R.drawable.background_white_radius10)
                 imageViewInfoNext2.setImageResource(R.drawable.ic_next)
             }
             // 영업시간
             if(storeInfo?.openingHours != null) {
-                isSaveInfo[2] = true
                 buttonOpenTime.setBackgroundResource(R.drawable.background_primary10_radius10)
                 imageViewInfoNext3.setImageResource(R.drawable.ic_check_circle_checked)
             } else {
-                isSaveInfo[2] = false
                 buttonOpenTime.setBackgroundResource(R.drawable.background_white_radius10)
                 imageViewInfoNext3.setImageResource(R.drawable.ic_next)
             }
 
             // 매장 정보
             if(storeInfo?.storeDescription != null) {
-                isSaveInfo[3] = true
                 buttonStoreInfo.setBackgroundResource(R.drawable.background_primary10_radius10)
                 imageViewInfoNext4.setImageResource(R.drawable.ic_check_circle_checked)
             } else {
-                isSaveInfo[3] = false
                 buttonStoreInfo.setBackgroundResource(R.drawable.background_white_radius10)
                 imageViewInfoNext4.setImageResource(R.drawable.ic_next)
             }
             // 메뉴판
             if(storeInfo?.menuImageUrls?.size != 0) {
-                isSaveInfo[4] = true
                 buttonMenu.setBackgroundResource(R.drawable.background_primary10_radius10)
                 imageViewInfoNext5.setImageResource(R.drawable.ic_check_circle_checked)
             } else {
-                isSaveInfo[4] = false
                 buttonMenu.setBackgroundResource(R.drawable.background_white_radius10)
                 imageViewInfoNext5.setImageResource(R.drawable.ic_next)
             }
