@@ -14,9 +14,12 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-object MainUtil {
-    fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+import android.content.res.Resources
+import kotlin.math.roundToInt
 
+object MainUtil {
+    fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).roundToInt()
+}
     // 투명한 status bar
     fun Activity.setStatusBarTransparent() {
         // 상태바를 투명하게 설정하고, 레이아웃을 상태바까지 확장
