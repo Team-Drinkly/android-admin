@@ -290,7 +290,6 @@ class StoreDetailAvailableDrinksFragment : Fragment() {
                         }
 
                         images?.removeAt(position)
-                        println(removedAvailableDrinkImages)
                         checkComplete()
                     }
                 }
