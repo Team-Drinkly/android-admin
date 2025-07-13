@@ -43,8 +43,20 @@ object BasicToast {
 
             popupWindow.showAsDropDown(anchorView, 0, yOffset)
 
+            // 뷰가 detach될 때 PopupWindow 해제
+            anchorView.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+                override fun onViewAttachedToWindow(v: View) {}
+                override fun onViewDetachedFromWindow(v: View) {
+                    if (popupWindow.isShowing) {
+                        popupWindow.dismiss()
+                    }
+                }
+            })
+
             binding.root.postDelayed({
-                popupWindow.dismiss()
+                if (popupWindow.isShowing) {
+                    popupWindow.dismiss()
+                }
             }, 2000)
         }
     }
